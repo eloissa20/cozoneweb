@@ -1,14 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class ClientController extends Controller
-{
-    public function viewClient()
-    {
-        return view('client_side.client');
-    }
-}
+class ClientController extends Controller {}
