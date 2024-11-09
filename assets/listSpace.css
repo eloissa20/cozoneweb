@@ -1,0 +1,63 @@
+.form-section {
+    border: 1px solid #c4c2c2;
+    border-radius: 1rem;
+    padding: 20px;
+    margin-bottom: 20px;
+    margin-top: 2rem;
+    background-color: #ececec;
+}
+
+.basic-container {
+    border: 2px solid #c4c2c2;
+    border-radius: .5rem;
+    padding: 20px;
+    background-color: #fff;
+    margin-top: 1.5rem;
+}
+
+.seat-container {
+    border: 2px solid #c4c2c2;
+    border-radius: .5rem;
+    padding: 20px;
+    background-color: #fff;
+    margin-top: 1.5rem;
+}
+
+.equipment-container {
+    border: 2px solid #c4c2c2;
+    border-radius: .5rem;
+    padding: 20px;
+    background-color: #fff;
+    margin-top: 1.5rem;
+}
+
+.facilities-container {
+    border: 2px solid #c4c2c2;
+    border-radius: .5rem;
+    padding: 20px;
+    background-color: #fff;
+    margin-top: 1.5rem;
+}
+
+.accessibility-container {
+    border: 2px solid #c4c2c2;
+    border-radius: .5rem;
+    padding: 20px;
+    background-color: #fff;
+    margin-top: 1.5rem;
+}
+
+.perks-container {
+    border: 2px solid #c4c2c2;
+    border-radius: .5rem;
+    padding: 20px;
+    background-color: #fff;
+    margin-top: 1.5rem;
+}
+
+.separator-line {
+    border: none;
+    height: 2px;
+    background-color: #1f1f1f;
+    margin: 10px 0;
+}
