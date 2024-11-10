@@ -83,7 +83,14 @@ Route::middleware(['preventBackHistory'])->group(function () {
 
     Route::middleware(['auth', 'userAuth:2'])->group(function () {
         Route::get('/coworker_side/coworker', [CoworkerController::class, 'viewDashboard'])->name('coworker_side.coworker');
+        Route::get('/coworker_side/listSpace', [CoworkerController::class, 'viewListSpace'])->name('coworker_side.listSpace');
+        Route::post('/coworker_side/listSpace', [CoworkerController::class, 'submitListSpace'])->name('listSpace');
+        Route::get('/coworker_side/myCoworkingSpace', [CoworkerController::class, 'viewmyCoworkingSpace'])->name('coworker_side.myCoworkingSpace');
+        Route::get('/getSpaceDetails/{id}', [CoworkerController::class, 'getSpaceDetails']);
+        Route::delete('/deleteSpace/{id}', [CoworkerController::class, 'deleteSpace']);
+        Route::post('/updateSpaceDetails', [CoworkerController::class, 'updateSpaceDetails']);
     });
+
 
     Route::middleware(['auth', 'userAuth:3'])->group(function () {
         Route::get('/admin_side/admin', [AdminController::class, 'viewDashboard'])->name('admin_side.admin');
