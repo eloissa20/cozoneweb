@@ -236,8 +236,3 @@ a.sidebar-link {
     border-radius: 50%;
 }
 
-.sidebar-item.active .sidebar-link {
-    font-weight: bold;
-    background-color: #f5f5f5;
-    color: #000000;
-}
