@@ -2,7 +2,7 @@
     <h2>MANAGE PRICING</h2>
     <hr class="separator-line" />
     <form id="section8">
-        
+
         <!-- DESKS Section -->
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 class="d-flex align-items-center">DESKS <input type="checkbox" class="ms-3" id="isdeskCheck" onchange="toggleDeskButtons()"></h3>
@@ -13,22 +13,22 @@
                 <div class="col-md-4">
                     <div class="form-check mb-3">
                         <label for="duration" class="form-label">Duration</label>
-                        <input type="text" class="form-control form-control-sm" id="duration" placeholder="1 hour - 2 hours"/>
+                        <input type="text" class="form-control form-control-sm" id="duration" placeholder="1 hour - 2 hours" />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-check mb-3">
                         <label for="deskPrice" class="form-label">Price</label>
-                        <input type="text" class="form-control form-control-sm" id="deskPrice" placeholder="PHP"/>
+                        <input type="text" class="form-control form-control-sm" id="deskPrice" placeholder="PHP" />
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-check mb-3">
                         <label for="deskHours" class="form-label">Hours</label>
-                        <input type="text" class="form-control form-control-sm" id="deskHours" placeholder="1 - 2"/>
+                        <input type="text" class="form-control form-control-sm" id="deskHours" placeholder="1 - 2" />
                     </div>
                 </div>
-                <div class="col-auto ms-auto"> <!-- Added margin for spacing -->
+                <div class="col-auto ms-auto">
                     <button type="button" class="btn btn-outline-danger remove-desk" disabled><i class="bi bi-dash-lg"></i></button> <!-- Remove button -->
                 </div>
             </div>
@@ -44,22 +44,22 @@
                 <div class="col-md-4">
                     <div class="form-check mb-3">
                         <label for="numPeople" class="form-label">No. of people</label>
-                        <input type="text" class="form-control form-control-sm" id="numPeople" placeholder="1 - 5 persons"/>
+                        <input type="text" class="form-control form-control-sm" id="numPeople" placeholder="1 - 5 persons" />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-check mb-3">
                         <label for="meetingPrice" class="form-label">Price</label>
-                        <input type="text" class="form-control form-control-sm" id="meetingPrice" placeholder="PHP"/>
+                        <input type="text" class="form-control form-control-sm" id="meetingPrice" placeholder="PHP" />
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-check mb-3">
                         <label for="meetingHours" class="form-label">Hours</label>
-                        <input type="text" class="form-control form-control-sm" id="meetingHours" placeholder="1 hour - 2 hours"/>
+                        <input type="text" class="form-control form-control-sm" id="meetingHours" placeholder="1 hour - 2 hours" />
                     </div>
                 </div>
-                <div class="col-auto ms-auto"> <!-- Added margin for spacing -->
+                <div class="col-auto ms-auto">
                     <button type="button" class="btn btn-outline-danger remove-meeting" disabled><i class="bi bi-dash-lg"></i></button> <!-- Remove button -->
                 </div>
             </div>
@@ -85,7 +85,6 @@
                             <label class="form-check-label" for="no"><strong>No</strong></label>
                         </div>
                     </div>
-                    <!-- Reduced Rates Section -->
                     <div class="form-check mb-3">
                         <label for="memberships" class="form-label">Do you offer reduced rates for long-term memberships</label>
                     </div>
@@ -103,68 +102,60 @@
                 <div class="col-md-6">
                     <div class="form-check mb-3">
                         <label for="membershipDuration" class="form-label">Duration</label>
-                        <input type="text" class="form-control form-control-sm" id="membershipDuration" placeholder="Starting Price per Week"/>
+                        <input type="text" class="form-control form-control-sm" id="membershipDuration" placeholder="Starting Price per Week" />
                     </div>
                     <div class="form-check mb-3">
                         <label for="membershipPrice" class="form-label">Price</label>
-                        <input type="text" class="form-control form-control-sm" id="membershipPrice" placeholder="PHP"/>
+                        <input type="text" class="form-control form-control-sm" id="membershipPrice" placeholder="PHP" />
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Previous and Next Buttons -->
         <div class="d-flex justify-content-end mt-4">
             <button type="button" class="btn btn-outline-secondary" id="prevButton8">Previous</button>
             <button type="button" class="btn btn-dark ms-3" id="nextButton8">Next</button>
-        </div>   
+        </div>
     </form>
 </div>
 
 <script>
-    // Function to toggle desk buttons based on checkbox state
     function toggleDeskButtons() {
         const isDeskChecked = document.getElementById('isdeskCheck').checked;
         const deskFields = document.querySelectorAll('.desk-fields input');
         const addDeskBtn = document.getElementById('add-desk-btn');
         const removeDeskBtns = document.querySelectorAll('.remove-desk');
-        
-        // Enable/disable desk fields
+
         deskFields.forEach(field => {
             field.disabled = !isDeskChecked;
         });
 
-        // Enable/disable buttons
         addDeskBtn.disabled = !isDeskChecked;
         removeDeskBtns.forEach(button => {
             button.disabled = !isDeskChecked || deskFields.length <= 1;
         });
     }
 
-    // Function to toggle meeting buttons based on checkbox state
     function toggleMeetingButtons() {
         const isMeetingChecked = document.getElementById('ismeetingCheck').checked;
         const meetingFields = document.querySelectorAll('.meeting-fields input');
         const addMeetingBtn = document.getElementById('add-meeting-btn');
         const removeMeetingBtns = document.querySelectorAll('.remove-meeting');
-        
-        // Enable/disable meeting room fields
+
         meetingFields.forEach(field => {
             field.disabled = !isMeetingChecked;
         });
 
-        // Enable/disable buttons
         addMeetingBtn.disabled = !isMeetingChecked;
         removeMeetingBtns.forEach(button => {
             button.disabled = !isMeetingChecked || meetingFields.length <= 1;
         });
     }
 
-    // Function to toggle virtual office fields (as you already have)
     function toggleVirtualOfficeFields() {
         const isVirtualChecked = document.getElementById('isvirtualCheck').checked;
         const virtualFields = document.querySelectorAll('.virtual-fields input, .virtual-fields .form-check-input');
-        
+
         virtualFields.forEach(field => {
             field.disabled = !isVirtualChecked;
         });
@@ -173,43 +164,38 @@
     function toggleVirtualOfficeFields() {
         const isVirtualChecked = document.getElementById('isvirtualCheck').checked;
         const virtualFields = document.querySelectorAll('.virtual-fields input, .virtual-fields .form-check-input');
-        
+
         virtualFields.forEach(field => {
             field.disabled = !isVirtualChecked;
         });
     }
 
-    // Function to add new desk fields
     document.querySelector('.add-desk').addEventListener('click', function() {
         const deskSection = document.querySelector('.desk-section');
         const newDeskFields = document.querySelector('.desk-fields').cloneNode(true);
-        
-        // Remove or modify ids in the cloned fields to prevent duplicates
+
         newDeskFields.querySelectorAll('[id]').forEach(function(item) {
-            item.removeAttribute('id'); // or generate new unique ids if needed
+            item.removeAttribute('id');
         });
-        
+
         deskSection.appendChild(newDeskFields);
-        toggleDeskButtons(); // Update button states after adding fields
+        toggleDeskButtons();
     });
 
 
-    // Function to add new meeting room fields
     document.querySelector('.add-meeting').addEventListener('click', function() {
         const meetingSection = document.querySelector('.meeting-section');
         const newMeetingFields = document.querySelector('.meeting-fields').cloneNode(true);
-        
-        // Remove or modify ids in the cloned fields to prevent duplicates
+
         newMeetingFields.querySelectorAll('[id]').forEach(function(item) {
-            item.removeAttribute('id'); // or generate new unique ids if needed
+            item.removeAttribute('id');
         });
 
         meetingSection.appendChild(newMeetingFields);
-        toggleMeetingButtons(); // Update button states after adding fields
+        toggleMeetingButtons();
     });
 
 
-    // Function to remove last desk fields
     document.addEventListener('click', function(e) {
         if (e.target.classList.contains('remove-desk')) {
             const deskFields = document.querySelectorAll('.desk-fields');
@@ -217,10 +203,9 @@
                 deskFields[deskFields.length - 1].remove();
             }
         }
-        toggleDeskButtons(); // Update button states after removing fields
+        toggleDeskButtons();
     });
 
-    // Function to remove last meeting fields
     document.addEventListener('click', function(e) {
         if (e.target.classList.contains('remove-meeting')) {
             const meetingFields = document.querySelectorAll('.meeting-fields');
@@ -228,10 +213,9 @@
                 meetingFields[meetingFields.length - 1].remove();
             }
         }
-        toggleMeetingButtons(); // Update button states after removing fields
+        toggleMeetingButtons();
     });
 
-    // Enable/Disable buttons on page load
     toggleDeskButtons();
     toggleMeetingButtons();
     toggleVirtualOfficeFields();

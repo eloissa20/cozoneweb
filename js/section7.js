@@ -2,7 +2,6 @@ $(document).ready(() => {
   loadLocalStorageStep7();
 });
 
-// Function to load saved data from localStorage
 function loadLocalStorageStep7() {
   if (localStorage.getItem("listSpace7") !== null) {
     let data = JSON.parse(localStorage.getItem("listSpace7"));
@@ -27,7 +26,6 @@ function loadLocalStorageStep7() {
   }
 }
 
-// Function to save data and move to the next step
 function moveToNextStepFromStep7() {
   const payOnline = $('input[name="payOnline"]:checked').val();
   const creditCards = $('input[name="creditCards"]:checked').val();
@@ -51,12 +49,10 @@ function moveToNextStepFromStep7() {
     })
   );
 
-  // Move to the next step
   $("#s7").hide();
   $("#s8").show();
 }
 
-// Function to move to the previous step
 function moveToPreviousStepFromStep7() {
   $("#s7").hide();
   $("#s6").show();

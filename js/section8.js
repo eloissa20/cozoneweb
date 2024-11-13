@@ -2,19 +2,16 @@ $(document).ready(() => {
   loadLocalStorageStep8();
 });
 
-// Function to load saved data from localStorage
 function loadLocalStorageStep8() {
   if (localStorage.getItem("listSpace8") !== null) {
     let data = JSON.parse(localStorage.getItem("listSpace8"));
 
-    // Load Desk Fields
     if (data.desks) {
       data.desks.forEach((desk) => {
         addDeskField(desk.duration, desk.price, desk.hours, desk.isChecked);
       });
     }
 
-    // Load Meeting Fields
     if (data.meetingRooms) {
       data.meetingRooms.forEach((meeting) => {
         addMeetingField(
@@ -26,7 +23,6 @@ function loadLocalStorageStep8() {
       });
     }
 
-    // Load Virtual Offices
     if (data.virtualService) {
       $(`input[name="virtualService"][value="${data.virtualService}"]`).prop(
         "checked",
@@ -51,12 +47,10 @@ function loadLocalStorageStep8() {
   }
 }
 
-// Function to save data and move to the next step
 function moveToNextStepFromStep8() {
   const desks = [];
   const meetingRooms = [];
 
-  // Collect Desk Data
   $(".desk-fields").each(function () {
     const duration = $(this).find("#duration").val();
     const price = $(this).find("#deskPrice").val();
@@ -68,7 +62,6 @@ function moveToNextStepFromStep8() {
     }
   });
 
-  // Collect Meeting Room Data
   $(".meeting-fields").each(function () {
     const numPeople = $(this).find("#numPeople").val();
     const price = $(this).find("#meetingPrice").val();
@@ -111,12 +104,10 @@ function moveToNextStepFromStep8() {
     })
   );
 
-  // Move to the next step
   $("#s8").hide();
   $("#s9").show();
 }
 
-// Function to move to the previous step
 function moveToPreviousStepFromStep8() {
   $("#s8").hide();
   $("#s7").show();

@@ -1,7 +1,7 @@
 $("#submitBtn").click((e) => {
   e.preventDefault();
 
-  const formData = new FormData(); // Initialize FormData here
+  const formData = new FormData();
 
   // Collect Desk Data
   $(".desk-fields").each(function () {
@@ -169,23 +169,23 @@ $("#submitBtn").click((e) => {
   // AJAX Call
   $.ajax({
     headers: {
-      "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"), // Include CSRF token
+      "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
     },
     type: "POST",
-    url: "./listSpace", // Ensure this is the correct URL
+    url: "./listSpace",
     data: formData,
-    contentType: false, // Important for FormData
-    processData: false, // Important for FormData
-    dataType: "json", // Expect JSON response
+    contentType: false,
+    processData: false,
+    dataType: "json",
     success: function (response) {
-      console.log(response); // Log response for debugging
+      console.log(response);
       Swal.fire({
         icon: "success",
         title: "Success",
         text: "Your request has been submitted successfully!",
       }).then(() => {
-        localStorage.clear(); // Clear local storage if needed
-        location.reload(); // Refresh the page
+        localStorage.clear();
+        location.reload();
       });
     },
     error: function (jqXHR, textStatus, errorThrown) {
@@ -199,7 +199,6 @@ $("#submitBtn").click((e) => {
   });
 });
 
-// Function to move to the previous step
 function moveToPreviousStepFromStep9() {
   $("#s9").hide();
   $("#s8").show();

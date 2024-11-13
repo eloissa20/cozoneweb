@@ -1,17 +1,6 @@
-@extends('layouts.app')
+@extends('coworker_side.side')
 
 @section('content')
-
-  {{-- <div class="container">
-        <div class="grid">
-            <div class="item">
-            </div>
-            <div class="item"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-            <div class="item"></div>
-        </div>
-    </div> --}}
 
 <div class="mb-3">
     <h4>Admin : {{ Auth::user()->name }}</h4>
@@ -29,38 +18,38 @@
                     </div>
                     {{-- <div class="col-6 align-self-end text-end">
                         <img src="{{ asset('img/poster.jpg') }}" class="img-fluid illustration-img"
-                            alt="">
-                    </div> --}}
-                </div>
+                    alt="">
+                </div> --}}
             </div>
         </div>
     </div>
-    <div class="col-12 col-md-6 d-flex">
-        <div class="card flex-fill border-0">
-            <div class="card-body py-4">
-                <div class="d-flex align-items-start">
-                    <div class="flex-grow-1">
-                        <h4 class="mb-2">
-                            {{ $data['total_users'] }} {{-- Display the total users --}}
-                        </h4>
-                        <p class="mb-2">
-                            Total Users
-                        </p>
-                        <div class="mb-0">
-                            <span class="badge text-success me-2">
-                                {{ $data['percentage_change'] > 0 ? '+' : '' }}{{ $data['percentage_change'] }}% {{-- Display percentage change --}}
-                            </span>
-                            <span class="text-muted">
-                                Since Last Month
-                            </span>
-                        </div>
+</div>
+<div class="col-12 col-md-6 d-flex">
+    <div class="card flex-fill border-0">
+        <div class="card-body py-4">
+            <div class="d-flex align-items-start">
+                <div class="flex-grow-1">
+                    <h4 class="mb-2">
+                        {{ $data['total_users'] }}
+                    </h4>
+                    <p class="mb-2">
+                        Total Users
+                    </p>
+                    <div class="mb-0">
+                        <span class="badge text-success me-2">
+                            {{ $data['percentage_change'] > 0 ? '+' : '' }}{{ $data['percentage_change'] }}%
+                        </span>
+                        <span class="text-muted">
+                            Since Last Month
+                        </span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- Table Element -->
+</div>
+
 <div class="card border-0">
     <div class="card-header">
         <h5 class="card-title">Users Table</h5>
@@ -89,50 +78,7 @@
         </table>
     </div>
 </div>
-<div class="card border-0">
-    <div class="card-header">
-        <h5 class="card-title">
-            Listed Space Table
-        </h5>
-        <h6 class="card-subtitle text-muted">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum ducimus,
-            necessitatibus reprehenderit itaque!
-        </h6>
-    </div>
-    <div class="card-body">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Handle</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td colspan="2">Larry the Bird</td>
-                    <td>@twitter</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
 
-<!-- Include DataTables JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
