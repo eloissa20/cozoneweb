@@ -43,7 +43,7 @@
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="{{ route('coworker_side.myCoworkingSpace') }}" class="sidebar-link">
+                        <a href="{{ route('myCoworkingSpace') }}" class="sidebar-link">
                             <i class="bi bi-building-fill"></i>
                             My Coworking Space
                         </a>
