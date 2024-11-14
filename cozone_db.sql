@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 03, 2024 at 09:09 AM
+-- Generation Time: Oct 04, 2024 at 09:50 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -52,8 +52,11 @@ CREATE TABLE `list_space_tbl` (
   `type_of_space` varchar(255) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `opening_date` date DEFAULT NULL,
-  `available_days` date DEFAULT NULL,
-  `operating_hours` date DEFAULT NULL,
+  `available_days_from` varchar(255) DEFAULT NULL,
+  `available_days_to` varchar(255) DEFAULT NULL,
+  `exceptions` varchar(255) DEFAULT NULL,
+  `operating_hours_from` varchar(255) DEFAULT NULL,
+  `operating_hours_to` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
   `instagram` varchar(255) DEFAULT NULL,
@@ -98,8 +101,11 @@ CREATE TABLE `list_space_tbl` (
 -- Dumping data for table `list_space_tbl`
 --
 
-INSERT INTO `list_space_tbl` (`id`, `role`, `coworking_space_name`, `coworking_space_address`, `space_name`, `type_of_space`, `description`, `opening_date`, `available_days`, `operating_hours`, `email`, `phone`, `instagram`, `facebook`, `contact_no`, `basics`, `seats`, `equipment`, `facilities`, `accessibility`, `perks`, `location`, `telephone`, `country`, `unit`, `postal`, `city`, `tables`, `capacity`, `meeting_rooms`, `virtual_offices`, `measurement_unit`, `size`, `header_image`, `additional_images`, `pay_online`, `credit_cards`, `eWallet`, `desk_fields`, `meeting_fields`, `virtual_service`, `membership`, `membership_duration`, `membership_price`, `short_term`, `free_pass`, `short_term_details`, `free_pass_details`) VALUES
-(1, 'Owner', 'test', 'test', 'test', 'Coworking', 'test', '2024-10-04', '2024-10-04', '2024-10-04', 'test', 'test', 'test', 'test', 'test', '\"[]\"', '\"[\\\"Couches\\\",\\\"Beanbag\\\"]\"', '\"[\\\"Printer\\\",\\\"Projector\\\"]\"', '\"[]\"', '\"[]\"', '\"[]\"', 'test', 'test', 'test', 'test', 'test', 'test', 1, 1, 1, 1, 'feet', 1, 'uploads/header/1727936422.png', NULL, 'yes', 'undefined', 'yes', '[\"{\\\"duration\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\",\"{\\\"duration\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\"]', '[\"{\\\"numPeople\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\",\"{\\\"numPeople\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\"]', 'yes', 'no', 1, 1, 'enable', 'disable', 'test', NULL);
+INSERT INTO `list_space_tbl` (`id`, `role`, `coworking_space_name`, `coworking_space_address`, `space_name`, `type_of_space`, `description`, `opening_date`, `available_days_from`, `available_days_to`, `exceptions`, `operating_hours_from`, `operating_hours_to`, `email`, `phone`, `instagram`, `facebook`, `contact_no`, `basics`, `seats`, `equipment`, `facilities`, `accessibility`, `perks`, `location`, `telephone`, `country`, `unit`, `postal`, `city`, `tables`, `capacity`, `meeting_rooms`, `virtual_offices`, `measurement_unit`, `size`, `header_image`, `additional_images`, `pay_online`, `credit_cards`, `eWallet`, `desk_fields`, `meeting_fields`, `virtual_service`, `membership`, `membership_duration`, `membership_price`, `short_term`, `free_pass`, `short_term_details`, `free_pass_details`) VALUES
+(1, 'Owner', 'test', 'test', 'test', 'Coworking', 'test', '2024-10-04', '2024-10-04', NULL, NULL, '2024-10-04', NULL, 'test', 'test', 'test', 'test', 'test', '\"[]\"', '\"[\\\"Couches\\\",\\\"Beanbag\\\"]\"', '\"[\\\"Printer\\\",\\\"Projector\\\"]\"', '\"[]\"', '\"[]\"', '\"[]\"', 'test', 'test', 'test', 'test', 'test', 'test', 1, 1, 1, 1, 'feet', 1, 'uploads/header/1727936422.png', NULL, 'yes', 'undefined', 'yes', '[\"{\\\"duration\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\",\"{\\\"duration\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\"]', '[\"{\\\"numPeople\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\",\"{\\\"numPeople\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\"]', 'yes', 'no', 1, 1, 'enable', 'disable', 'test', NULL),
+(2, 'Owner', 'test', 'test', 'test', 'Coworking', 'test', '2024-10-05', '2024-10-06', NULL, NULL, '2024-10-07', NULL, 'test', '696969', 'test', 'test', '09611915869', '\"[]\"', '\"[\\\"Beanbag\\\"]\"', '\"[\\\"Printer\\\"]\"', '\"[\\\"Kitchen\\\"]\"', '\"[\\\"Parking\\\"]\"', '\"[\\\"Free Drinking Water\\\"]\"', 'Manila', '696969', 'Philippines', 'Unit69', '6969', 'Etivac', 2, 3, 4, 5, 'meters', 10, 'uploads/header/1728009958.png', NULL, 'yes', 'undefined', 'yes', '[\"{\\\"duration\\\":\\\"1\\\",\\\"price\\\":\\\"100\\\",\\\"hours\\\":\\\"2\\\"}\"]', '[\"{\\\"numPeople\\\":\\\"10\\\",\\\"price\\\":\\\"1500\\\",\\\"hours\\\":\\\"1\\\"}\"]', 'yes', 'no', 2, 1500, 'enable', 'disable', 'testing lang', NULL),
+(3, 'Owner', 'test', 'test', 'Anywhere', 'Coworking', 'asdasdasd', '2024-10-04', 'Monday', 'Sunday', 'saturday', '1', '2', 'coworker@example.com', '6966966996', 'coworker', 'coworker', '69696969', '\"[\\\"Wifi\\\",\\\"Air Conditioned\\\"]\"', '\"[\\\"Couches\\\",\\\"Beanbag\\\"]\"', '\"[\\\"Printer\\\",\\\"Projector\\\"]\"', '\"[\\\"Kitchen\\\"]\"', '\"[\\\"Parking\\\"]\"', '\"[\\\"Free Drinking Water\\\"]\"', 'Manila', '123123', 'Philippines', '69', '1234', 'BGC', 1, 1, 1, 1, 'meters', 5, 'uploads/header/1728027364.jpg', NULL, 'yes', 'undefined', 'yes', '[\"{\\\"duration\\\":\\\"1\\\",\\\"price\\\":\\\"100\\\",\\\"hours\\\":\\\"1\\\"}\"]', '[\"{\\\"numPeople\\\":\\\"3\\\",\\\"price\\\":\\\"1500\\\",\\\"hours\\\":\\\"1\\\"}\"]', 'yes', 'no', 1, 1500, 'enable', 'disable', 'Sheesh', NULL),
+(4, 'Owner', 'Cozone', 'Manila', 'Cozone', 'Coworking', 'Cozone', '2024-10-05', 'Monday', 'Sunday', 'saturday', '1', '3', 'coworker@example.com', '096969696', 'test', 'test', '096969696', '\"[\\\"Air Conditioned\\\"]\"', '\"[\\\"Couches\\\",\\\"Beanbag\\\"]\"', '\"[]\"', '\"[]\"', '\"[]\"', '\"[\\\"Free Drinking Water\\\",\\\"Free Snacks\\\"]\"', 'Manila', '09696969', 'Philippines', '689', '6546', 'Mandaluyong', 1, 1, 1, 1, 'meters', 25, 'uploads/header/1728027832.jpg', NULL, 'yes', 'undefined', 'yes', '[\"{\\\"duration\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\"]', '[\"{\\\"numPeople\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\"]', 'yes', 'no', 1, 1, 'enable', 'disable', 'sheesh', NULL);
 
 -- --------------------------------------------------------
 
@@ -239,7 +245,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `list_space_tbl`
 --
 ALTER TABLE `list_space_tbl`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `migrations`

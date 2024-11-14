@@ -24,13 +24,74 @@
                     <label for="openingDate" class="form-label">Opening Date</label>
                     <input type="date" class="form-control" id="openingDate" />
                 </div>
-                <div class="form-check mb-3">
+                <div class="form-check">
                     <label for="availableDays" class="form-label">Available Days</label>
-                    <input type="date" class="form-control" id="availableDays" />
+                    <div class="row">
+                        <div class="col-md-6 d-flex align-items-center">
+                            <label for="availableDaysFrom" class="form-label mb-0 me-2">From</label>
+                            <input type="text" class="form-control" id="availableDaysFrom" />
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center">
+                            <label for="availableDaysTo" class="form-label mb-0 me-2">To</label>
+                            <input type="text" class="form-control" id="availableDaysTo" />
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="form-check form-group radio-group p-2 mb-0">
+                            <label for="excepts" class="form-label" style="font-size: 0.65rem; font-weight: 100;">Except:</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="exceptions" id="monday" value="monday">
+                                <label class="form-check-label" for="monday" style="font-size: 0.65rem; font-weight: 100;">Monday</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="exceptions" id="tuesday" value="tuesday">
+                                <label class="form-check-label" for="tuesday" style="font-size: 0.65rem; font-weight: 100;">Tuesday</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="exceptions" id="tuesday" value="tuesday">
+                                <label class="form-check-label" for="tuesday" style="font-size: 0.65rem; font-weight: 100;">Wednesday</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="exceptions" id="thursday" value="thursday">
+                                <label class="form-check-label" for="thursday" style="font-size: 0.65rem; font-weight: 100;">Thursday</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="exceptions" id="friday" value="friday">
+                                <label class="form-check-label" for="friday" style="font-size: 0.65rem; font-weight: 100;">Friday</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="exceptions" id="saturday" value="saturday">
+                                <label class="form-check-label" for="saturday" style="font-size: 0.65rem; font-weight: 100;">Saturday</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="exceptions" id="sunday" value="sunday">
+                                <label class="form-check-label" for="sunday" style="font-size: 0.65rem; font-weight: 100;">Sunday</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                
                 <div class="form-check mb-3">
                     <label for="operatingHours" class="form-label">Operating Hours</label>
-                    <input type="date" class="form-control" id="operatingHours" />
+                    {{-- <input type="date" class="form-control" id="operatingHours" /> --}}
+                    <div class="row">
+                        <div class="col-md-6 d-flex align-items-center">
+                            <label for="operatingHoursFrom" class="form-label mb-0 me-2">From</label>
+                            <input type="text" class="form-control" id="operatingHoursFrom" />
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center">
+                            <label for="operatingHoursTo" class="form-label mb-0 me-2">To</label>
+                            <input type="text" class="form-control" id="operatingHoursTo" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 d-flex align-items-center">
+                            <label for="operatingHoursFrom" class="form-label mb-0 ms-auto" style="font-size: 0.75rem; font-weight: 100;">What time do you open?</label>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center">
+                            <label for="operatingHoursTo" class="form-label mb-0 ms-auto" style="font-size: 0.75rem; font-weight: 100;">What time do you close?</label>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -44,9 +105,10 @@
                     <input type="email" class="form-control" id="email" />
                 </div>
                 <div class="form-check">
-                    <label for="phone" class="form-label">Telephone No.</label>
-                    <input type="text" class="form-control" id="phone" />
+                    <label for="facebook" class="form-label">Facebook</label>
+                    <input type="text" class="form-control" id="facebook" />
                 </div>
+                
                 <div class="form-check">
                     <label for="instagram" class="form-label">Instagram</label>
                     <input type="text" class="form-control" id="instagram" />
@@ -54,8 +116,8 @@
             </div>
             <div class="col-md-6">
                 <div class="form-check">
-                    <label for="facebook" class="form-label">Facebook</label>
-                    <input type="text" class="form-control" id="facebook" />
+                    <label for="phone" class="form-label">Telephone No.</label>
+                    <input type="text" class="form-control" id="phone" />
                 </div>
                 <div class="form-check">
                     <label for="contactNo" class="form-label">Contact No.</label>
@@ -65,7 +127,7 @@
         </div>
 
         <div class="text-end mt-3">
-            <button type="button" class="btn btn-light" id="prevButton2">Previous</button>
+            {{-- <button type="button" class="btn btn-light" id="prevButton2">Previous</button> --}}
             <button type="button" class="btn btn-dark ms-3" id="nextButton2">Next</button>
         </div>
     </form>
