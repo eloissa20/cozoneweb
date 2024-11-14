@@ -1,8 +1,4 @@
 <style>
-    body {
-        background-color: #eeeeee;
-    }
-
     .main-container {
         display: flex;
         justify-content: space-between;
@@ -13,7 +9,7 @@
     .form-container {
         width: 45%;
         padding: 40px;
-        border: 2px solid #000000;
+        border: 1px solid #000000;
         border-radius: 10px;
         background-color: white;
     }
@@ -31,7 +27,7 @@
 </style>
 
 <div class="container main-container">
-    <div class="form-container d-flex flex-column justify-content-center align-items-center bg-secondary">
+    <div class="form-container d-flex flex-column justify-content-center bg-secondary">
         <form id="section1" class="w-100">
             <div class="form-group radio-group text-center mb-5">
                 <div class="form-check form-check-inline">
@@ -47,21 +43,21 @@
                     <label class="form-check-label" for="roleMember"><strong>Member</strong></label>
                 </div>
             </div>
-
+    
             <div class="form-group mb-4">
                 <input type="text" class="form-control" id="coworkingSpaceName" placeholder="Name of your coworking space">
             </div>
-
+    
             <div class="form-group mb-4">
                 <input type="text" class="form-control" id="coworkingSpaceAddress" placeholder="Address/City">
             </div>
-
+    
             <div class="text-center">
                 <button type="button" class="btn btn-dark" id="nextButton1">Done</button>
             </div>
         </form>
     </div>
-
+    
     <div class="center-text">
         ADD YOUR COWORKING SPACE IN COZONE
     </div>

@@ -74,7 +74,7 @@
                             <a class="nav-link" href="{{ route('coworker_side.listSpace') }}">List Space</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
+                            <a href="#" data-bs-toggle="dropdown" class="pe-md-0">
                                 <img src="{{ asset('assets/img/profile.png') }}" class="avatar img-fluid rounded" alt="">
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
