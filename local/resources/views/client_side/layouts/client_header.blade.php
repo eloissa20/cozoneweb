@@ -9,23 +9,31 @@
     <title>{{ config('app.name', 'Cozone') }} | Client @yield('title')</title>
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.9.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm w-100" style="z-index: 2; position: fixed; top: 0; left: 0;">
+        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm w-100"
+            style="z-index: 2; position: fixed; top: 0; left: 0;">
             <div class="container d-flex justify-content-between align-items-center">
                 <a class="navbar-brand d-flex align-items-center" href="{{ url('/client_side/home') }}">
-                    <img src="{{ asset('assets/logo.png') }}"
-                        alt="Logo" style="height: 40px;">
+                    <img src="{{ asset('assets/logo.png') }}" alt="Logo" style="height: 40px;">
                 </a>
 
                 <div class="d-flex">
-                    <a class="btn btn-outline-secondary me-2" href="{{ route('client_side.how.reserve') }}">How
-                        to</a>
-                    <a class="btn btn-outline-secondary me-2" href="{{ route('client_side.about') }}">About
-                        Us</a>
+                    <a class="btn btn-outline-secondary me-2" href="{{ route('client_side.how.reserve') }}">How to</a>
+                    <a class="btn btn-outline-secondary me-2" href="{{ route('client_side.about') }}">About Us</a>
                     <a class="btn btn-outline-secondary me-2" href="#">List Space</a>
                 </div>
                 <div class="d-flex align-items-center">
@@ -44,17 +52,10 @@
         </main>
     </div>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
-
-
     <style>
         a {
             text-decoration: none;
-            color: #888;
+            color: #000;
         }
 
         body {
