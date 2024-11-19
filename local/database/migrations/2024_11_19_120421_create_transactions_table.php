@@ -17,10 +17,21 @@ return new class extends Migration {
             $table->foreignIdFor(User::class)->constrained()->onDelete('cascade');
             $table->integer('space_id');
             $table->foreign('space_id')->references('id')->on('list_space_tbl')->onDelete('cascade');
-            $table->string('invoice')->nullable();
-            $table->decimal('amount')->nullable();
-            $table->string('payment_method')->nullable();
-            $table->string('status')->nullable();
+            $table->date('reservation_date'); // Date of the reservation
+            $table->integer('hours'); // Hours reserved
+            $table->integer('guests'); // Number of guests
+            $table->string('name'); // Full name
+            $table->string('email'); // Email address
+            $table->string('company')->nullable(); // Company name (nullable)
+            $table->string('contact'); // Contact number
+            $table->time('arrival_time'); // Estimated arrival time
+
+            // Amount for the transaction
+            $table->decimal('amount', 10, 2)->nullable();
+
+            // Payment method and status fields
+            $table->string('payment_method', 50)->nullable();
+            $table->enum('status', ['pending', 'completed', 'failed', 'refunded'])->default('pending');
             $table->timestamps();
         });
     }

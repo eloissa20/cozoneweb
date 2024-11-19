@@ -38,12 +38,10 @@
                         <table id="data-table" class="table table-responsive" style="width: 100%;">
                             <thead>
                                 <tr>
-                                    <th>Invoice</th>
                                     <th>Date</th>
                                     <th>Space Name</th>
                                     <th>Amount</th>
                                     <th>Payment Methods</th>
-                                    <th>Location</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
@@ -71,9 +69,7 @@
                         alert('Error: ' + xhr.responseText);
                     }
                 },
-                columns: [{
-                        data: 'invoice'
-                    },
+                columns: [
                     {
                         data: 'date'
                     },
@@ -85,9 +81,6 @@
                     },
                     {
                         data: 'payment_method'
-                    },
-                    {
-                        data: 'location'
                     },
                     {
                         data: 'status'

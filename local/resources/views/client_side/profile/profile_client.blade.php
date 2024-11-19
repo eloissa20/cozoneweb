@@ -59,11 +59,11 @@
                                 <label for="gender">Gender</label>
                                 <select class="form-control" id="gender" name="gender">
                                     <option selected disabled>Not Set</option>
-                                    <option hidden value="Male" {{ $user->gender === 'Male' ? 'selected' : '' }}>Male
+                                    <option hidden value="Male" {{ $user->gender === 'Male' ? 'selected disabled' : '' }}>Male
                                     </option>
-                                    <option hidden value="Female" {{ $user->gender === 'Female' ? 'selected' : '' }}>Female
+                                    <option hidden value="Female" {{ $user->gender === 'Female' ? 'selected disabled' : '' }}>Female
                                     </option>
-                                    <option hidden value="Other" {{ $user->gender === 'Other' ? 'selected' : '' }}>Other
+                                    <option hidden value="Other" {{ $user->gender === 'Other' ? 'selected disabled' : '' }}>Other
                                     </option>
                                 </select>
                             </div>
@@ -85,7 +85,7 @@
 
     <script>
         $(document).ready(function() {
-            console.log('Hello')
+
         });
 
         function toggleInputs() {

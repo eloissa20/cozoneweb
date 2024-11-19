@@ -152,7 +152,8 @@
                             </div>
 
                             <div class="d-flex justify-content-between">
-                                <button type="button" class="btn btn-outline-secondary"><a href="{{ route('client_side.details', ['id' => $space->id]) }}">Go Back</a></button>
+                                <button type="button" class="btn btn-outline-secondary"><a
+                                        href="{{ route('client_side.details', ['id' => $space->id]) }}">Go Back</a></button>
                                 <button type="submit" class="btn btn-dark">Confirm and Pay</button>
                             </div>
                         </form>
@@ -164,8 +165,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
-                            <img src="{{ asset($space->header_image) }}"
-                                style="height: 150px; width: 50%;" alt="Space">
+                            <img src="{{ asset($space->header_image) }}" style="height: 150px; width: 50%;" alt="Space">
                             <div class="ms-3">
                                 <h5 class="mb-0">{{ $space->coworking_space_name }}</h5>
                                 <p class="text-muted">★★★★★ 0 Reviews</p>
@@ -173,23 +173,34 @@
                         </div>
                     </div>
                     <div class="card-body summary-section">
-                        <p><strong>1 Guest</strong> <br> 05/20/2024</p>
+                        <p><strong>{{ $transaction->guests }} Guest</strong> <br> {{ $transaction->reservation_date }}</p>
                         <p>₱ 80.00 x 1</p>
                         <div class="d-flex justify-content-between">
                             <p>Subtotal</p>
                             <p>₱ 80.00</p>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <p>Discount</p>
-                            <p>Code</p>
                         </div>
                         <hr>
                         <div class="d-flex justify-content-between">
                             <p><strong>Total</strong></p>
                             <p><strong>₱ 80.00</strong></p>
                         </div>
-                        <p class="text-muted mt-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua.</p>
+                        <p class="text-muted mt-3"> Welcome to {{ $space->coworking_space_name }}, a vibrant coworking
+                            space located at
+                            {{ $space->unit }}, {{ $space->city }}, {{ $space->location }}, {{ $space->country }},
+                            offering a dynamic environment for freelancers, startups, and established businesses.
+                            Our facility features various workspace types, including private offices and meeting rooms,
+                            with a seating capacity of {{ $space->capacity }}. We are open from
+                            {{ $space->available_days_from }}
+                            to {{ $space->available_days_to }} (except on {{ $space->exceptions }}), operating between
+                            {{ $space->operating_hours_from }} and {{ $space->operating_hours_to }}.
+
+                            Membership options include short-term and long-term plans at competitive prices, with various
+                            payment methods accepted.
+                            For inquiries, reach us at {{ $space->email }} or {{ $space->contact_no }} /
+                            {{ $space->phone }},
+                            and
+                            connect with us on Instagram ({{ $space->instagram }}) and Facebook ({{ $space->facebook }}).
+                        </p>
                     </div>
                 </div>
             </div>

@@ -23,4 +23,9 @@ class Cowork extends Model
     // public function user_cowork(){
     //     return $this->belongsTo(User::class);
     // }
+
+    public function cowork_reviews()
+    {
+        return $this->hasMany(Reviews::class, 'cowork_id');
+    }
 }

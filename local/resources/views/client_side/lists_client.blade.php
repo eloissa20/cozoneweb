@@ -140,8 +140,11 @@
                                 <p class="text-muted">{{ $item->coworking_space_address }}</p>
                                 <p><span class="rating">★★★★★</span> <small>(21)</small></p>
                                 <p class="price-tag">Price at ₱{{ $item->membership_price }}</p>
-                                <a href="{{ route('client_side.details', ['id' => $item->id]) }}"
-                                    class="btn btn-outline-dark btn-sm">View Details</a>
+                                <form action="{{ route('client_side.details', ['id' => $item->id]) }}" method="POST"
+                                    style="display:inline;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-outline-dark btn-sm">View Details</button>
+                                </form>
                             </div>
                         </div>
                     @endforeach
@@ -190,7 +193,7 @@
             $(document).on('click', '.add_to_favorite, .remove_to_favorite', function() {
                 const itemId = $(this).data('id');
                 const isFavorite = $(this).hasClass(
-                'remove_to_favorite');
+                    'remove_to_favorite');
 
                 $.ajax({
                     url: isFavorite ? '{{ route('client_side.profile.favorite.remove.space') }}' :
@@ -206,7 +209,7 @@
                         });
                         if (spaceIndex !== -1) {
                             spaces.data[spaceIndex].isFavorite = !
-                            isFavorite;
+                                isFavorite;
                         }
 
                         const searchTerm = $('#search').val().toLowerCase();
@@ -218,11 +221,8 @@
                         });
 
                         renderSpaces(filteredSpaces);
-                        alert(response.message);
                     },
-                    error: function() {
-                        alert('Failed to update favorite.');
-                    }
+                    error: function() {}
                 });
             });
         });

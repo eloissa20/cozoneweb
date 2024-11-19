@@ -127,8 +127,12 @@
                                     <h5 class="fw-bold">{{ $item->coworking_space_name }}</h5>
                                     <p>{{ $item->coworking_space_address }}</p>
                                     <p>&#9733;&#9733;&#9733;&#9733;&#9733;</p>
-                                    <a href="{{ route('client_side.details', ['id' => $item->id]) }}"
-                                        class="btn btn-outline-dark btn-sm">View Details</a>
+
+                                    <form action="{{ route('client_side.details', ['id' => $item->id]) }}" method="POST"
+                                        style="display:inline;">
+                                        @csrf
+                                        <button type="submit" class="btn btn-outline-dark btn-sm">View Details</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -181,7 +185,7 @@
             $(document).on('click', '.add_to_favorite, .remove_to_favorite', function() {
                 const itemId = $(this).data('id');
                 const isFavorite = $(this).hasClass(
-                'remove_to_favorite');
+                    'remove_to_favorite');
 
                 $.ajax({
                     url: isFavorite ? '{{ route('client_side.profile.favorite.remove.space') }}' :
@@ -197,7 +201,7 @@
                         });
                         if (spaceIndex !== -1) {
                             spaces.data[spaceIndex].isFavorite = !
-                            isFavorite;
+                                isFavorite;
                         }
 
                         const searchTerm = $('.form-control').val().toLowerCase();
@@ -209,10 +213,9 @@
                         });
 
                         renderSpaces(filteredSpaces);
-                        alert(response.message);
                     },
                     error: function() {
-                        alert('Failed to update favorite.');
+
                     }
                 });
             });

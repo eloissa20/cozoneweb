@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\TransactionController;
 use App\Models\Cowork;
 use App\Models\Favorites;
+use App\Models\Transactions;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ClientController;
@@ -21,8 +24,9 @@ use Illuminate\Http\Request;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
+
 Route::middleware(['preventBackHistory'])->group(function () {
 
     Auth::routes();
@@ -53,22 +57,28 @@ Route::middleware(['preventBackHistory'])->group(function () {
             return view('client_side.home_client', ['spaces' => $spaces]);
         })->name('client_side.home');
 
-        Route::get('/client_side/details/{id}', function ($id) {
+        //details
+        Route::post('/client_side/details/{id}', [ClientController::class, 'show_cowork_details'])->name('client_side.details');
+        Route::post('/client_side/details/reserve/{id}', [TransactionController::class, 'processReservation'])->name('client_side.details.reserve');
+
+
+        //reviews
+        Route::post('/client_side/reviews/add/{spaceId}', [ReviewController::class, 'store'])->name('client_side.review.add');
+        Route::put('/client_side/reviews/update/{id}', [ReviewController::class, 'update'])->name('client_side.review.update');
+        Route::delete('/client_side/reviews/delete/{id}', [ReviewController::class, 'destroy'])->name('client_side.review.delete');
+
+        //payment
+        Route::get('/client_side/payment/pay/{id}/{transactionId}', function ($id, $transactionId) {
             $space = Cowork::find($id);
             if (!$space) {
                 return abort(404, 'Space not found');
             }
 
-            return view('client_side.details_client', ['space' => $space,]);
-        })->name('client_side.details');
-
-        Route::get('/client_side/payment/pay/{id}', function ($id) {
-            $space = Cowork::find($id);
-            if (!$space) {
-                return abort(404, 'Space not found');
+            $transaction = Transactions::find($transactionId);
+            if(!$transaction){
+                return abort( 404, 'Transaction not found');
             }
-
-            return view('client_side.payment.payment_client', ['space' => $space]);
+            return view('client_side.payment.payment_client', ['space' => $space, 'transaction' => $transaction]);
         })->name('client_side.payment');
 
         Route::get('/client_side/payment/success/{id}', function ($id) {
