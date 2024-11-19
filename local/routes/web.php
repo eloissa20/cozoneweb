@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Cowork;
+use App\Models\Favorites;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ClientController;
@@ -38,6 +39,17 @@ Route::middleware(['preventBackHistory'])->group(function () {
 
             $spaces = $query->paginate(6);
 
+            $user = Auth::user();
+            $favoritedSpaceIds = [];
+
+            if ($user) {
+                $favoritedSpaceIds = Favorites::where('user_id', $user->id)->pluck('space_id')->toArray();
+            }
+
+            foreach ($spaces as $space) {
+                $space->isFavorite = in_array($space->id, $favoritedSpaceIds);
+            }
+
             return view('client_side.home_client', ['spaces' => $spaces]);
         })->name('client_side.home');
 
@@ -71,15 +83,23 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('/client_side/lists', function (Request $request) {
             $query = Cowork::query();
 
-            // Check if a search term is present
-            if ($request->has('search') && !empty($request->search)) {
+            if ($request->has('search')) {
                 $query->where('coworking_space_name', 'LIKE', '%' . $request->search . '%')
                     ->orWhere('coworking_space_address', 'LIKE', '%' . $request->search . '%');
             }
 
-            // Get paginated results
-            $spaces = $query->paginate(10);
+            $spaces = $query->paginate(6);
 
+            $user = Auth::user();
+            $favoritedSpaceIds = [];
+
+            if ($user) {
+                $favoritedSpaceIds = Favorites::where('user_id', $user->id)->pluck('space_id')->toArray();
+            }
+
+            foreach ($spaces as $space) {
+                $space->isFavorite = in_array($space->id, $favoritedSpaceIds);
+            }
             return view('client_side.lists_client', ['spaces' => $spaces]);
         })->name('client_side.lists');
 
@@ -116,6 +136,8 @@ Route::middleware(['preventBackHistory'])->group(function () {
 
         Route::delete('/client_side/profile/favorite/remove', [ClientController::class, 'remove_favorite'])->name('client_side.profile.favorite.remove');
 
+        Route::delete('/client_side/profile/favorite/remove/space', [ClientController::class, 'remove_favorite_by_space'])->name('client_side.profile.favorite.remove.space');
+
         Route::post('/client_side/profile/favorite/add', [ClientController::class, 'add_to_favorite'])->name('client_side.profile.favorite.add');
 
         Route::get('/client_side/profile/favorites', function () {
@@ -130,10 +152,14 @@ Route::middleware(['preventBackHistory'])->group(function () {
     Route::middleware(['auth', 'userAuth:2'])->group(function () {
 
         Route::get('/coworker_side/coworker', [CoworkerController::class, 'viewDashboard'])->name('coworker_side.coworker');
+
         Route::get('/coworker_side/listSpace', [CoworkerController::class, 'viewListSpace'])->name('coworker_side.listSpace');
+
         Route::post('/coworker_side/listSpace', [CoworkerController::class, 'submitListSpace'])->name('listSpace');
 
         Route::get('/coworker_side/myCoworkingSpace', [CoworkerController::class, 'viewmyCoworkingSpace'])->name('myCoworkingSpace');
+
+        Route::get('/coworker_side/reviews', [CoworkerController::class, 'viewReviews'])->name('reviews');
 
     });
 

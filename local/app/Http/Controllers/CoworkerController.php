@@ -143,6 +143,8 @@ class CoworkerController extends Controller
             'unit' => $request->input('unit'),
             'postal' => $request->input('postal'),
             'city' => $request->input('city'),
+            'latitude' => $request->input('latitude'),
+            'longitude' => $request->input('longitude'),
             'tables' => $request->input('tables'),
             'capacity' => $request->input('capacity'),
             'meeting_rooms' => $request->input('meetingRoomsCount'),
@@ -168,6 +170,11 @@ class CoworkerController extends Controller
         DB::table('list_space_tbl')->insert($data);
 
         return response()->json(['message' => 'Data inserted successfully.']);
+    }
+
+    public function viewReviews()
+    {
+        return view('coworker_side.reviews');
     }
 
 }
