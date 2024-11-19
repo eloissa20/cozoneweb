@@ -211,7 +211,7 @@ a.sidebar-link {
 }
 
 .nav-link.active {
-    background-color: rgb(184, 184, 184);
+    background-color: gray;
     color: white;
 }
 
@@ -235,4 +235,3 @@ a.sidebar-link {
     height: 40px;
     border-radius: 50%;
 }
-

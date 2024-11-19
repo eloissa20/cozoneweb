@@ -133,7 +133,8 @@
                         <div class="col-md-4 space-card">
                             <div class="coworking-card position-relative">
                                 <img src="{{ asset($item->header_image) }}" alt="Coworking Space Image" class="img-fluid">
-                                <i class="favorite-heart bi bi-heart-fill fs-3 btn add_to_favorite"
+                                <i class="favorite-heart bi bi-heart-fill fs-3 btn
+                                    {{ $item->isFavorite ? 'text-danger remove_to_favorite' : 'add_to_favorite' }}"
                                     data-id="{{ $item->id }}"></i>
                                 <h6 class="mt-2">{{ $item->coworking_space_name }}</h6>
                                 <p class="text-muted">{{ $item->coworking_space_address }}</p>
@@ -169,37 +170,58 @@
 
                 spaces.forEach(space => {
                     spaceContainer.append(`
-                <div class="col-md-4">
-                    <div class="coworking-card position-relative">
-                        <img src="{{ asset('${space.header_image}') }}" alt="Coworking Space Image" class="img-fluid">
-                        <i class="favorite-heart bi bi-heart-fill fs-3 btn add_to_favorite" data-id="${space.id}"></i>
-                        <h6 class="mt-2">${space.coworking_space_name}</h6>
-                        <p class="text-muted">${space.coworking_space_address}</p>
-                        <p><span class="rating">★★★★★</span> <small>(21)</small></p>
-                        <p class="price-tag">Price at ₱${space.membership_price}</p>
-                        <a href="{{ route('client_side.details', '') }}/${space.id}" class="btn btn-outline-dark btn-sm">View Details</a>
-                    </div>
-                </div>
-            `);
+        <div class="col-md-4 space-card">
+            <div class="coworking-card position-relative">
+                <img src="{{ asset('${space.header_image}') }}" alt="Coworking Space Image" class="img-fluid">
+                <i class="favorite-heart bi bi-heart-fill fs-3 btn
+                    ${space.isFavorite ? 'text-danger remove_to_favorite' : 'add_to_favorite'}"
+                    data-id="${space.id}"></i>
+                <h6 class="mt-2">${space.coworking_space_name}</h6>
+                <p class="text-muted">${space.coworking_space_address}</p>
+                <p><span class="rating">★★★★★</span> <small>(21)</small></p>
+                <p class="price-tag">Price at ₱${space.membership_price}</p>
+                <a href="{{ url('client_side/details') }}/${space.id}" class="btn btn-outline-dark btn-sm">View Details</a>
+            </div>
+        </div>
+    `);
                 });
             }
 
-            $('.add_to_favorite').on('click', function() {
+            $(document).on('click', '.add_to_favorite, .remove_to_favorite', function() {
                 const itemId = $(this).data('id');
+                const isFavorite = $(this).hasClass(
+                'remove_to_favorite');
+
                 $.ajax({
-                    url: '{{ route('client_side.profile.favorite.add') }}',
-                    method: 'POST',
+                    url: isFavorite ? '{{ route('client_side.profile.favorite.remove.space') }}' :
+                        '{{ route('client_side.profile.favorite.add') }}',
+                    method: isFavorite ? 'DELETE' : 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',
                         id: itemId
                     },
                     success: function(response) {
-                        if (response.success) {
-                            alert(response.message)
+                        let spaceIndex = _.findIndex(spaces.data, {
+                            id: itemId
+                        });
+                        if (spaceIndex !== -1) {
+                            spaces.data[spaceIndex].isFavorite = !
+                            isFavorite;
                         }
+
+                        const searchTerm = $('#search').val().toLowerCase();
+                        const filteredSpaces = _.filter(spaces.data, function(space) {
+                            return space.coworking_space_name.toLowerCase().includes(
+                                    searchTerm) ||
+                                space.coworking_space_address.toLowerCase().includes(
+                                    searchTerm);
+                        });
+
+                        renderSpaces(filteredSpaces);
+                        alert(response.message);
                     },
                     error: function() {
-                        alert('Failed to add favorite.');
+                        alert('Failed to update favorite.');
                     }
                 });
             });

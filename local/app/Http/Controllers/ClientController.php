@@ -34,10 +34,21 @@ class ClientController extends Controller
         $favorite = Favorites::find($request->id);
         if ($favorite) {
             $favorite->delete();
-            return response()->json(['success' => true]);
+            return response()->json(['success' => true, 'message' => 'Cowork remove to favorite.']);
         }
-        return response()->json(['success' => false]);
+        return response()->json(['success' => false, 'message' => 'Cowork remove failed.']);
     }
+
+    public function remove_favorite_by_space(Request $request)
+    {
+        $favorite = Favorites::where('space_id',$request->id);
+        if ($favorite) {
+            $favorite->delete();
+            return response()->json(['success' => true, 'message' => 'Cowork remove to favorite.']);
+        }
+        return response()->json(['success' => false, 'message' => 'Cowork remove failed.']);
+    }
+
 
 
     public function add_to_favorite(Request $request)

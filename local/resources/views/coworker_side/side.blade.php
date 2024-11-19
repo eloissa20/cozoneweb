@@ -19,6 +19,13 @@
 
 </head>
 
+<style>
+    .sidebar-item.active .sidebar-link {
+    font-weight: bold;
+    background-color: #f5f5f5;
+    color: #000000;
+}
+</style>
 <body>
     <div class="wrapper">
         <aside id="sidebar">
@@ -30,7 +37,7 @@
                     <li class="sidebar-header">
                         Admin Dashboard
                     </li>
-                    <li class="sidebar-item">
+                    <li class="sidebar-item {{ Route::is('coworker_side.coworker') ? 'active' : '' }}">
                         <a href="{{ route('coworker_side.coworker') }}" class="sidebar-link">
                             <i class="bi bi-graph-up"></i>
                             Analytics
@@ -42,14 +49,14 @@
                             Reservation
                         </a>
                     </li>
-                    <li class="sidebar-item">
+                    <li class="sidebar-item {{ Route::is('myCoworkingSpace') ? 'active' : '' }}">
                         <a href="{{ route('myCoworkingSpace') }}" class="sidebar-link">
                             <i class="bi bi-building-fill"></i>
                             My Coworking Space
                         </a>
                     </li>
-                    <li class="sidebar-item">
-                        <a href="#" class="sidebar-link">
+                    <li class="sidebar-item {{ Route::is('reviews') ? 'active' : '' }}">
+                        <a href="{{ route('reviews') }}" class="sidebar-link">
                             <i class="bi bi-chat-left-text-fill"></i>
                             Reviews
                         </a>
@@ -71,7 +78,7 @@
                             <a class="nav-link" href="#">About Us</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('coworker_side.listSpace') }}">List Space</a>
+                            <a class="nav-link {{ Route::is('coworker_side.listSpace') ? 'active' : '' }}" href="{{ route('coworker_side.listSpace') }}">List Space</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a href="#" data-bs-toggle="dropdown" class="pe-md-0">
