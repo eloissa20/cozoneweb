@@ -12,6 +12,7 @@ function loadLocalStorageStep6() {
   }
 }
 
+// Preview header image
 $('input[name="headerImage"]').on("change", function (event) {
   const file = event.target.files[0];
   if (file) {
@@ -20,6 +21,23 @@ $('input[name="headerImage"]').on("change", function (event) {
       $("#imagePreview").attr("src", e.target.result).show();
     };
     reader.readAsDataURL(file);
+  }
+});
+
+// Preview additional images
+$('input[name="additionalImages[]"]').on('change', function (event) {
+  $('#additionalImagesPreview').html(''); // Clear previous previews
+  const files = event.target.files;
+  if (files.length > 0) {
+      Array.from(files).forEach(file => {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+              $('#additionalImagesPreview').append(
+                  `<img src="${e.target.result}" style="width: 100px; height: auto; margin-right: 10px;" alt="Image Preview" />`
+              );
+          };
+          reader.readAsDataURL(file);
+      });
   }
 });
 

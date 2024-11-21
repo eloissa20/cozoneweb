@@ -153,6 +153,13 @@ $("#submitBtn").click((e) => {
         formData.append('headerImage', headerImage);
     }
 
+    const additionalImages = $('input[name="additionalImages[]"]')[0].files;
+    if (additionalImages.length > 0) {
+        for (let i = 0; i < additionalImages.length; i++) {
+            formData.append('additionalImages[]', additionalImages[i]);
+        }
+    }
+
     // Section 7
     const payOnline = $('input[name="payOnline"]:checked').val();
     const creditCards = $('#creditCards').val();
@@ -192,7 +199,7 @@ $("#submitBtn").click((e) => {
                 text: 'Your request has been submitted successfully!'
             }).then(() => {
                 localStorage.clear();
-                window.location.href = 'coworker_side.listSpace';
+                window.location.href = 'listSpace';
             });
         },
         error: function(jqXHR, textStatus, errorThrown) {

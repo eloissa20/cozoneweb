@@ -1,7 +1,7 @@
 @extends('coworker_side.side')
 
 @section('content')
-<meta name="csrf-token" content="{{ csrf_token() }}" >
+<meta name="csrf-token" content="{{ csrf_token() }}" enctype="multipart/form-data">
 
 <style>
     .step {

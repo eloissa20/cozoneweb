@@ -17,14 +17,14 @@
 
     <link href="{{ asset('assets/listSpace.css') }}" rel="stylesheet">
 
+    <!-- Include SweetAlert2 CSS and JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+
 </head>
 
 <style>
-    .sidebar-item.active .sidebar-link {
-    font-weight: bold;
-    background-color: #f5f5f5;
-    color: #000000;
-}
+
 </style>
 <body>
     <div class="wrapper">
@@ -43,8 +43,8 @@
                             Analytics
                         </a>
                     </li>
-                    <li class="sidebar-item">
-                        <a href="#" class="sidebar-link">
+                    <li class="sidebar-item {{ Route::is('reservations') ? 'active' : '' }}">
+                        <a href="{{ route('reservations') }}" class="sidebar-link">
                             <i class="bi bi-book"></i>
                             Reservation
                         </a>
@@ -142,5 +142,6 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/coworker/coworker.js') }}" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>
