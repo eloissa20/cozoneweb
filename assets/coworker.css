@@ -211,7 +211,7 @@ a.sidebar-link {
 }
 
 .nav-link.active {
-    background-color: gray;
+    background-color: rgb(184, 184, 184);
     color: white;
 }
 
@@ -234,4 +234,10 @@ a.sidebar-link {
     width: 40px;
     height: 40px;
     border-radius: 50%;
+}
+
+.sidebar-item.active .sidebar-link {
+    font-weight: bold;
+    background-color: #f5f5f5;
+    color: #000000;
 }

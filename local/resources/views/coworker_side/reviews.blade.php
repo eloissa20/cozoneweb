@@ -14,32 +14,13 @@
     <h2><strong>WHAT OUR CLIENTS SAY</strong></h2>
     <hr class="separator-line" />
 
-        @php
-        // Total number of reviews
-        $totalReviews = 57; 
-        
-        // Number of reviews per rating
-        $fiveStar = 25;
-        $fourStar = 20;
-        $threeStar = 10;
-        $twoStar = 1;
-        $oneStar = 1;
-
+    @php
         // Calculate the percentage for the progress bars
         $fiveStarPercentage = ($fiveStar / $totalReviews) * 100;
         $fourStarPercentage = ($fourStar / $totalReviews) * 100;
         $threeStarPercentage = ($threeStar / $totalReviews) * 100;
         $twoStarPercentage = ($twoStar / $totalReviews) * 100;
         $oneStarPercentage = ($oneStar / $totalReviews) * 100;
-
-        // Calculate the weighted average for the star rating
-        $averageRating = (
-            (5 * $fiveStar) + 
-            (4 * $fourStar) + 
-            (3 * $threeStar) + 
-            (2 * $twoStar) + 
-            (1 * $oneStar)
-        ) / $totalReviews;
     @endphp
 
     <div class="d-flex align-items-center">
@@ -57,40 +38,40 @@
             @endfor
         </div>
     </div>
-        
+    
     <div class="review-summary mt-3">
-        <div>Overall rating of {{ $totalReviews }} 1st party reviews</div>
+        <div>Overall rating of {{ $totalReviews }} reviews</div>
         <ul class="list-unstyled">
             <li class="d-flex align-items-center">
-                5 Stars: 
+                5 Stars:
                 <div class="progress ms-2 w-50">
                     <div class="progress-bar bg-secondary" role="progressbar" style="width: {{ $fiveStarPercentage }}%;" aria-valuenow="{{ $fiveStarPercentage }}" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
                 <span class="ms-2">{{ $fiveStar }}</span>
             </li>
             <li class="d-flex align-items-center">
-                4 Stars: 
+                4 Stars:
                 <div class="progress ms-2 w-50">
                     <div class="progress-bar bg-secondary" role="progressbar" style="width: {{ $fourStarPercentage }}%;" aria-valuenow="{{ $fourStarPercentage }}" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
                 <span class="ms-2">{{ $fourStar }}</span>
             </li>
             <li class="d-flex align-items-center">
-                3 Stars: 
+                3 Stars:
                 <div class="progress ms-2 w-50">
                     <div class="progress-bar bg-secondary" role="progressbar" style="width: {{ $threeStarPercentage }}%;" aria-valuenow="{{ $threeStarPercentage }}" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
                 <span class="ms-2">{{ $threeStar }}</span>
             </li>
             <li class="d-flex align-items-center">
-                2 Stars: 
+                2 Stars:
                 <div class="progress ms-2 w-50">
                     <div class="progress-bar bg-secondary" role="progressbar" style="width: {{ $twoStarPercentage }}%;" aria-valuenow="{{ $twoStarPercentage }}" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
                 <span class="ms-2">{{ $twoStar }}</span>
             </li>
             <li class="d-flex align-items-center">
-                1 Stars: 
+                1 Stars:
                 <div class="progress ms-2 w-50">
                     <div class="progress-bar bg-secondary" role="progressbar" style="width: {{ $oneStarPercentage }}%;" aria-valuenow="{{ $oneStarPercentage }}" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
@@ -113,99 +94,61 @@
             </select>
         </div>
     </div>
+    
     <div class="row">
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-body position-relative">
-                    <button class="btn btn-outline-secondary btn-sm position-absolute top-0 end-0 me-2 mt-2">
-                        <i class="bi bi-pencil-fill"></i>
-                    </button>
-                    <div class="text-center mb-3">
-                        <img src="{{ asset('assets/img/profile.png') }}" class="img-fluid rounded-circle" alt="Client image" style="width: 60px; height:60px;">
-                        <h5 class="card-title">{{ Auth::user()->name }}</h5>
-                    </div>
-                    
-                    <div class="d-flex mb-3 justify-content-between">
-                        <img src="{{ asset('assets/img/sample_room.jpg') }}" class="img-fluid rounded me-3" alt="Space image" style="width: 60%; object-fit:cover;">
-                        <div>
-                            <p class="mb-1"><strong>COWORKING SPACE NAME</strong></p>
-                            <p class="mb-1">Location</p>
-                            <p>Open Hours</p>
+        @foreach ($reviews as $review)
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body position-relative">
+                        <button class="btn btn-outline-secondary btn-sm position-absolute top-0 end-0 me-2 mt-2">
+                            <i class="bi bi-pencil-fill"></i>
+                        </button>
+                        <div class="text-center mb-3">
+                            <img src="{{ asset('assets/img/profile.png') }}" class="img-fluid rounded-circle" alt="Client image" style="width: 60px; height:60px;">
+                            <h5 class="card-title">{{ $review->reviewer_name }}</h5>
                         </div>
-                    </div>
-            
-                    <p class="mb-0"><strong>"Great coworking environment"</strong></p>
-                    <p class="text-muted">Tues May 27, 2024</p>
-            
-                    <div class="bg-light p-3 rounded border border-1">
-                        <p class="card-text mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
-                        <div class="text-warning text-end mt-2">★★★★☆</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                        
+                        {{-- <div class="d-flex mb-3 justify-content-between">
+                            <img src="{{ asset('assets/img/sample_room.jpg') }}" class="img-fluid rounded me-3" alt="Space image" style="width: 60%; object-fit:cover;">
+                            <div>
+                                <p class="mb-1"><strong>{{ $review->space_name }}</strong></p>
+                                <p class="mb-1">Location</p>
+                                <p>Open Hours</p>
+                            </div>
+                        </div> --}}
 
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-body position-relative">
-                    <button class="btn btn-outline-secondary btn-sm position-absolute top-0 end-0 me-2 mt-2">
-                        <i class="bi bi-pencil-fill"></i>
-                    </button>
-                    <div class="text-center mb-3">
-                        <img src="{{ asset('assets/img/profile.png') }}" class="img-fluid rounded-circle" alt="Client image" style="width: 60px; height:60px;">
-                        <h5 class="card-title">{{ Auth::user()->name }}</h5>
-                    </div>
-                    
-                    <div class="d-flex mb-3 justify-content-between">
-                        <img src="{{ asset('assets/img/sample_room.jpg') }}" class="img-fluid rounded me-3" alt="Space image" style="width: 60%; object-fit:cover;">
-                        <div>
-                            <p class="mb-1"><strong>COWORKING SPACE NAME</strong></p>
-                            <p class="mb-1">Location</p>
-                            <p>Open Hours</p>
+                        <div class="d-flex mb-3 justify-content-between">
+                            <img src="{{ asset($review->header_image) }}" class="img-fluid rounded me-3" alt="Space image" style="width: 60%; object-fit:cover;">
+                            <div>
+                                <p class="mb-0">COWORKING SPACE NAME:</p>
+                                <p class="mb-1"><strong>{{ $review->space_name }}</strong></p>
+                                <p class="mb-0">Location:</p>
+                                <p class="mb-1"></p>
+                                <p class="mb-0">Open Hours</p>
+                                <p class="mb-1"></p>
+                            </div>
                         </div>
-                    </div>
-            
-                    <p class="mb-0"><strong>"Great coworking environment"</strong></p>
-                    <p class="text-muted">Tues May 27, 2024</p>
-            
-                    <div class="bg-light p-3 rounded border border-1">
-                        <p class="card-text mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
-                        <div class="text-warning text-end mt-2">★★★★☆</div>
-                    </div>
-                </div>
-            </div>      
-        </div>
-        
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-body position-relative">
-                    <button class="btn btn-outline-secondary btn-sm position-absolute top-0 end-0 me-2 mt-2">
-                        <i class="bi bi-pencil-fill"></i>
-                    </button>
-                    <div class="text-center mb-3">
-                        <img src="{{ asset('assets/img/profile.png') }}" class="img-fluid rounded-circle" alt="Client image" style="width: 60px; height:60px;">
-                        <h5 class="card-title">{{ Auth::user()->name }}</h5>
-                    </div>
-                    
-                    <div class="d-flex mb-3 justify-content-between">
-                        <img src="{{ asset('assets/img/sample_room.jpg') }}" class="img-fluid rounded me-3" alt="Space image" style="width: 60%; object-fit:cover;">
-                        <div>
-                            <p class="mb-1"><strong>COWORKING SPACE NAME</strong></p>
-                            <p class="mb-1">Location</p>
-                            <p>Open Hours</p>
+                
+                        {{-- <p class="mb-0"><strong>{{ $review->review_body }}</strong></p> --}}
+                        <p class="text-muted">{{ $review->created_at->format('D M d, Y') }}</p>
+
+                
+                        <div class="bg-light p-3 rounded border border-1">
+                            <p class="mb-1"><strong>{{ $review->space_name }}</strong></p>
+                            <div class="text-warning text-end mt-2">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    @if ($i <= $review->rating)
+                                        ★
+                                    @else
+                                        ☆
+                                    @endif
+                                @endfor
+                            </div>
                         </div>
-                    </div>
-            
-                    <p class="mb-0"><strong>"Great coworking environment"</strong></p>
-                    <p class="text-muted">Tues May 27, 2024</p>
-            
-                    <div class="bg-light p-3 rounded border border-1">
-                        <p class="card-text mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
-                        <div class="text-warning text-end mt-2">★★★★☆</div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endforeach
     </div>
 
     <div class="response-section row mb-5">
@@ -216,5 +159,6 @@
             <button class="btn btn-primary w-100">Submit</button>
         </div>
     </div>
+    
 </div>
 @endsection

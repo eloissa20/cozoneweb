@@ -171,6 +171,12 @@ Route::middleware(['preventBackHistory'])->group(function () {
 
         Route::get('/coworker_side/reviews', [CoworkerController::class, 'viewReviews'])->name('reviews');
 
+        Route::get('/coworker_side/reservations', [CoworkerController::class, 'viewReservations'])->name('reservations');
+
+        Route::get('/coworker_side/viewSpaceDetails/{id}', [CoworkerController::class, 'viewSpaceDetails'])->name('viewSpaceDetails');
+        
+        Route::delete('/coworker_side/deleteSpace/{id}', [CoworkerController::class, 'deleteSpace'])->name('deleteSpace');
+
     });
 
     Route::middleware(['auth', 'userAuth:3'])->group(function () {
