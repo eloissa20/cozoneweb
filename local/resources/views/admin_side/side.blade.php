@@ -51,6 +51,12 @@
                             Users
                         </a>
                     </li>
+                    <li class="sidebar-item {{ Route::is('deactivated') ? 'active' : '' }}">
+                        <a href="{{ route('deactivated') }}" class="sidebar-link">
+                            <i class="bi bi-people"></i>
+                            Deactivated Users
+                        </a>
+                    </li>
                     <li class="sidebar-item {{ Route::is('clients') ? 'active' : '' }}">
                         <a href="{{ route('clients') }}" class="sidebar-link">
                             <i class="bi bi-briefcase"></i>
@@ -84,9 +90,6 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">About Us</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ Route::is('coworker_side.listSpace') ? 'active' : '' }}" href="{{ route('coworker_side.listSpace') }}">List Space</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a href="#" data-bs-toggle="dropdown" class="pe-md-0">

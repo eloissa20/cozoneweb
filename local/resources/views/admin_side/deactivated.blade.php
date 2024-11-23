@@ -25,8 +25,10 @@
                     <th>Name</th>
                     <th>Email</th>
                     <th>Role</th>
-                    <th>Created At</th>
-                    <th>Updated At</th>
+                    <th>Contact</th>
+                    <th>Birthdate</th>
+                    <th>Gender</th>
+                    <th>Address</th>
                     <th class='d-flex justify-content-center'>Action</th>
                 </tr>
             </thead>
@@ -90,14 +92,17 @@
                 'headers': {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                'url': './users',
+                'url': './deactivated_users',
                 'type': 'GET',
             },
             order: [
                 [0, "asc"],
             ],
             'columns': [{
-                    data: 'id'
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1; // Calculate row count
+                    }
                 },
                 {
                     data: 'name'
@@ -121,50 +126,21 @@
                     }
                 },
                 {
-                    data: 'created_at'
+                    data: 'contact'
                 },
                 {
-                    data: 'updated_at'
+                    data: 'birthday'
+                },
+                {
+                    data: 'gender'
+                },
+                {
+                    data: 'address'
                 },
                 {
                     data: 'actions'
                 },
             ]
-        });
-    }
-
-    // View User
-    function viewUserDetails(id) {
-        $.ajax({
-            url: './viewUserDetails/' + id,
-            type: 'GET',
-            success: function(response) {
-                const userRole = response.user_type == 1 ? 'Client' :
-                    response.user_type == 2 ? 'Co Worker' :
-                    response.user_type == 3 ? 'Admin' :
-                    'Unknown';
-
-                const formattedBirthday = response.birthday ?
-                    new Date(response.birthday).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    }) :
-                    'Unknown';
-
-                $('#userName').text(response.name);
-                $('#userEmail').text(response.email);
-                $('#userContact').text(response.contact || 'Unknown');
-                $('#userBirthday').text(formattedBirthday);
-                $('#userGender').text(response.gender || 'Unknown');
-                $('#userAddress').text(response.address || 'Unknown');
-                $('#userRole').text(userRole);
-                $('#viewUserModal').modal('show');
-            },
-            error: function(xhr, status, error) {
-                console.error('Error fetching space details:', xhr.responseText);
-                alert('Failed to fetch space details. Please try again later.');
-            }
         });
     }
 </script>

@@ -180,7 +180,17 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('/admin_side/admin', [AdminController::class, 'viewDashboard'])->name('admin_side.admin');
 
         Route::get('/admin_side/users', [AdminController::class, 'viewUsers'])->name('users');
+        Route::get('/admin_side/users/create', [AdminController::class, 'createUser'])->name('user.create');
+        Route::post('/admin_side/users', [AdminController::class, 'storeUser'])->name('user.store');
+        Route::get('/admin_side/users/{id}/edit', [AdminController::class, 'editUser'])->name('user.edit');
+        Route::put('/admin_side/users/{id}/update', [AdminController::class, 'updateUser'])->name('user.update');
+        Route::post('/admin_side/users/{id}/deactivate', [AdminController::class, 'deactivateUser'])->name('user.deactivate');
         Route::get('/admin_side/viewUserDetails/{id}', [AdminController::class, 'viewUserDetails'])->name('viewUserDetails');
+
+        Route::get('/admin_side/deactivated_users', [AdminController::class, 'viewDeactivatedUsers'])->name('deactivated');
+        Route::post('/admin_side/reactivate/{id}', [AdminController::class, 'reactivateUser'])->name('user.reactivate');
+        Route::delete('/admin_side/deactivated_users/{id}', [AdminController::class, 'deleteUser'])->name('deactivated.delete');
+
 
         Route::get('/admin_side/clients', [AdminController::class, 'viewClients'])->name('clients');
     });
