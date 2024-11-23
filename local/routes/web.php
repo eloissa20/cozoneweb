@@ -23,9 +23,13 @@ use Illuminate\Http\Request;
 |
 */
 
+// Route::get('/', function () {
+//     return view('auth.login');
+// });
+
 Route::get('/', function () {
-    return view('auth.login');
-});
+    return view('landing');
+})->name('landing');
 
 Route::middleware(['preventBackHistory'])->group(function () {
 
