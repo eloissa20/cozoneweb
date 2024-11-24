@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 namespace App\Http\Controllers;
-
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\DeactivatedUser;
+use App\Models\Transactions;
 use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\DataTables;
 
@@ -53,8 +53,7 @@ class AdminController extends Controller
     }
 
 
-    public function createUser()
-    {
+    public function createUser() {
         return view('admin_side.users.create');
     }
 
@@ -80,9 +79,8 @@ class AdminController extends Controller
         return redirect()->route('users')->with('success', 'User saved successfully!');
     }
 
-
-    public function editUser($id)
-    {
+    
+    public function editUser($id) {
         $user = User::findOrFail($id);
 
         return view('admin_side.users.edit', compact('user'));
@@ -186,8 +184,7 @@ class AdminController extends Controller
         return view('admin_side.deactivated');
     }
 
-    public function deleteUser($id)
-    {
+    public function deleteUser($id) {
         $user = DeactivatedUser::findOrFail($id);
         $user->delete();
 
@@ -247,11 +244,47 @@ class AdminController extends Controller
     public function viewUserDetails($id)
     {
         $userDetails = DB::table('users')->where('id', $id)->first();
-
+    
         if (!$userDetails) {
             return response()->json(['error' => 'Space not found.'], 404);
         }
-
+    
         return response()->json($userDetails);
+    }
+
+    public function viewSpaces(Request $request) {
+
+    }
+
+    public function viewTransactions(Request $request) {
+        if ($request->ajax()) {
+            $transactions = Transactions::with('cowork')
+                ->select('*')
+                ->get();
+
+            return DataTables::of($transactions)
+                ->addColumn('actions', function ($row) {
+
+                    $str = "<div class='d-flex justify-content-center'>
+                                <button class='btn btn-outline-dark btn-sm me-2' onclick='viewTransactionDetails(\"{$row->id}\")'><i class='bi bi-eye'></i> View</button>
+                            </div>";
+                    return $str;
+                })
+                ->rawColumns(['actions'])
+                ->make(true);
+        }
+
+        return view('admin_side.transactions');
+    }
+
+    public function viewTransactionDetails($id)
+    {
+        $transactionDetails = Transactions::with('cowork')->where('id', $id)->first();
+    
+        if (!$transactionDetails) {
+            return response()->json(['error' => 'Transaction not found.'], 404);
+        }
+    
+        return response()->json($transactionDetails);
     }
 }

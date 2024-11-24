@@ -203,6 +203,9 @@ Route::middleware(['preventBackHistory'])->group(function () {
 
 
         Route::get('/admin_side/clients', [AdminController::class, 'viewClients'])->name('clients');
+        
+        Route::get('/admin_side/transactions', [AdminController::class, 'viewTransactions'])->name('admin.transactions');
+        Route::get('/admin_side/viewTransactionDetails/{id}', [AdminController::class, 'viewTransactionDetails'])->name('viewTransactionDetails');
     });
 
 });
