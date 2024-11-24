@@ -40,6 +40,11 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-3">
+                <input type="number" class="form-control" name="price" id="price" placeholder="Price of your space">
+            </div>
+        </div>
 
         <div class="d-flex justify-content-end mt-4">
             <button type="button" class="btn btn-light" id="prevButton9">Previous</button>
