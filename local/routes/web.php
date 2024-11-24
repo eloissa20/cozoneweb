@@ -79,8 +79,8 @@ Route::middleware(['preventBackHistory'])->group(function () {
             }
 
             $transaction = Transactions::find($transactionId);
-            if (!$transaction) {
-                return abort(404, 'Transaction not found');
+            if(!$transaction){
+                return abort( 404, 'Transaction not found');
             }
             return view('client_side.payment.payment_client', ['space' => $space, 'transaction' => $transaction]);
         })->name('client_side.payment');
@@ -159,6 +159,8 @@ Route::middleware(['preventBackHistory'])->group(function () {
 
             return view('client_side.profile.favorites_client', ['favorites' => $favorites,]);
         })->name('client_side.profile.favorites');
+
+
     });
 
     Route::middleware(['auth', 'userAuth:2'])->group(function () {
@@ -172,12 +174,16 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('/coworker_side/myCoworkingSpace', [CoworkerController::class, 'viewmyCoworkingSpace'])->name('myCoworkingSpace');
 
         Route::get('/coworker_side/reviews', [CoworkerController::class, 'viewReviews'])->name('reviews');
-
+        
         Route::get('/coworker_side/reservations', [CoworkerController::class, 'viewReservations'])->name('reservations');
 
         Route::get('/coworker_side/viewSpaceDetails/{id}', [CoworkerController::class, 'viewSpaceDetails'])->name('viewSpaceDetails');
 
         Route::delete('/coworker_side/deleteSpace/{id}', [CoworkerController::class, 'deleteSpace'])->name('deleteSpace');
+        
+        Route::get('/coworker_side/editSpace/{id}', [CoworkerController::class, 'editSpace'])->name('editSpace');
+
+
     });
 
     Route::middleware(['auth', 'userAuth:3'])->group(function () {
@@ -198,6 +204,7 @@ Route::middleware(['preventBackHistory'])->group(function () {
 
         Route::get('/admin_side/clients', [AdminController::class, 'viewClients'])->name('clients');
     });
+
 });
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

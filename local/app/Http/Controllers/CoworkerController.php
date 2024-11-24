@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Auth;
 
 
 class CoworkerController extends Controller
@@ -191,6 +192,8 @@ class CoworkerController extends Controller
             'short_term_details' => $request->input('shortTermDetails'),
             'free_pass' => $request->input('freePass'),
             'free_pass_details' => $request->input('freePassDetails'),
+            'price' => $request->input('price'),
+            'user_id' => Auth::id(),
         ];
 
         DB::table('list_space_tbl')->insert($data);

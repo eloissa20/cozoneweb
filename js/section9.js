@@ -152,7 +152,6 @@ $("#submitBtn").click((e) => {
     if (headerImage) {
         formData.append('headerImage', headerImage);
     }
-
     const additionalImages = $('input[name="additionalImages[]"]')[0].files;
     if (additionalImages.length > 0) {
         for (let i = 0; i < additionalImages.length; i++) {
@@ -174,11 +173,13 @@ $("#submitBtn").click((e) => {
     const shortTermDetails = $('#shortTermDetails').val();
     const freePass = $('input[name="freePass"]:checked').val();
     const freePassDetails = $('#freePassDetails').val();
+    const price = $('#price').val();
 
     formData.append('shortTerm', shortTerm);
     formData.append('shortTermDetails', shortTermDetails);
     formData.append('freePass', freePass);
     formData.append('freePassDetails', freePassDetails);
+    formData.append('price', price);
 
     // AJAX Call
     $.ajax({
