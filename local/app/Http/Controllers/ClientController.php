@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cowork;
-use App\Models\Favorites;
-use App\Models\Reviews;
-use App\Models\Transactions;
+use App\Models\Favorite;
+use App\Models\Review;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -25,15 +24,15 @@ class ClientController extends Controller
             'address' => 'nullable|string|max:255',
         ]);
 
-        $user->update($validated); //this return true but not updating the database
+        $user->update($validated);
 
-        return redirect()->route('client_side.profile')->with('message', 'User updated successfully!');
+        return redirect()->route('client_side.profile')->with('success', 'Profile updated successfully!');
     }
 
-    //favorite
+    //favorites
     public function remove_favorite(Request $request)
     {
-        $favorite = Favorites::find($request->id);
+        $favorite = Favorite::find($request->id);
         if ($favorite) {
             $favorite->delete();
             return response()->json(['success' => true, 'message' => 'Cowork remove to favorite.']);
@@ -43,7 +42,7 @@ class ClientController extends Controller
 
     public function remove_favorite_by_space(Request $request)
     {
-        $favorite = Favorites::where('space_id', $request->id);
+        $favorite = Favorite::where('space_id', $request->id);
         if ($favorite) {
             $favorite->delete();
             return response()->json(['success' => true, 'message' => 'Cowork remove to favorite.']);
@@ -53,7 +52,7 @@ class ClientController extends Controller
 
     public function add_to_favorite(Request $request)
     {
-        $exists = Favorites::where('user_id', auth()->user()->id)
+        $exists = Favorite::where('user_id', auth()->user()->id)
             ->where('space_id', $request->id)
             ->exists();
 
@@ -61,7 +60,7 @@ class ClientController extends Controller
             return response()->json(['success' => false, 'message' => 'This cowork is already in your favorites.']);
         }
 
-        $favorite = Favorites::create([
+        $favorite = Favorite::create([
             'user_id' => auth()->user()->id,
             'space_id' => $request->id,
         ]);
@@ -123,15 +122,10 @@ class ClientController extends Controller
             }
         }
 
-        $allReviews = Reviews::where('cowork_id', $space->id)->get();
-        $averageRating = Reviews::where('cowork_id', $space->id)
-        ->avg('rating');
+        $allReviews = Review::where('cowork_id', $space->id)->get();
 
-        return view('client_side.details_client', ['space' => $space, 'allReviews' => $allReviews, 'averageRating' => $averageRating]);
+        return view('client_side.details_client', ['space' => $space, 'allReviews' => $allReviews,]);
     }
-
-
-
 
     //transactions
     public function transaction_table(Request $request)
@@ -140,6 +134,9 @@ class ClientController extends Controller
             $request = auth()->user()->user_transactions()->with('cowork')->get();
 
             return DataTables::of($request)
+                ->addColumn('invoice', function ($row) {
+                    return $row->cowork ? '#00000' . $row->id : 'N/A';
+                })
                 ->addColumn('space_name', function ($row) {
                     return $row->cowork ? $row->cowork->coworking_space_name : 'N/A';
                 })
@@ -147,7 +144,7 @@ class ClientController extends Controller
                     return $row->cowork ? $row->cowork->coworking_space_address : 'N/A';
                 })
                 ->editColumn('date', function ($row) {
-                    return Carbon::parse($row->date)->format('D F j, Y');
+                    return Carbon::parse($row->date)->format('D, F j, Y');
                     ;
                 })
                 ->make(true);

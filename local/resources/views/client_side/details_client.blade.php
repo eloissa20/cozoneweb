@@ -5,6 +5,7 @@
         .map-placeholder {
             background: #eaeaea;
             height: 300px;
+            z-index: 1;
         }
 
         .review-placeholder,
@@ -22,10 +23,10 @@
             <div class="col">
                 <h1>{{ $space->coworking_space_name }}</h1>
                 <p class="mb-4">
-                    @if ($averageRating)
+                    @if ($space->averageRating !== 0 || $space->averageRating !== null)
                         @php
-                            $fullStars = floor($averageRating);
-                            $halfStar = $averageRating - $fullStars >= 0.5 ? 1 : 0;
+                            $fullStars = floor($space->averageRating );
+                            $halfStar = $space->averageRating  - $fullStars >= 0.5 ? 1 : 0;
                             $emptyStars = 5 - ($fullStars + $halfStar);
                         @endphp
                         @for ($i = 0; $i < $fullStars; $i++)
@@ -159,7 +160,7 @@
                 <div class="card mb-4">
                     <div class="card-header">Space Reviews <button class="btn text-primary edit-review fs-5 p-0"
                             data-id="{{ $space->id }}" data-bs-toggle="modal" data-bs-target="#reviewModal">
-                            <i class="bi bi-pencil"></i>
+                            <i class="bi bi-pencil text-dark"></i>
                         </button></div>
                     <div class="card-body">
                         @if (count($allReviews) > 0)
@@ -294,8 +295,6 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-
-
     <script>
         $(document).ready(function() {
 
@@ -320,10 +319,11 @@
                     method: 'POST',
                     data: formData,
                     success: function(data) {
-                        alert(data.message);
+                        alertify.success('Review added successfully!');
                         location.reload();
                     },
                     error: function(xhr) {
+                        alertify.error('Error: ' + xhr.responseText || xhr.statusText);
                         console.error('Error:', xhr);
                     }
                 });
@@ -332,21 +332,30 @@
 
             $('.remove-review').on('click', function() {
                 const spaceId = $(this).data('id');
-                if (confirm('Are you sure you want to delete this review?')) {
-                    $.ajax({
-                        url: "{{ route('client_side.review.delete', ':id') }}".replace(':id',
-                            spaceId),
-                        method: 'DELETE',
-                        success: function(data) {
-                            alert(data.message);
-                            location.reload();
-                        },
-                        error: function(xhr) {
-                            console.error('Error:', xhr);
-                        }
-                    });
-                }
+                showConfirmDelete(spaceId);
             });
+
+            function showConfirmDelete(id) {
+                alertify.confirm("Confirm Delete", "Are you sure you want to delete this review?",
+                    function() {
+                        $.ajax({
+                            url: "{{ route('client_side.review.delete', ':id') }}".replace(':id', id),
+                            method: 'DELETE',
+                            success: function(data) {
+                                alertify.success('Review deleted successfully!');
+                                location.reload();
+                            },
+                            error: function(xhr) {
+                                alertify.error('Error: ' + xhr.responseText || xhr.statusText);
+                                console.error('Error:', xhr);
+                            }
+                        });
+                    },
+                    function() {
+                        alertify.error('Canceled');
+                    });
+            }
+
 
             var today = new Date();
             var dd = String(today.getDate()).padStart(2, '0');

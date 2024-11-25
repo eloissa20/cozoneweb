@@ -25,7 +25,7 @@
         }
 
 
-        .coworking-space img{
+        .coworking-space img {
             width: 100%;
             height: 100%;
         }
@@ -51,7 +51,7 @@
         }
     </style>
     <div class="container reservation-confirmation page">
-        <a href="{{ route('client_side.home') }}" class="back-button text-decoration-none">
+        <a href="{{ route('client_side.profile.transactions') }}" class="back-button text-decoration-none">
             <i class="bi bi-arrow-left"></i> My Reserved Space
         </a>
         <h2>Your reservation is confirmed!</h2>
@@ -64,48 +64,49 @@
                             <tr>
                                 <td>
                                     <p><strong>Booked:</strong></p>
-                                    <p> 09/20/2024</p>
+                                    <p>{{ $transaction->created_at->format('D, M d, Y') }}</p>
                                 </td>
                                 <td>
                                     <p><strong>ID Invoice</strong></p>
-                                    <p>#00000000</p>
+                                    <p>#00000{{ $transaction->id }}</p>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <p><strong>Full Name</strong></p>
-                                    <p>Maria Eloisa M. Andal</p>
+                                    <p>{{ $transaction->name }}</p>
                                 </td>
                                 <td>
                                     <p><strong>Email Address</strong></p>
-                                    <p>andal@gmail.com</p>
+                                    <p>{{ $transaction->email }}</p>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <p><strong>Number of Hours</strong></p>
-                                    <p>1-3 hours</p>
+                                    <p>{{ $transaction->hours }} hour(s)</p>
                                 </td>
                                 <td>
                                     <p><strong>Contact No.</strong></p>
-                                    <p>096737826344</p>
+                                    <p>{{ $transaction->contact }}</p>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <p><strong>Number of Guest</strong></p>
-                                    <p>1 guest(s)</p>
+                                    <p>{{ $transaction->guests }} guest(s)</p>
                                 </td>
                                 <td>
                                     <p><strong>Company/University/Name</strong></p>
-                                    <p>TUP</p>
+                                    <p>{{ $transaction->company ? $transaction->company : 'Not available' }}</p>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                     <p><strong>Arrival Time</strong></p>
-                                    <p>10:30 AM PH</p>
+                                    <p>{{ \Carbon\Carbon::parse($transaction->arrival_time)->format('h:i A') }}</p>
                                 </td>
+                                <td></td>
                             </tr>
                         </tbody>
                     </table>
@@ -117,23 +118,21 @@
                     </div>
                     <div>
                         <p>{{ $space->unit }}, {{ $space->city }}, {{ $space->location }}, {{ $space->country }},</p>
-                        <button class="btn btn-secondary">Get Directions</button>
                     </div>
                 </div>
 
                 <div class="box">
                     <h4>Total cost</h4>
-                    <p><strong>Payment Method:</strong> Visa **** **** 6520</p>
-                    <p><strong>Coworking Space Cost:</strong> ₱80.00</p>
-                    <p><strong>Discount:</strong> ₱0.00</p>
-                    <p><strong>Total:</strong> ₱0.00</p>
+                    <p><strong>Payment Method:</strong> {{ $transaction->payment_method }}</p>
+                    <p><strong>Coworking Space Cost:</strong> ₱ {{ $space->price }}</p>
+                    <p><strong>Discount:</strong> ₱ 0.00</p>
+                    <p><strong>Total:</strong> ₱ {{ $transaction->amount }}</p>
                 </div>
             </div>
 
             <div class="col-lg-6">
                 <div class="box coworking-space">
-                    <img class="mb-2" src="{{ asset($space->header_image) }}"
-                        alt="">
+                    <img class="mb-2" src="{{ asset($space->header_image) }}" alt="">
                     <div class="">
                         <div class="flex">
                             <h4>{{ $space->coworking_space_name }}</h4>
@@ -141,7 +140,26 @@
                             <p>{{ $space->operating_hours_from }} - {{ $space->operating_hours_to }}</p>
                         </div>
                         <div>
-                            <p>★★★★★</p>
+
+                            @if ($space->averageRating !== 0 || $space->averageRating !== null)
+                                <span>Rating: </span>
+                                @php
+                                    $fullStars = floor($space->averageRating);
+                                    $halfStar = $space->averageRating - $fullStars >= 0.5 ? 1 : 0;
+                                    $emptyStars = 5 - ($fullStars + $halfStar);
+                                @endphp
+                                @for ($i = 0; $i < $fullStars; $i++)
+                                    <span style="color: gold;" class="fs-5">★</span>
+                                @endfor
+                                @if ($halfStar)
+                                    <span style="color: gold;" class="fs-5">☆</span>
+                                @endif
+                                @for ($i = 0; $i < $emptyStars; $i++)
+                                    <span style="color: lightgray;" class="fs-5">☆</span>
+                                @endfor
+                            @else
+                                <p class="text-muted">☆☆☆☆☆ 0 Reviews</p>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -162,8 +180,8 @@
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
     <script>
-        const latitude = 15.3072;
-        const longitude = 120.9464;
+        const latitude = {{ $space->latitude }};
+        const longitude = {{ $space->longitude }};
 
         const map = L.map('map').setView([latitude, longitude], 13);
 

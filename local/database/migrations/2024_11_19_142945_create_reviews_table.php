@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,15 +14,12 @@ return new class extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');  // Foreign key for the user
-            $table->integer('cowork_id'); // Foreign key for cowork space
+            $table->foreignIdFor(User::class)->constrained()->onDelete('cascade');
+            $table->integer('cowork_id');
+            $table->foreign('cowork_id')->references('id')->on('list_space_tbl')->onDelete('cascade');
             $table->integer('rating')->unsigned(); // Rating, e.g., 1-5
             $table->text('review_body');  // Body of the review
             $table->timestamps();
-
-            // Foreign key constraints
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('cowork_id')->references('id')->on('list_space_tbl')->onDelete('cascade');
         });
     }
 

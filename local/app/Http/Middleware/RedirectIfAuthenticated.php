@@ -31,7 +31,7 @@ class RedirectIfAuthenticated
             // Redirect based on the user's role
             switch (Auth::user()->user_type) {
                 case 1:
-                    return redirect()->route('client_side.client');
+                    return redirect()->route('client_side.home');
                 case 2:
                     return redirect()->route('coworker_side.coworker');
                 case 3:
