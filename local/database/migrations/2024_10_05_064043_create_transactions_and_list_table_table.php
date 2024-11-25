@@ -43,6 +43,8 @@ return new class extends Migration {
             $table->string('unit')->nullable();
             $table->string('postal')->nullable();
             $table->string('city')->nullable();
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
             $table->integer('tables')->nullable();
             $table->integer('capacity')->nullable();
             $table->integer('meeting_rooms')->nullable();

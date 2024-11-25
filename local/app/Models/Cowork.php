@@ -13,11 +13,11 @@ class Cowork extends Model
     protected $guarded = [];
 
     public function cowork_in_transaction(){
-        return $this->hasMany(\App\Models\Transactions::class);
+        return $this->hasMany(\App\Models\Transaction::class);
     }
 
     public function cowork_in_favorites(){
-        return $this->hasMany(\App\Models\Favorites::class);
+        return $this->hasMany(\App\Models\Favorite::class);
     }
 
     // public function user_cowork(){
@@ -26,6 +26,18 @@ class Cowork extends Model
 
     public function cowork_reviews()
     {
-        return $this->hasMany(Reviews::class, 'cowork_id');
+        return $this->hasMany(Review::class, 'cowork_id');
+    }
+
+    public function cowork_average_review($id)
+    {
+        $averageRating = Review::where('cowork_id', $id)
+        ->avg('rating');
+
+        if($averageRating === null){
+            $averageRating = 0;
+        }
+
+        return $averageRating;
     }
 }
