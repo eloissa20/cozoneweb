@@ -96,12 +96,12 @@
     <div class="col-12 col-md-6">
         <div class="row g-3">
             <div class="col-12">
-                <div class="rounded-4 border p-4 mb-2 shadow" style="background-color: #f5f5f5; min-height: 170px;">
+                <div class="rounded-4 border p-4 mb-2 shadow" style="background-color: #ffffff; min-height: 170px;">
                     Reservation Transactions
                 </div>
             </div>
             <div class="col-12">
-                <div class="rounded-4 border p-4 mb-3 shadow" style="background-color: #f5f5f5; min-height: 130px;">
+                <div class="rounded-4 border p-4 mb-3 shadow" style="background-color: #ffffff; min-height: 130px;">
                     Free Day Passes
                 </div>
             </div>
@@ -109,24 +109,24 @@
     </div>
     
     <div class="col-12 col-md-6">
-        <div class="rounded-4 border p-4 mb-3 shadow" style="background-color: #f5f5f5; min-height: 320px;">
+        <div class="rounded-4 border p-4 mb-3 shadow" style="background-color: #ffffff; min-height: 320px;">
             Reservation Type
         </div>
     </div>
 
     {{-- <div class="col-12">
-        <div class="rounded-4 border p-4" style="background-color: #f5f5f5; min-height: 150px;">
+        <div class="rounded-4 border p-4" style="background-color: #ffffff; min-height: 150px;">
             Full-Width Block
         </div>
     </div> --}}
 
     <div class="col-12 col-md-6">
-        <div class="rounded-4 border mb-3 p-4 shadow" style="background-color: #f5f5f5; min-height: 300px;">
+        <div class="rounded-4 border mb-3 p-4 shadow" style="background-color: #ffffff; min-height: 300px;">
             Current Occupancy
         </div>
     </div>
     <div class="col-12 col-md-6">
-        <div class="rounded-4 border mb-3 p-4 shadow" style="background-color: #f5f5f5; min-height: 300px;">
+        <div class="rounded-4 border mb-3 p-4 shadow" style="background-color: #ffffff; min-height: 300px;">
             Total Revenue
         </div>
     </div>

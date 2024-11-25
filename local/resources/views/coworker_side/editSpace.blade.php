@@ -637,7 +637,7 @@
     <h2>MANAGE PRICING</h2>
     <hr class="separator-line" />
 
-        <!-- DESKS Section -->
+        {{-- <!-- DESKS Section -->
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 class="d-flex align-items-center">DESKS <input type="checkbox" class="ms-3" id="isdeskCheck" onchange="toggleDeskButtons()"></h3>
             <button type="button" class="btn btn-outline-secondary add-desk" id="add-desk-btn" disabled><i class="bi bi-plus-lg"></i></button>
@@ -697,7 +697,7 @@
                     <button type="button" class="btn btn-outline-danger remove-meeting" disabled><i class="bi bi-dash-lg"></i></button> <!-- Remove button -->
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <!-- VIRTUAL OFFICES Section -->
         <div class="d-flex justify-content-between align-items-center mb-3">

@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 
 
 class CoworkerController extends Controller
@@ -85,10 +87,81 @@ class CoworkerController extends Controller
             return response()->json(['error' => 'Space not found.'], 404);
         }
     
+        // Convert the header image path to a full URL
         $spaceDetails->header_image = asset($spaceDetails->header_image);
     
+        // Decode additional_images if it exists and is not null
+        if (!empty($spaceDetails->additional_images)) {
+            $additionalImages = json_decode($spaceDetails->additional_images);
+            $spaceDetails->additional_images = array_map(function($image) {
+                return asset($image); // Convert each image path to an absolute URL
+            }, $additionalImages);
+        }
+    
+        // Decode basics field (assuming it's stored as a JSON string)
+        if (!empty($spaceDetails->basics)) {
+            $spaceDetails->basics = json_decode(stripslashes(trim($spaceDetails->basics, '"')));
+        }
+    
+        // Decode seats field
+        if (!empty($spaceDetails->seats)) {
+            $spaceDetails->seats = json_decode(stripslashes(trim($spaceDetails->seats, '"')));
+        }
+    
+        // Decode equipment field
+        if (!empty($spaceDetails->equipment)) {
+            $spaceDetails->equipment = json_decode(stripslashes(trim($spaceDetails->equipment, '"')));
+        }
+    
+        // Decode facilities field
+        if (!empty($spaceDetails->facilities)) {
+            $spaceDetails->facilities = json_decode(stripslashes(trim($spaceDetails->facilities, '"')));
+        }
+    
+        // Decode accessibility field
+        if (!empty($spaceDetails->accessibility)) {
+            $spaceDetails->accessibility = json_decode(stripslashes(trim($spaceDetails->accessibility, '"')));
+        }
+    
+        // Decode perks field
+        if (!empty($spaceDetails->perks)) {
+            $spaceDetails->perks = json_decode(stripslashes(trim($spaceDetails->perks, '"')));
+        }
+
+        if (!empty($spaceDetails->desk_fields)) {
+            $decodedDeskFields = json_decode($spaceDetails->desk_fields, true);
+            if (is_array($decodedDeskFields)) {
+                $deskFields = array_map(function ($field) {
+                    return json_decode($field, true);
+                }, $decodedDeskFields);
+                $spaceDetails->desk_fields = $deskFields;
+            } else {
+                $spaceDetails->desk_fields = [];
+            }
+        } else {
+            $spaceDetails->desk_fields = [];
+        }
+        
+        if (!empty($spaceDetails->meeting_fields)) {
+            $decodedMeetingFields = json_decode($spaceDetails->meeting_fields, true);
+            if (is_array($decodedMeetingFields)) {
+                $meetingFields = array_map(function ($field) {
+                    return json_decode($field, true);
+                }, $decodedMeetingFields);
+                $spaceDetails->meeting_fields = $meetingFields;
+            } else {
+                $spaceDetails->meeting_fields = [];
+            }
+        } else {
+            $spaceDetails->meeting_fields = [];
+        }
+        
+    
+        // Return the space details
         return response()->json($spaceDetails);
     }
+    
+    
 
     public function deleteSpace($id)
     {
@@ -125,12 +198,16 @@ class CoworkerController extends Controller
     
         // Decode additional images (if they exist)
         $additionalImages = $space->additional_images ? json_decode($space->additional_images, true) : [];
+        
+        // Decode desk and meeting fields
+        $deskFields = json_decode($space->desk_fields, true);
+        $meetingFields = json_decode($space->meeting_fields, true);
 
         // dd($space);
         // dd($equipment);
     
         // Pass all data to the view
-        return view('coworker_side.editSpace', compact('space', 'basics', 'seats', 'equipment', 'facilities', 'accessibility', 'perks', 'additionalImages'));
+        return view('coworker_side.editSpace', compact('space', 'basics', 'seats', 'equipment', 'facilities', 'accessibility', 'perks', 'additionalImages', 'deskFields', 'meetingFields'));
     }
     
 
