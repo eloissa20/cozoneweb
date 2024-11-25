@@ -182,6 +182,12 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::delete('/coworker_side/deleteSpace/{id}', [CoworkerController::class, 'deleteSpace'])->name('deleteSpace');
         
         Route::get('/coworker_side/editSpace/{id}', [CoworkerController::class, 'editSpace'])->name('editSpace');
+        
+        Route::put('/coworker_side/editSpace/{id}', [CoworkerController::class, 'updateSpace'])->name('coworker_side.updateSpace');
+
+
+
+
 
 
     });

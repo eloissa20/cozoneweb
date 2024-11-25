@@ -78,19 +78,14 @@ function moveToNextStepFromStep8() {
   const membershipDuration = $("#membershipDuration").val();
   const membershipPrice = $("#membershipPrice").val();
 
-  if (
-    !virtualService ||
-    !membership ||
-    !membershipDuration ||
-    !membershipPrice
-  ) {
-    Swal.fire({
-      icon: "error",
-      title: "Incomplete Form",
-      text: "Please fill out all required fields before proceeding!",
-    });
-    return;
-  }
+  // if (!virtualService || !membership || !membershipDuration || !membershipPrice) {
+  //     Swal.fire({
+  //         icon: "error",
+  //         title: "Incomplete Form",
+  //         text: "Please fill out all required fields before proceeding!"
+  //     });
+  //     return;
+  // }
 
   localStorage.setItem(
     "listSpace8",

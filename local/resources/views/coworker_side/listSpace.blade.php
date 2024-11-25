@@ -283,7 +283,7 @@
     function updateProgressBar(currentStep) {
         $('.step').removeClass('active');
         $('.progress-line').removeClass('active');
-        $('.label').removeClass('show'); // Remove show class to hide all labels
+        $('.label').removeClass('show');
 
         if (currentStep >= 1) {
             $('#stepper').show();
@@ -298,9 +298,8 @@
             }
         }
 
-        // Show the label of the current step
         if (currentStep > 0) {
-            $('.label').eq(currentStep - 1).addClass('show'); // Add show class to current step label
+            $('.label').eq(currentStep - 1).addClass('show');
         }
     }
 
