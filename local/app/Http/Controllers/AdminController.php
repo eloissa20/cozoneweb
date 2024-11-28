@@ -1,10 +1,15 @@
 <?php
+
 namespace App\Http\Controllers;
-use App\Models\Transaction;
+
+namespace App\Http\Controllers;
+
+use App\Models\Cowork;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\DeactivatedUser;
+use App\Models\Transactions;
 use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\DataTables;
 
@@ -32,12 +37,12 @@ class AdminController extends Controller
                                 <a href='{$editRoute}' class='btn btn-outline-dark btn-sm me-2'>
                                     <i class='bi bi-pencil-square'></i> Update
                                 </a>
-
+                                
                                 <form action='{$deactivateRoute}' method='POST' onsubmit='return confirm(\"Are you sure you want to deactivate this user?\");' style='display:inline;'>
                                     {$csrf}
                                     <button type='submit' class='btn btn-outline-dark btn-sm me-2'><i class='bi bi-archive'></i> Deactivate</button>
                                 </form>
-
+                                
                                 <button class='btn btn-outline-dark btn-sm me-2' onclick='viewUserDetails(\"{$row->id}\")'><i class='bi bi-eye'></i> View</button>
                             </div>";
                     return $str;
@@ -76,7 +81,7 @@ class AdminController extends Controller
         return redirect()->route('users')->with('success', 'User saved successfully!');
     }
 
-
+    
     public function editUser($id) {
         $user = User::findOrFail($id);
 
@@ -165,7 +170,7 @@ class AdminController extends Controller
                                     {$csrf}
                                     <button type='submit' class='btn btn-outline-dark btn-sm me-2'><i class='bi bi-arrow-repeat'></i> Activate</button>
                                 </form>
-                                <form action='{$deleteRoute}' method='POST' onsubmit='return confirm(\"Are you sure you want to permanently delete this user?\");'
+                                <form action='{$deleteRoute}' method='POST' onsubmit='return confirm(\"Are you sure you want to permanently delete this user?\");' 
                                 style='display:inline;'>
                                     {$csrf}
                                     <input type='hidden' name='_method' value='DELETE'>
@@ -241,21 +246,49 @@ class AdminController extends Controller
     public function viewUserDetails($id)
     {
         $userDetails = DB::table('users')->where('id', $id)->first();
-
+    
         if (!$userDetails) {
             return response()->json(['error' => 'Space not found.'], 404);
         }
-
+    
         return response()->json($userDetails);
     }
 
     public function viewSpaces(Request $request) {
+        if ($request->ajax()) {
+            $requests = DB::table('list_space_tbl')
+                ->select('*')
+                ->get();
 
+            return DataTables::of($requests)
+                ->addColumn('actions', function ($row) {
+
+                    $str = "<div class='d-flex justify-content-center'>
+                                <button class='btn btn-outline-dark btn-sm me-2' onclick='viewSpaceDetails(\"{$row->id}\")'><i class='bi bi-eye'></i> View</button>
+                            </div>";
+                    return $str;
+                })
+                ->rawColumns(['actions'])
+                ->make(true);
+        }
+
+        return view('admin_side.spaces');
+    }
+
+    public function viewSpaceDetails($id)
+    {
+        $spaceDetails = Cowork::where('id', $id)->first();
+    
+        if (!$spaceDetails) {
+            return response()->json(['error' => 'Space not found.'], 404);
+        }
+    
+        return response()->json($spaceDetails);
     }
 
     public function viewTransactions(Request $request) {
         if ($request->ajax()) {
-            $transactions = Transaction::with('cowork')
+            $transactions = Transactions::with('cowork')
                 ->select('*')
                 ->get();
 
@@ -276,12 +309,12 @@ class AdminController extends Controller
 
     public function viewTransactionDetails($id)
     {
-        $transactionDetails = Transaction::with('cowork')->where('id', $id)->first();
-
+        $transactionDetails = Transactions::with('cowork')->where('id', $id)->first();
+    
         if (!$transactionDetails) {
             return response()->json(['error' => 'Transaction not found.'], 404);
         }
-
+    
         return response()->json($transactionDetails);
     }
 }
