@@ -17,14 +17,9 @@
                                 Details</a></li>
                         <li><a href="{{ route('client_side.profile.favorites') }}">Favorites / Wishlist</a></li>
                     </ul>
-                    <button class="btn btn-dark w-100 align-bottom">
-                        <a class="dropdown-item" href="{{ route('logout') }}"
-                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    <button class="btn btn-dark w-100 align-bottom"> <a class="dropdown-item" id="logout">
                             {{ __('LOG OUT') }}
                         </a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                            @csrf
-                        </form>
                     </button>
                 </div>
             </nav>
@@ -42,7 +37,7 @@
                                     <th>Date</th>
                                     <th>Space Name</th>
                                     <th>Amount</th>
-                                    <th>Payment Methods</th>
+                                    <th>Payment Method</th>
                                     <th>Location</th>
                                     <th>Status</th>
                                 </tr>
@@ -94,6 +89,33 @@
                     }
                 ]
             });
+
+            $('#logout').on('click', function() {
+                showConfirmDelete();
+            });
+
+            function showConfirmDelete() {
+                alertify.confirm("Confirm Logout", "Are you sure you want to logout?",
+                    function() {
+                        $.ajax({
+                            url: "{{ route('logout') }}",
+                            method: 'POST',
+                            data: {
+                                _token: $('meta[name="csrf-token"]').attr(
+                                    'content')
+                            },
+                            success: function(data) {
+                                location.reload();
+                            },
+                            error: function(xhr) {
+                                alertify.error('Error: ' + xhr.responseText || xhr.statusText);
+                                console.error('Error:', xhr);
+                            }
+                        });
+                    },
+                    function() {
+                    });
+            }
         });
     </script>
 

@@ -78,15 +78,17 @@
                         <div class="mb-3">
                             <label class="form-label">Payment Methods</label>
                             <div class="d-flex gap-2">
-                                <button type="button" class="btn btn-outline-dark btn-payment-method active"
-                                    id="btnCreditCard">Credit Card</button>
-                                <button type="button" class="btn btn-outline-dark btn-payment-method"
-                                    id="btnEWallets">E-Wallets</button>
+                                {{-- <button type="button" class="btn btn-outline-dark btn-payment-method active"
+                                    id="btnCreditCard">Credit Card</button> --}}
+                                {{-- <button type="button" class="btn btn-outline-dark btn-payment-method"
+                                    id="btnEWallets">E-Wallets</button> --}}
                             </div>
                         </div>
 
-                        <form method="GET" action="{{ route('client_side.payment.success', ['id' => $space->id]) }}">
-                            <div id="credit-card">
+                        <form method="POST"
+                            action="{{ route('client_side.payment.process', ['id' => $space->id, 'transactionId' => $transaction->id]) }}">
+                            @csrf
+                            {{-- <div id="credit-card">
                                 <div class="mb-3">
                                     <label for="nameOnCard" class="form-label">Name on Card</label>
                                     <input type="text" class="form-control" id="nameOnCard" placeholder="Full Name">
@@ -113,9 +115,9 @@
                                             placeholder="Enter Code">
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
 
-                            <div id="e-wallets" style="display: none;">
+                            <div id="e-wallets">
                                 <div class="row">
                                     <div class="col-md-6 mb-4 text-center">
                                         <label class="payment-label">
@@ -135,25 +137,27 @@
 
                                     <div class="col-md-6 mb-4 text-center">
                                         <label class="payment-label">
-                                            <input type="radio" name="payment" value="paypal" class="payment-radio">
-                                            <span>PayPal</span>
+                                            <input type="radio" name="payment" value="grabpay" class="payment-radio">
+                                            <span>GrabPay</span>
                                             <div class="placeholder-box"></div>
                                         </label>
                                     </div>
 
                                     <div class="col-md-6 mb-4 text-center">
                                         <label class="payment-label">
-                                            <input type="radio" name="payment" value="grabpay" class="payment-radio">
-                                            <span>GrabPay</span>
+                                            <input type="radio" name="payment" value="paypal" class="payment-radio">
+                                            <span>PayPal</span>
                                             <div class="placeholder-box"></div>
                                         </label>
                                     </div>
+                                    <input hidden type="text" name="total_amount" id="total_amount" value="0">
                                 </div>
                             </div>
 
                             <div class="d-flex justify-content-between">
-                                <button type="button" class="btn btn-outline-secondary"><a href="{{ route('client_side.details', ['id' => $space->id]) }}">Go Back</a></button>
-                                <button type="submit" class="btn btn-dark">Confirm and Pay</button>
+                                <button type="button" class="btn btn-outline-secondary"><a
+                                        href="{{ route('client_side.details', ['id' => $space->id]) }}">Go Back</a></button>
+                                <button type="submit" class="btn btn-dark">Confirm Payment</button>
                             </div>
                         </form>
                     </div>
@@ -163,33 +167,65 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
-                        <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
                             <img src="{{ asset($space->header_image) }}"
-                                style="height: 150px; width: 50%;" alt="Space">
+                                style="height: 150px; width: 50%; object-fit: cover;" alt="Space">
                             <div class="ms-3">
                                 <h5 class="mb-0">{{ $space->coworking_space_name }}</h5>
-                                <p class="text-muted">★★★★★ 0 Reviews</p>
+
+                                @if ($space->averageRating !== 0 || $space->averageRating !== null)
+                                    @php
+                                        $fullStars = floor($space->averageRating);
+                                        $halfStar = $space->averageRating - $fullStars >= 0.5 ? 1 : 0;
+                                        $emptyStars = 5 - ($fullStars + $halfStar);
+                                    @endphp
+                                    @for ($i = 0; $i < $fullStars; $i++)
+                                        <span style="color: gold;" class="fs-5">★</span>
+                                    @endfor
+                                    @if ($halfStar)
+                                        <span style="color: gold;" class="fs-5">☆</span>
+                                    @endif
+                                    @for ($i = 0; $i < $emptyStars; $i++)
+                                        <span style="color: lightgray;" class="fs-5">☆</span>
+                                    @endfor
+                                @else
+                                    <p class="text-muted">☆☆☆☆☆ 0 Reviews</p>
+                                @endif
+
                             </div>
                         </div>
                     </div>
                     <div class="card-body summary-section">
-                        <p><strong>1 Guest</strong> <br> 05/20/2024</p>
-                        <p>₱ 80.00 x 1</p>
+                        <p><strong>{{ $transaction->guests }} Guest</strong> <br> {{ $transaction->reservation_date }}</p>
+                        <p>₱ <span id="amount">{{ $space->price }}</span> x <span
+                                id="hours">{{ $transaction->hours }}</span></p>
+
                         <div class="d-flex justify-content-between">
                             <p>Subtotal</p>
-                            <p>₱ 80.00</p>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <p>Discount</p>
-                            <p>Code</p>
+                            <p>₱ <span id="subtotal">0.00</span></p>
                         </div>
                         <hr>
                         <div class="d-flex justify-content-between">
                             <p><strong>Total</strong></p>
-                            <p><strong>₱ 80.00</strong></p>
+                            <p><strong>₱ <span id="total">0.00</span></strong></p>
                         </div>
-                        <p class="text-muted mt-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua.</p>
+                        <p class="text-muted mt-3"> Welcome to {{ $space->coworking_space_name }}, a vibrant coworking
+                            space located at
+                            {{ $space->unit }}, {{ $space->city }}, {{ $space->location }}, {{ $space->country }},
+                            offering a dynamic environment for freelancers, startups, and established businesses.
+                            Our facility features various workspace types, including private offices and meeting rooms,
+                            with a seating capacity of {{ $space->capacity }}. We are open from
+                            {{ $space->available_days_from }}
+                            to {{ $space->available_days_to }} (except on {{ $space->exceptions }}), operating between
+                            {{ $space->operating_hours_from }} and {{ $space->operating_hours_to }}.
+
+                            Membership options include short-term and long-term plans at competitive prices, with various
+                            payment methods accepted.
+                            For inquiries, reach us at {{ $space->email }} or {{ $space->contact_no }} /
+                            {{ $space->phone }},
+                            and
+                            connect with us on Instagram ({{ $space->instagram }}) and Facebook ({{ $space->facebook }}).
+                        </p>
                     </div>
                 </div>
             </div>
@@ -198,24 +234,51 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const creditCardSection = document.getElementById('credit-card');
-            const eWalletsSection = document.getElementById('e-wallets');
-            const btnCreditCard = document.getElementById('btnCreditCard');
-            const btnEWallets = document.getElementById('btnEWallets');
+            // const creditCardSection = document.getElementById('credit-card');
+            // const eWalletsSection = document.getElementById('e-wallets');
+            // const btnCreditCard = document.getElementById('btnCreditCard');
+            // const btnEWallets = document.getElementById('btnEWallets');
 
-            btnCreditCard.addEventListener('click', function() {
-                creditCardSection.style.display = 'block';
-                eWalletsSection.style.display = 'none';
-                btnCreditCard.classList.add('active');
-                btnEWallets.classList.remove('active');
-            });
+            // btnCreditCard.addEventListener('click', function() {
+            //     creditCardSection.style.display = 'block';
+            //     eWalletsSection.style.display = 'none';
+            //     btnCreditCard.classList.add('active');
+            //     btnEWallets.classList.remove('active');
+            // });
 
-            btnEWallets.addEventListener('click', function() {
-                creditCardSection.style.display = 'none';
-                eWalletsSection.style.display = 'block';
-                btnEWallets.classList.add('active');
-                btnCreditCard.classList.remove('active');
-            });
+            // btnEWallets.addEventListener('click', function() {
+            //     creditCardSection.style.display = 'none';
+            //     eWalletsSection.style.display = 'block';
+            //     btnEWallets.classList.add('active');
+            //     btnCreditCard.classList.remove('active');
+            // });
+
+            const amount = document.getElementById("amount").textContent;
+            const hours = document.getElementById("hours").textContent;
+
+            // Calculate subtotal and total
+            const subtotal = calculateTotal(amount, hours);
+            const total = subtotal; // Modify this if there are additional charges or tax
+
+            // Update HTML elements with calculated values
+            document.getElementById("subtotal").textContent = subtotal.toFixed(2);
+            document.getElementById("total").textContent = total.toFixed(2);
+            document.getElementById("total_amount").value = total.toFixed(2);
+
+            function calculateTotal(amount, hours) {
+                const amountNum = parseFloat(amount);
+                const hoursNum = parseFloat(hours);
+
+                if (isNaN(amountNum) || isNaN(hoursNum)) {
+                    console.error("Invalid input: amount and hours should be numeric strings.");
+                    return null;
+                }
+
+                const total = amountNum * hoursNum;
+
+                return total;
+            }
+
         });
     </script>
 @endsection

@@ -1,12 +1,15 @@
 <?php
 
-use App\Models\Cowork;
+use App\Http\Controllers\FilterController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CoworkerController;
 use App\Http\Controllers\AdminController;
-use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,68 +23,33 @@ use Illuminate\Http\Request;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('landing');
+})->name('landing');
+
 Route::middleware(['preventBackHistory'])->group(function () {
 
     Auth::routes();
 
     Route::middleware(['auth', 'userAuth:1'])->group(function () {
+        //home
+        Route::get('/client_side/home', [FilterController::class, 'client_home'])->name('client_side.home');
 
-        Route::get('/client_side/home', function (Request $request) {
-            $query = Cowork::query();
+        //details
+        Route::get('/client_side/details/{id}', [ClientController::class, 'show_cowork_details'])->name('client_side.details');
+        Route::post('/client_side/details/reserve/{id}', [TransactionController::class, 'processReservation'])->name('client_side.details.reserve');
 
-            if ($request->has('search')) {
-                $query->where('coworking_space_name', 'LIKE', '%' . $request->search . '%')
-                    ->orWhere('coworking_space_address', 'LIKE', '%' . $request->search . '%');
-            }
+        //reviews
+        Route::post('/client_side/reviews/add/{spaceId}', [ReviewController::class, 'store'])->name('client_side.review.add');
+        Route::put('/client_side/reviews/update/{id}', [ReviewController::class, 'update'])->name('client_side.review.update');
+        Route::delete('/client_side/reviews/delete/{id}', [ReviewController::class, 'destroy'])->name('client_side.review.delete');
 
-            $spaces = $query->paginate(6);
-
-            return view('client_side.home_client', ['spaces' => $spaces]);
-        })->name('client_side.home');
-
-        Route::get('/client_side/details/{id}', function ($id) {
-            $space = Cowork::find($id);
-            if (!$space) {
-                return abort(404, 'Space not found');
-            }
-
-            return view('client_side.details_client', ['space' => $space,]);
-        })->name('client_side.details');
-
-        Route::get('/client_side/payment/pay/{id}', function ($id) {
-            $space = Cowork::find($id);
-            if (!$space) {
-                return abort(404, 'Space not found');
-            }
-
-            return view('client_side.payment.payment_client', ['space' => $space]);
-        })->name('client_side.payment');
-
-        Route::get('/client_side/payment/success/{id}', function ($id) {
-            $space = Cowork::find($id);
-            if (!$space) {
-                return abort(404, 'Space not found');
-            }
-            return view('client_side.payment.payment_success_client', ['space' => $space]);
-        })->name('client_side.payment.success');
+        //payment
+        Route::get('/client_side/payment/pay/{id}/{transactionId}', [PaymentController::class, 'client_payment'])->name('client_side.payment');
+        Route::post('/client_side/payment/process/{id}/{transactionId}', [TransactionController::class, 'paymentProcess'])->name('client_side.payment.process');
+        Route::get('/client_side/payment/success/{id}/{transactionId}', [PaymentController::class, 'client_payment_success'])->name('client_side.payment.success');
 
         //list of spaces
-        Route::get('/client_side/lists', function (Request $request) {
-            $query = Cowork::query();
-
-            // Check if a search term is present
-            if ($request->has('search') && !empty($request->search)) {
-                $query->where('coworking_space_name', 'LIKE', '%' . $request->search . '%')
-                    ->orWhere('coworking_space_address', 'LIKE', '%' . $request->search . '%');
-            }
-
-            // Get paginated results
-            $spaces = $query->paginate(10);
-
-            return view('client_side.lists_client', ['spaces' => $spaces]);
-        })->name('client_side.lists');
+        Route::get('/client_side/lists', [FilterController::class, 'client_list'])->name('client_side.lists');
 
         //how to
         Route::get('/client_side/how/faqs', function () {
@@ -116,29 +84,73 @@ Route::middleware(['preventBackHistory'])->group(function () {
 
         Route::delete('/client_side/profile/favorite/remove', [ClientController::class, 'remove_favorite'])->name('client_side.profile.favorite.remove');
 
+        Route::delete('/client_side/profile/favorite/remove/space', [ClientController::class, 'remove_favorite_by_space'])->name('client_side.profile.favorite.remove.space');
+
         Route::post('/client_side/profile/favorite/add', [ClientController::class, 'add_to_favorite'])->name('client_side.profile.favorite.add');
 
         Route::get('/client_side/profile/favorites', function () {
-            $favorites = auth()->user()->user_favorites()->with('cowork')->get(); //how can i access the cowork attributes
+            $favorites = auth()->user()
+                ->user_favorites()
+                ->with('cowork')
+                ->orderBy('created_at', 'desc')
+                ->get();
 
-            return view('client_side.profile.favorites_client', ['favorites' => $favorites,]);
+            return view('client_side.profile.favorites_client', ['favorites' => $favorites]);
         })->name('client_side.profile.favorites');
 
-
+        //notifications
+        Route::get('/client_side/notifications/all', [NotificationController::class, 'showAll'])->name('client_side.notifications.all');
     });
 
     Route::middleware(['auth', 'userAuth:2'])->group(function () {
 
         Route::get('/coworker_side/coworker', [CoworkerController::class, 'viewDashboard'])->name('coworker_side.coworker');
+
         Route::get('/coworker_side/listSpace', [CoworkerController::class, 'viewListSpace'])->name('coworker_side.listSpace');
+
         Route::post('/coworker_side/listSpace', [CoworkerController::class, 'submitListSpace'])->name('listSpace');
 
         Route::get('/coworker_side/myCoworkingSpace', [CoworkerController::class, 'viewmyCoworkingSpace'])->name('myCoworkingSpace');
+
+        Route::get('/coworker_side/reviews', [CoworkerController::class, 'viewReviews'])->name('reviews');
+
+        Route::get('/coworker_side/reservations', [CoworkerController::class, 'viewReservations'])->name('reservations');
+
+        Route::get('/coworker_side/viewSpaceDetails/{id}', [CoworkerController::class, 'viewSpaceDetails'])->name('viewSpaceDetails');
+
+        Route::delete('/coworker_side/deleteSpace/{id}', [CoworkerController::class, 'deleteSpace'])->name('deleteSpace');
+
+        Route::get('/coworker_side/editSpace/{id}', [CoworkerController::class, 'editSpace'])->name('editSpace');
+
+        Route::put('/coworker_side/editSpace/{id}', [CoworkerController::class, 'updateSpace'])->name('coworker_side.updateSpace');
+
+
+
+
+
 
     });
 
     Route::middleware(['auth', 'userAuth:3'])->group(function () {
         Route::get('/admin_side/admin', [AdminController::class, 'viewDashboard'])->name('admin_side.admin');
+
+        Route::get('/admin_side/users', [AdminController::class, 'viewUsers'])->name('users');
+        Route::get('/admin_side/users/create', [AdminController::class, 'createUser'])->name('user.create');
+        Route::post('/admin_side/users', [AdminController::class, 'storeUser'])->name('user.store');
+        Route::get('/admin_side/users/{id}/edit', [AdminController::class, 'editUser'])->name('user.edit');
+        Route::put('/admin_side/users/{id}/update', [AdminController::class, 'updateUser'])->name('user.update');
+        Route::post('/admin_side/users/{id}/deactivate', [AdminController::class, 'deactivateUser'])->name('user.deactivate');
+        Route::get('/admin_side/viewUserDetails/{id}', [AdminController::class, 'viewUserDetails'])->name('viewUserDetails');
+
+        Route::get('/admin_side/deactivated_users', [AdminController::class, 'viewDeactivatedUsers'])->name('deactivated');
+        Route::post('/admin_side/reactivate/{id}', [AdminController::class, 'reactivateUser'])->name('user.reactivate');
+        Route::delete('/admin_side/deactivated_users/{id}', [AdminController::class, 'deleteUser'])->name('deactivated.delete');
+
+
+        Route::get('/admin_side/clients', [AdminController::class, 'viewClients'])->name('clients');
+
+        Route::get('/admin_side/transactions', [AdminController::class, 'viewTransactions'])->name('admin.transactions');
+        Route::get('/admin_side/viewTransactionDetails/{id}', [AdminController::class, 'viewTransactionDetails'])->name('viewTransactionDetails');
     });
 
 });

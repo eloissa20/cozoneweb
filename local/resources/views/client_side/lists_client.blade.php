@@ -64,6 +64,15 @@
             padding: 10px 20px;
             border: 1px solid #ced4da;
         }
+
+        #spacesContainer {
+            height: 80vh;
+            /* Set the height to 50% of the viewport height */
+            overflow-x: hidden;
+            /* Hide horizontal overflow */
+            overflow-y: auto;
+            /* Allow vertical scrolling if necessary */
+        }
     </style>
     <div class="container-fluid page">
         <div class="row">
@@ -81,30 +90,31 @@
                     <div class="mb-3">
                         <label for="duration" class="form-label">Duration</label>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="duration1">
+                            <input class="form-check-input" type="checkbox" value="1-2" id="duration1">
                             <label class="form-check-label" for="duration1">
                                 1 hour - 2 hours
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="duration2">
+                            <input class="form-check-input" type="checkbox" value="3-5" id="duration2">
                             <label class="form-check-label" for="duration2">
                                 3 hours - 5 hours
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="duration3">
+                            <input class="form-check-input" type="checkbox" value="6-8" id="duration3">
                             <label class="form-check-label" for="duration3">
                                 6 hours - 8 hours
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="duration4">
+                            <input class="form-check-input" type="checkbox" value="9-12" id="duration4">
                             <label class="form-check-label" for="duration4">
                                 9 hours - 12 hours
                             </label>
                         </div>
                     </div>
+                    <button hidden type="button" id="remove-filters" class="btn btn-dark mt-3 w-100">Remove Filter</button>
                 </div>
             </div>
 
@@ -116,15 +126,15 @@
                                 placeholder="Search Location" value="{{ request('search') }}">
                         </form>
                     </div>
-                    <div class="col-md-4">
-                        <select class="form-select">
-                            <option value="">Select Type</option>
-                            <option>Coworking</option>
+                    <div class="col-md-4 d-flex gap-2">
+                        <select class="form-select" id="filter-spaces">
+                            <option selected disabled>Select Type</option>
+                            <option value="Private Room">Private Room</option>
+                            <option value="Meeting Room">Meeting Room</option>
+                            <option value="Desk Space">Desk Space</option>
                         </select>
-                    </div>
-                    <div>
-                        <button class="btn btn-outline-secondary">Recommended</button>
-                        <button class="btn btn-outline-secondary">Map</button>
+                        <button hidden type="button" id="remove-type-filter" class="btn btn-outline-dark"><i
+                                class="bi bi-x"></i></button>
                     </div>
                 </div>
 
@@ -133,13 +143,35 @@
                         <div class="col-md-4 space-card">
                             <div class="coworking-card position-relative">
                                 <img src="{{ asset($item->header_image) }}" alt="Coworking Space Image" class="img-fluid">
-                                <i class="favorite-heart bi bi-heart-fill fs-3 btn add_to_favorite"
+                                <i class="favorite-heart bi bi-heart-fill fs-3 btn
+                                    {{ $item->isFavorite ? 'text-danger remove_to_favorite' : 'add_to_favorite' }}"
                                     data-id="{{ $item->id }}"></i>
                                 <h6 class="mt-2">{{ $item->coworking_space_name }}</h6>
                                 <p class="text-muted">{{ $item->coworking_space_address }}</p>
-                                <p><span class="rating">★★★★★</span> <small>(21)</small></p>
-                                <p class="price-tag">Price at ₱{{ $item->membership_price }}</p>
-                                <a href="{{ route('client_side.details', ['id' => $item->id]) }}"
+
+                                @if ($item->averageRating !== 0 || $item->averageRating !== null)
+                                    <p>
+                                        @php
+                                            $fullStars = floor($item->averageRating);
+                                            $halfStar = $item->averageRating - $fullStars >= 0.5 ? 1 : 0;
+                                            $emptyStars = 5 - ($fullStars + $halfStar);
+                                        @endphp
+                                        @for ($i = 0; $i < $fullStars; $i++)
+                                            <span style="color: gold;" class="fs-5">★</span>
+                                        @endfor
+                                        @if ($halfStar)
+                                            <span style="color: gold;" class="fs-5">☆</span>
+                                        @endif
+                                        @for ($i = 0; $i < $emptyStars; $i++)
+                                            <span style="color: lightgray;" class="fs-5">
+                                                ☆</span>
+                                        @endfor
+                                    </p>
+                                @else
+                                    <p class="text-muted fs-5">☆☆☆☆☆</p>
+                                @endif
+                                <p class="price-tag">Price at ₱{{ $item->price }}</p>
+                                <a href="{{ route('client_side.details', ['id' => $item->id]) }}" type="submit"
                                     class="btn btn-outline-dark btn-sm">View Details</a>
                             </div>
                         </div>
@@ -153,6 +185,40 @@
         $(document).ready(function() {
             let spaces = @json($spaces);
 
+            function renderSpaces(spaces) {
+                let spaceContainer = $('#spacesContainer');
+                spaceContainer.html('');
+
+                spaces.forEach(space => {
+                    const fullStars = Math.floor(space.averageRating || 0);
+                    const halfStar = (space.averageRating - fullStars >= 0.5) ? 1 : 0;
+                    const emptyStars = 5 - (fullStars + halfStar);
+
+                    const stars = `${'<span style="color: gold;" class="fs-5">★</span>'.repeat(fullStars)}
+                   ${halfStar ? '<span style="color: gold;" class="fs-5">☆</span>' : ''}
+                   ${'<span style="color: lightgray;" class="fs-5">☆</span>'.repeat(emptyStars)}`;
+
+                    const detailsRouteBase = "{{ url('client_side/details') }}";
+
+                    spaceContainer.append(`
+                        <div class="col-md-4 space-card">
+                            <div class="coworking-card position-relative">
+                                <img src="{{ asset('${space.header_image}') }}" alt="Coworking Space Image" class="img-fluid">
+                                <i class="favorite-heart bi bi-heart-fill fs-3 btn
+                                    ${space.isFavorite ? 'text-danger remove_to_favorite' : 'add_to_favorite'}"
+                                    data-id="${space.id}"></i>
+                                <h6 class="mt-2">${space.coworking_space_name}</h6>
+                                <p class="text-muted">${space.coworking_space_address}</p>
+                                <p>${stars}</p>
+                                <p class="price-tag">Price at ₱${space.price}</p>
+                                <a href="${detailsRouteBase}/${space.id}" type="submit" class="btn btn-outline-dark btn-sm">View Details</a>
+                            </div>
+                        </div>
+                    `);
+                });
+
+            }
+
             $('#search').on('keyup', _.debounce(function() {
                 const searchTerm = $(this).val().toLowerCase();
                 const filteredSpaces = _.filter(spaces.data, function(space) {
@@ -163,44 +229,161 @@
                 renderSpaces(filteredSpaces);
             }, 300));
 
-            function renderSpaces(spaces) {
-                let spaceContainer = $('#spacesContainer');
-                spaceContainer.html('');
+            $('#filter-spaces').on('change', function() {
+                const filterType = $(this).val();
+                const filteredSpaces = spaces.data.filter(item => item.type_of_space === filterType);
+                $('#remove-type-filter').removeAttr('hidden');
+                renderSpaces(filteredSpaces);
+            });
 
-                spaces.forEach(space => {
-                    spaceContainer.append(`
-                <div class="col-md-4">
-                    <div class="coworking-card position-relative">
-                        <img src="{{ asset('${space.header_image}') }}" alt="Coworking Space Image" class="img-fluid">
-                        <i class="favorite-heart bi bi-heart-fill fs-3 btn add_to_favorite" data-id="${space.id}"></i>
-                        <h6 class="mt-2">${space.coworking_space_name}</h6>
-                        <p class="text-muted">${space.coworking_space_address}</p>
-                        <p><span class="rating">★★★★★</span> <small>(21)</small></p>
-                        <p class="price-tag">Price at ₱${space.membership_price}</p>
-                        <a href="{{ route('client_side.details', '') }}/${space.id}" class="btn btn-outline-dark btn-sm">View Details</a>
-                    </div>
-                </div>
-            `);
+            $('#remove-type-filter').on('click', function() {
+                $('#remove-type-filter').attr('hidden', true);
+                renderSpaces(spaces.data);
+            });
+
+            function applyPriceFilter() {
+                let minPrice = parseFloat($('#minPrice').val()) || 0;
+                let maxPrice = parseFloat($('#maxPrice').val()) || Infinity;
+
+                let filteredSpaces = spaces.data.filter(space => {
+                    let spacePrice = space.price;
+                    let priceMatches = spacePrice >= minPrice && spacePrice <= maxPrice;
+
+                    return priceMatches;
                 });
+
+                renderSpaces(filteredSpaces);
+
+                // Show the remove filter button if filters are applied
+                if (minPrice > 0 || maxPrice < Infinity) {
+                    $('#remove-filters').removeAttr('hidden');
+                } else {
+                    $('#remove-filters').attr('hidden', true);
+                }
             }
 
-            $('.add_to_favorite').on('click', function() {
+            // Trigger filtering when input fields change
+            $('#minPrice, #maxPrice').on('change', applyPriceFilter);
+
+            function applyDurationFilter() {
+                let selectedDuration1 = $('#duration1').prop('checked');
+                let selectedDuration2 = $('#duration2').prop('checked');
+                let selectedDuration3 = $('#duration3').prop('checked');
+                let selectedDuration4 = $('#duration4').prop('checked');
+
+                // Time ranges for duration (in minutes)
+                const durationRanges = [{
+                        min: 60,
+                        max: 120
+                    }, // 1 hour - 2 hours
+                    {
+                        min: 180,
+                        max: 300
+                    }, // 3 hours - 5 hours
+                    {
+                        min: 360,
+                        max: 480
+                    }, // 6 hours - 8 hours
+                    {
+                        min: 540,
+                        max: 720
+                    }, // 9 hours - 12 hours
+                ];
+
+                // Convert operating hours (from time to minutes) for comparison
+                function timeToMinutes(time) {
+                    let [hours, minutes] = time.split(':').map(Number);
+                    return hours * 60 + minutes;
+                }
+
+                // Filter spaces based on price and selected duration
+                let filteredSpaces = spaces.data.filter(space => {
+                    let spaceMinTime = timeToMinutes(space.operating_hours_from); // Example: "08:00:00"
+                    let spaceMaxTime = timeToMinutes(space.operating_hours_to); // Example: "17:00:00"
+
+                    // Check duration range
+                    let durationMatches = false;
+                    if (selectedDuration1) {
+                        durationMatches = spaceMinTime >= durationRanges[0].min && spaceMaxTime <=
+                            durationRanges[0].max;
+                    }
+                    if (selectedDuration2) {
+                        durationMatches = spaceMinTime >= durationRanges[1].min && spaceMaxTime <=
+                            durationRanges[1].max;
+                    }
+                    if (selectedDuration3) {
+                        durationMatches = spaceMinTime >= durationRanges[2].min && spaceMaxTime <=
+                            durationRanges[2].max;
+                    }
+                    if (selectedDuration4) {
+                        durationMatches = spaceMinTime >= durationRanges[3].min && spaceMaxTime <=
+                            durationRanges[3].max;
+                    }
+
+                    return durationMatches;
+                });
+
+                renderSpaces(filteredSpaces);
+
+                // Show the remove filter button if filters are applied
+                if (selectedDuration1 || selectedDuration2 ||
+                    selectedDuration3 || selectedDuration4) {
+                    $('#remove-filters').removeAttr('hidden');
+                } else {
+                    $('#remove-filters').attr('hidden', true);
+                }
+            }
+
+            // Trigger filtering when input fields change
+            $('#duration1, #duration2, #duration3, #duration4').on('change', applyDurationFilter);
+
+            // Remove filters
+            $('#remove-filters').on('click', function() {
+                $('#minPrice').val('');
+                $('#maxPrice').val('');
+                $('#duration1, #duration2, #duration3, #duration4').prop('checked', false);
+                applyPriceFilter(); // Reapply filters to show all spaces
+                applyDurationFilter();
+            });
+
+            $(document).on('click', '.add_to_favorite, .remove_to_favorite', function() {
                 const itemId = $(this).data('id');
+                const isFavorite = $(this).hasClass(
+                    'remove_to_favorite');
+
                 $.ajax({
-                    url: '{{ route('client_side.profile.favorite.add') }}',
-                    method: 'POST',
+                    url: isFavorite ? '{{ route('client_side.profile.favorite.remove.space') }}' :
+                        '{{ route('client_side.profile.favorite.add') }}',
+                    method: isFavorite ? 'DELETE' : 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',
                         id: itemId
                     },
                     success: function(response) {
-                        if (response.success) {
-                            alert(response.message)
+                        if (isFavorite) {
+                            alertify.success('Cozone remove to favorites!')
+                        } else {
+                            alertify.success('Cozone added to favorites!')
                         }
+                        let spaceIndex = _.findIndex(spaces.data, {
+                            id: itemId
+                        });
+                        if (spaceIndex !== -1) {
+                            spaces.data[spaceIndex].isFavorite = !
+                                isFavorite;
+                        }
+
+                        const searchTerm = $('#search').val().toLowerCase();
+                        const filteredSpaces = _.filter(spaces.data, function(space) {
+                            return space.coworking_space_name.toLowerCase().includes(
+                                    searchTerm) ||
+                                space.coworking_space_address.toLowerCase().includes(
+                                    searchTerm);
+                        });
+
+                        renderSpaces(filteredSpaces);
                     },
-                    error: function() {
-                        alert('Failed to add favorite.');
-                    }
+                    error: function() {}
                 });
             });
         });

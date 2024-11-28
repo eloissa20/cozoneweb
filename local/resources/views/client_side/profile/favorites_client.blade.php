@@ -58,14 +58,9 @@
                         <li><a href="{{ route('client_side.profile.favorites') }}" class="active_sidebar">Favorites /
                                 Wishlist</a></li>
                     </ul>
-                    <button class="btn btn-dark w-100 align-bottom"> <a class="dropdown-item" href="{{ route('logout') }}"
-                            onclick="event.preventDefault();
-                                      document.getElementById('logout-form').submit();">
+                    <button class="btn btn-dark w-100 align-bottom"> <a class="dropdown-item" id="logout">
                             {{ __('LOG OUT') }}
                         </a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                            @csrf
-                        </form>
                     </button>
                 </div>
             </nav>
@@ -79,7 +74,7 @@
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 Filter Date
                             </button>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu" id="filter-transactions">
                                 <li><a class="dropdown-item" href="#">Newest</a></li>
                                 <li><a class="dropdown-item" href="#">Oldest</a></li>
                             </ul>
@@ -89,15 +84,19 @@
                     <div class="grid-container">
                         @if (count($favorites) == 0)
                             <h6>No Favorites</h6>
+                        @else
+                            @foreach ($favorites as $item)
+                                <div class="coworking-card">
+                                    <img src="{{ asset($item->cowork->header_image) }}" alt="Coworking Space">
+                                    <h5>{{ $item->cowork->coworking_space_name }}</h5>
+                                    <p class="mb-3">{{ $item->cowork->coworking_space_name }}</p>
+                                    <a href="{{ route('client_side.details', ['id' => $item->space_id]) }}" type="submit"
+                                        class="btn btn-outline-dark btn-sm">View Details</a>
+                                    <a class="btn btn-outline-danger btn-sm btn remove_item"
+                                        data-id="{{ $item->id }}">Remove</a>
+                                </div>
+                            @endforeach
                         @endif
-                        @foreach ($favorites as $item)
-                            <div class="coworking-card">
-                                <img src="{{ asset($item->cowork->header_image) }}" alt="Coworking Space">
-                                <h5>{{ $item->cowork->coworking_space_name }}</h5>
-                                <p>{{ $item->cowork->coworking_space_name }}</p>
-                                <i class="bi bi-heart-fill text-danger fs-3 btn remove_item" data-id="{{ $item->id }}"></i>
-                            </div>
-                        @endforeach
                     </div>
                 </div>
             </main>
@@ -106,8 +105,49 @@
     </div>
 
     <script>
-        $(document).ready(function () {
-            $('.remove_item').on('click', function() {
+        $(document).ready(function() {
+            const favoritesContainer = document.querySelector('.grid-container');
+            const filterMenu = document.getElementById('filter-transactions');
+
+            let favorites = @json($favorites);
+
+            function renderFavorites(favorites) {
+                favoritesContainer.innerHTML = '';
+
+                if (favorites.length === 0) {
+                    favoritesContainer.innerHTML = '<h6>No Favorites</h6>';
+                    return;
+                }
+
+                const detailsRouteBase = "{{ url('client_side/details') }}";
+
+                favorites.forEach(item => {
+                    favoritesContainer.innerHTML += `
+                <div class="coworking-card">
+                    <img src="{{ asset('${item.cowork.header_image}') }}" alt="Coworking Space">
+                    <h5>${item.cowork.coworking_space_name}</h5>
+                    <p class="mb-3">${item.cowork.coworking_space_name}</p>
+                    <a href="${detailsRouteBase}/${item.space_id}" class="btn btn-outline-dark btn-sm">View Details</a>
+                    <a class="btn btn-outline-danger btn-sm btn remove_item" data-id="${item.id}">Remove</a>
+                </div>
+            `;
+                });
+            }
+
+            filterMenu.addEventListener('click', function(e) {
+                e.preventDefault();
+                const filterType = e.target.textContent.trim();
+
+                if (filterType === 'Newest') {
+                    favorites.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                } else if (filterType === 'Oldest') {
+                    favorites.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+                }
+
+                renderFavorites(favorites);
+            });
+
+            $(document).on('click', '.remove_item', function() {
                 const itemId = $(this).data('id');
                 $.ajax({
                     url: '{{ route('client_side.profile.favorite.remove') }}',
@@ -118,14 +158,46 @@
                     },
                     success: function(response) {
                         if (response.success) {
-                            $(`i[data-id="${itemId}"]`).closest('.coworking-card').remove();
+                            favorites = favorites.filter(item => item.id !== itemId);
+                            renderFavorites(favorites);
+                            alertify.success('Cozone removed from favorites!');
                         }
                     },
                     error: function() {
-                        alert('Failed to remove favorite.');
+                        alertify.error('Failed to remove favorite.');
                     }
                 });
             });
+
+            renderFavorites(favorites);
+        });
+
+        $(document).ready(function() {
+            $('#logout').on('click', function() {
+                showConfirmDelete();
+            });
+
+            function showConfirmDelete() {
+                alertify.confirm("Confirm Logout", "Are you sure you want to logout?",
+                    function() {
+                        $.ajax({
+                            url: "{{ route('logout') }}",
+                            method: 'POST',
+                            data: {
+                                _token: $('meta[name="csrf-token"]').attr(
+                                    'content')
+                            },
+                            success: function(data) {
+                                location.reload();
+                            },
+                            error: function(xhr) {
+                                alertify.error('Error: ' + xhr.responseText || xhr.statusText);
+                                console.error('Error:', xhr);
+                            }
+                        });
+                    },
+                    function() {});
+            }
         })
     </script>
 @endsection

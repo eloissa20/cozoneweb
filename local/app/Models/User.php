@@ -55,11 +55,21 @@ class User extends Authenticatable
 
     public function user_transactions()
     {
-        return $this->hasMany(\App\Models\Transactions::class);
+        return $this->hasMany(\App\Models\Transaction::class);
     }
 
     public function user_favorites()
     {
-        return $this->hasMany(\App\Models\Favorites::class);
+        return $this->hasMany(\App\Models\Favorite::class);
+    }
+
+    public function user_reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function user_notifications()
+    {
+        return $this->hasMany(Notification::class);
     }
 }
