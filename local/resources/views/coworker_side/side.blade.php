@@ -17,8 +17,21 @@
 
     <link href="{{ asset('assets/listSpace.css') }}" rel="stylesheet">
 
+    <!-- Include SweetAlert2 CSS and JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- SweetAlert2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.0/dist/sweetalert2.min.css" rel="stylesheet">
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.0/dist/sweetalert2.min.js"></script>
+
+
+
 </head>
 
+<style>
+
+</style>
 <body>
     <div class="wrapper">
         <aside id="sidebar">
@@ -30,26 +43,26 @@
                     <li class="sidebar-header">
                         Admin Dashboard
                     </li>
-                    <li class="sidebar-item">
+                    <li class="sidebar-item {{ Route::is('coworker_side.coworker') ? 'active' : '' }}">
                         <a href="{{ route('coworker_side.coworker') }}" class="sidebar-link">
                             <i class="bi bi-graph-up"></i>
                             Analytics
                         </a>
                     </li>
-                    <li class="sidebar-item">
-                        <a href="#" class="sidebar-link">
+                    <li class="sidebar-item {{ Route::is('reservations') ? 'active' : '' }}">
+                        <a href="{{ route('reservations') }}" class="sidebar-link">
                             <i class="bi bi-book"></i>
                             Reservation
                         </a>
                     </li>
-                    <li class="sidebar-item">
+                    <li class="sidebar-item {{ Route::is('myCoworkingSpace') ? 'active' : '' }}">
                         <a href="{{ route('myCoworkingSpace') }}" class="sidebar-link">
                             <i class="bi bi-building-fill"></i>
                             My Coworking Space
                         </a>
                     </li>
-                    <li class="sidebar-item">
-                        <a href="#" class="sidebar-link">
+                    <li class="sidebar-item {{ Route::is('reviews') ? 'active' : '' }}">
+                        <a href="{{ route('reviews') }}" class="sidebar-link">
                             <i class="bi bi-chat-left-text-fill"></i>
                             Reviews
                         </a>
@@ -71,7 +84,7 @@
                             <a class="nav-link" href="#">About Us</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('coworker_side.listSpace') }}">List Space</a>
+                            <a class="nav-link {{ Route::is('coworker_side.listSpace') ? 'active' : '' }}" href="{{ route('coworker_side.listSpace') }}">List Space</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a href="#" data-bs-toggle="dropdown" class="pe-md-0">
@@ -135,5 +148,6 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/coworker/coworker.js') }}" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

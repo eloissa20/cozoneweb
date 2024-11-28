@@ -19,26 +19,26 @@ body {
   max-width: 430px;
   width: 100%;
   /* background: #fff;
-    border-radius: 7px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3); */
+  border-radius: 7px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3); */
 
-  background: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: rgba( 255, 255, 255, 0.25 );
+  box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+  backdrop-filter: blur( 6px );
+  -webkit-backdrop-filter: blur( 6px );
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba( 255, 255, 255, 0.18 );
 }
 
 .login-container .registration {
   display: none;
 }
 
-#check:checked ~ .registration {
+#check:checked~.registration {
   display: block;
 }
 
-#check:checked ~ .login {
+#check:checked~.login {
   display: none;
 }
 
@@ -89,6 +89,8 @@ body {
   text-decoration: underline;
 }
 
+
+
 .form button.btn-primary {
   width: 100%;
   height: 60px;
@@ -103,7 +105,7 @@ body {
   border: none;
   border-radius: 6px;
   outline: none;
-  margin-bottom: 0.5rem;
+  margin-bottom: .5rem;
 }
 
 .form button.btn-primary:hover {
@@ -124,7 +126,7 @@ body {
   text-decoration: underline;
 }
 
-.loading-screen {
+/* .loading-screen {
   position: fixed;
   top: 0;
   left: 0;
@@ -147,10 +149,44 @@ body {
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+} */
+
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.spinner {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #292929;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.forgot-password {
+  font-size: 0.85rem; /* Adjust font size as needed */
+  line-height: 1.2;   /* Adjust line height if needed */
+  color: #007bff;     /* Adjust color to match your theme */
+  text-decoration: underline; /* Optional: Underline the text */
+}
+
+.forgot-password:hover {
+  color: #0056b3; /* Darker color on hover */
 }

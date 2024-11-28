@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 
 
 class CoworkerController extends Controller
@@ -52,44 +55,272 @@ class CoworkerController extends Controller
     {
         return view('coworker_side.listSpace');
     }
-    // public function viewmyCoworkingSpace(Request $request)
-    // {
-    //     if ($request->ajax()) {
-    //         $requests = DB::table('list_space_tbl')
-    //             ->select('*')
-    //             ->get();
-    //             dd($requests);
-
-    //         return Datatables::of($requests)
-    //             ->addIndexColumn()
-    //             ->addColumn('action', function($row){
-    //                 return '<button class="btn btn-outline-light">View</button>';
-    //             })
-    //             ->make(true);
-    //     }
-
-    //     return view('coworker_side.myCoworkingSpace');
-    // }
 
     public function viewmyCoworkingSpace(Request $request)
-{
-    if ($request->ajax()) {
-        $requests = DB::table('list_space_tbl')
-            ->select('*')
-            ->get();
+    {
+        if ($request->ajax()) {
+            $requests = DB::table('list_space_tbl')
+                ->select('*')
+                ->get();
 
-        return DataTables::of($requests)
-            // ->addIndexColumn()
-            ->addColumn('actions', function ($row) {
-                $str = "<button class='btn btn-outline-dark btn-sm me-2'><i class='bi bi-pencil-square'></i> Update</button>
-                        <button class='btn btn-outline-dark btn-sm' ><i class='bi bi-trash'></i> Delete</button>";
-                return $str;
-            })
-            ->rawColumns(['actions'])
-            ->make(true);
+            return DataTables::of($requests)
+                // ->addIndexColumn()
+                ->addColumn('actions', function ($row) {
+                    $editUrl = route('editSpace', $row->id);
+                    $str = "<button class='btn btn-outline-dark btn-sm me-2' onclick='window.location.href=\"$editUrl\"'><i class='bi bi-pencil-square'></i> Update</button>
+                            <button class='btn btn-outline-dark btn-sm me-2' onclick='deleteSpace(\"{$row->id}\")'><i class='bi bi-trash'></i> Delete</button>
+                            <button class='btn btn-outline-dark btn-sm me-2' onclick='viewSpaceDetails(\"{$row->id}\")'><i class='bi bi-eye'></i> View</button>";
+                    return $str;
+                })
+                ->rawColumns(['actions'])
+                ->make(true);
+        }
+
+        return view('coworker_side.myCoworkingSpace');
     }
 
-    return view('coworker_side.myCoworkingSpace');
+    public function viewSpaceDetails($id)
+    {
+        $spaceDetails = DB::table('list_space_tbl')->where('id', $id)->first();
+    
+        if (!$spaceDetails) {
+            return response()->json(['error' => 'Space not found.'], 404);
+        }
+    
+        // Convert the header image path to a full URL
+        $spaceDetails->header_image = asset($spaceDetails->header_image);
+    
+        // Decode additional_images if it exists and is not null
+        if (!empty($spaceDetails->additional_images)) {
+            $additionalImages = json_decode($spaceDetails->additional_images);
+            $spaceDetails->additional_images = array_map(function($image) {
+                return asset($image); // Convert each image path to an absolute URL
+            }, $additionalImages);
+        }
+    
+        // Decode basics field (assuming it's stored as a JSON string)
+        if (!empty($spaceDetails->basics)) {
+            $spaceDetails->basics = json_decode(stripslashes(trim($spaceDetails->basics, '"')));
+        }
+    
+        // Decode seats field
+        if (!empty($spaceDetails->seats)) {
+            $spaceDetails->seats = json_decode(stripslashes(trim($spaceDetails->seats, '"')));
+        }
+    
+        // Decode equipment field
+        if (!empty($spaceDetails->equipment)) {
+            $spaceDetails->equipment = json_decode(stripslashes(trim($spaceDetails->equipment, '"')));
+        }
+    
+        // Decode facilities field
+        if (!empty($spaceDetails->facilities)) {
+            $spaceDetails->facilities = json_decode(stripslashes(trim($spaceDetails->facilities, '"')));
+        }
+    
+        // Decode accessibility field
+        if (!empty($spaceDetails->accessibility)) {
+            $spaceDetails->accessibility = json_decode(stripslashes(trim($spaceDetails->accessibility, '"')));
+        }
+    
+        // Decode perks field
+        if (!empty($spaceDetails->perks)) {
+            $spaceDetails->perks = json_decode(stripslashes(trim($spaceDetails->perks, '"')));
+        }
+
+        if (!empty($spaceDetails->desk_fields)) {
+            $decodedDeskFields = json_decode($spaceDetails->desk_fields, true);
+            if (is_array($decodedDeskFields)) {
+                $deskFields = array_map(function ($field) {
+                    return json_decode($field, true);
+                }, $decodedDeskFields);
+                $spaceDetails->desk_fields = $deskFields;
+            } else {
+                $spaceDetails->desk_fields = [];
+            }
+        } else {
+            $spaceDetails->desk_fields = [];
+        }
+        
+        if (!empty($spaceDetails->meeting_fields)) {
+            $decodedMeetingFields = json_decode($spaceDetails->meeting_fields, true);
+            if (is_array($decodedMeetingFields)) {
+                $meetingFields = array_map(function ($field) {
+                    return json_decode($field, true);
+                }, $decodedMeetingFields);
+                $spaceDetails->meeting_fields = $meetingFields;
+            } else {
+                $spaceDetails->meeting_fields = [];
+            }
+        } else {
+            $spaceDetails->meeting_fields = [];
+        }
+        
+    
+        // Return the space details
+        return response()->json($spaceDetails);
+    }
+    
+    
+
+    public function deleteSpace($id)
+    {
+        $space = DB::table('list_space_tbl')->where('id', $id)->first();
+
+        if (!$space) {
+            return response()->json(['error' => 'Space not found.'], 404);
+        }
+
+        DB::table('list_space_tbl')->where('id', $id)->delete();
+
+        return response()->json(['message' => 'Space deleted successfully.']);
+    }
+
+    public function editSpace($id)
+    {
+        // Find the space by ID
+        $space = DB::table('list_space_tbl')->where('id', $id)->first();
+    
+        // Check if space exists
+        if (!$space) {
+            return redirect()->back()->with('error', 'Space not found.');
+        }
+    
+        // Decode JSON-encoded fields
+        $basics = json_decode(stripslashes(trim($space->basics, '"')), true);
+        $seats = json_decode(stripslashes(trim($space->seats, '"')), true);
+        // $equipment = json_decode($space->equipment, true);
+        $equipment = json_decode(stripslashes(trim($space->equipment, '"')), true);
+        $facilities = json_decode(stripslashes(trim($space->facilities, '"')), true);
+        $accessibility = json_decode(stripslashes(trim($space->accessibility, '"')), true);
+        $perks = json_decode(stripslashes(trim($space->perks, '"')), true);
+        
+    
+        // Decode additional images (if they exist)
+        $additionalImages = $space->additional_images ? json_decode($space->additional_images, true) : [];
+        
+        // Decode desk and meeting fields
+        $deskFields = json_decode($space->desk_fields, true);
+        $meetingFields = json_decode($space->meeting_fields, true);
+
+        // dd($space);
+        // dd($equipment);
+    
+        // Pass all data to the view
+        return view('coworker_side.editSpace', compact('space', 'basics', 'seats', 'equipment', 'facilities', 'accessibility', 'perks', 'additionalImages', 'deskFields', 'meetingFields'));
+    }
+    
+
+    public function updateSpace(Request $request, $id)
+{
+    // Validate the input
+    $request->validate([
+        'headerImage' => 'nullable|mimes:png,jpg,jpeg,webp',
+        'additionalImages.*' => 'nullable|mimes:png,jpg,jpeg,webp|max:2048',
+    ], [
+        'headerImage.mimes' => 'The header image must be a file of type: png, jpg, jpeg, webp.',
+        'additionalImages.*.mimes' => 'Each additional image must be a file of type: png, jpg, jpeg, webp.',
+        'additionalImages.*.max' => 'Each additional image may not be larger than 2MB.',
+    ]);
+
+    // Check if space exists
+    $space = DB::table('list_space_tbl')->where('id', $id)->first();
+    if (!$space) {
+        return response()->json(['error' => 'Space not found.'], 404);
+    }
+
+    // Handle the header image upload
+    if ($request->hasFile('headerImage')) {
+        $file = $request->file('headerImage');
+        $extension = $file->getClientOriginalExtension();
+        $filename = time() . '.' . $extension;
+        $path = 'uploads/header/';
+        $file->move($path, $filename);
+        $headerImagePath = $path . $filename;
+    } else {
+        // Keep existing header image if not updated
+        $headerImagePath = $space->header_image;
+    }
+
+    // Handle additional images upload
+    $additionalImages = [];
+    if ($request->hasFile('additionalImages')) {
+        foreach ($request->file('additionalImages') as $image) {
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move('uploads/additional_images/', $imageName);
+            $additionalImages[] = 'uploads/additional_images/' . $imageName;
+        }
+    } else {
+        // Keep existing additional images if not updated
+        $additionalImages = json_decode($space->additional_images, true);
+    }
+
+    // Prepare the data for updating
+    $data = [
+        'role' => $request->input('role'),
+        'coworking_space_name' => $request->input('coworkingSpaceName'),
+        'coworking_space_address' => $request->input('coworkingSpaceAddress'),
+        'space_name' => $request->input('spaceName'),
+        'type_of_space' => $request->input('typeOfSpace'),
+        'description' => $request->input('description'),
+        'opening_date' => $request->input('openingDate'),
+        'available_days_from' => $request->input('availableDaysFrom'),
+        'available_days_to' => $request->input('availableDaysTo'),
+        'exceptions'=> $request->input('exceptions'),
+        'operating_hours_from' => $request->input('operatingHoursFrom'),
+        'operating_hours_to' => $request->input('operatingHoursTo'),
+        'email' => $request->input('email'),
+        'phone' => $request->input('phone'),
+        'instagram' => $request->input('instagram'),
+        'facebook' => $request->input('facebook'),
+        'contact_no' => $request->input('contactNo'),
+        
+        // Ensure you're saving basics, seats, equipment, etc., as JSON-encoded arrays
+        'basics' => json_encode($request->input('basics', [])),
+        'seats' => json_encode($request->input('seats', [])),
+        'equipment' => json_encode($request->input('equipment', [])),
+        'facilities' => json_encode($request->input('facilities', [])),
+        'accessibility' => json_encode($request->input('accessibility', [])),
+        'perks' => json_encode($request->input('perks', [])),
+        
+        'location' => $request->input('location'),
+        'telephone' => $request->input('telephone'),
+        'country' => $request->input('country'),
+        'unit' => $request->input('unit'),
+        'postal' => $request->input('postal'),
+        'city' => $request->input('city'),
+        'latitude' => $request->input('latitude'),
+        'longitude' => $request->input('longitude'),
+        'tables' => $request->input('tables'),
+        'capacity' => $request->input('capacity'),
+        'meeting_rooms' => $request->input('meetingRooms'),
+        'virtual_offices' => $request->input('virtualOffices'),
+        'size' => $request->input('size'),
+        'measurement_unit' => $request->input('measurementUnit'),
+        'header_image' => $headerImagePath,
+        'additional_images' => json_encode($additionalImages),
+        'pay_online' => $request->input('payOnline'),
+        'credit_cards' => $request->input('creditCards'),
+        'eWallet' => $request->input('eWallet'),
+        'desk_fields' => json_encode($request->input('desks', [])),
+        'meeting_fields' => json_encode($request->input('meetingRooms', [])),
+        'virtual_service' => $request->input('virtualService'),
+        'membership' => $request->input('membership'),
+        'membership_duration' => $request->input('membershipDuration'),
+        'membership_price' => $request->input('membershipPrice'),
+        'short_term' => $request->input('shortTerm'),
+        'short_term_details' => $request->input('shortTermDetails'),
+        'free_pass' => $request->input('freePass'),
+        'free_pass_details' => $request->input('freePassDetails'),
+        'price' => $request->input('price'),
+        'user_id' => Auth::id(),
+    ];
+
+    // Update the space in the database
+    DB::table('list_space_tbl')->where('id', $id)->update($data);
+
+    // Return success response
+    return redirect()->route('myCoworkingSpace')->with('success', 'Space updated successfully.');
 }
 
     public function submitListSpace(Request $request)
@@ -98,8 +329,11 @@ class CoworkerController extends Controller
         // dd($request->all());
         $request->validate([
             'headerImage' => 'nullable|mimes:png,jpg,jpeg,webp',
+            'additionalImages.*' => 'nullable|mimes:png,jpg,jpeg,webp|max:2048',
         ], [
             'headerImage.mimes' => 'The header image must be a file of type: png, jpg, jpeg, webp.',
+            'additionalImages.*.mimes' => 'Each additional image must be a file of type: png, jpg, jpeg, webp.',
+            'additionalImages.*.max' => 'Each additional image may not be larger than 2MB.',
         ]);
 
 
@@ -111,6 +345,15 @@ class CoworkerController extends Controller
             $file->move($path, $filename);
         } else {
             $filename = null;
+        }
+
+        $additionalImages = [];
+        if ($request->hasFile('additionalImages')) {
+            foreach ($request->file('additionalImages') as $image) {
+                $imageName = time() . '_' . $image->getClientOriginalName();
+                $image->move('uploads/additional_images/', $imageName);
+                $additionalImages[] = 'uploads/additional_images/' . $imageName;
+            }
         }
 
         $data = [
@@ -143,6 +386,8 @@ class CoworkerController extends Controller
             'unit' => $request->input('unit'),
             'postal' => $request->input('postal'),
             'city' => $request->input('city'),
+            'latitude' => $request->input('latitude'),
+            'longitude' => $request->input('longitude'),
             'tables' => $request->input('tables'),
             'capacity' => $request->input('capacity'),
             'meeting_rooms' => $request->input('meetingRoomsCount'),
@@ -150,6 +395,7 @@ class CoworkerController extends Controller
             'size' => $request->input('size'),
             'measurement_unit' => $request->input('measurementUnit'),
             'header_image' => $path . $filename,
+            'additional_images' => json_encode($additionalImages),
             'pay_online' => $request->input('payOnline'),
             'credit_cards' => $request->input('creditCards'),
             'eWallet' => $request->input('eWallet'),
@@ -163,11 +409,59 @@ class CoworkerController extends Controller
             'short_term_details' => $request->input('shortTermDetails'),
             'free_pass' => $request->input('freePass'),
             'free_pass_details' => $request->input('freePassDetails'),
+            'price' => $request->input('price'),
+            'user_id' => Auth::id(),
         ];
 
         DB::table('list_space_tbl')->insert($data);
 
         return response()->json(['message' => 'Data inserted successfully.']);
     }
+
+    public function viewReviews()
+    {
+        $reviews = DB::table('reviews')
+            ->join('users', 'reviews.user_id', '=', 'users.id')
+            ->join('list_space_tbl', 'reviews.cowork_id', '=', 'list_space_tbl.id')
+            ->select('reviews.*', 'users.name as reviewer_name', 'list_space_tbl.space_name', 'list_space_tbl.header_image')
+            ->get();
+
+        if ($reviews->isEmpty()) {
+            return view('coworker_side.reviews', [
+                'reviews' => [],
+                'totalReviews' => 0,
+                'fiveStar' => 0,
+                'fourStar' => 0,
+                'threeStar' => 0,
+                'twoStar' => 0,
+                'oneStar' => 0,
+                'averageRating' => 0,
+            ]);
+        }
+
+        $reviews->transform(function ($review) {
+            $review->created_at = Carbon::parse($review->created_at);
+            return $review;
+        });
+
+        $totalReviews = $reviews->count();
+        $fiveStar = $reviews->where('rating', 5)->count();
+        $fourStar = $reviews->where('rating', 4)->count();
+        $threeStar = $reviews->where('rating', 3)->count();
+        $twoStar = $reviews->where('rating', 2)->count();
+        $oneStar = $reviews->where('rating', 1)->count();
+
+        $averageRating = $totalReviews > 0 ? $reviews->sum('rating') / $totalReviews : 0;
+
+        return view('coworker_side.reviews', compact('reviews', 'totalReviews', 'fiveStar', 'fourStar', 'threeStar', 'twoStar', 'oneStar', 'averageRating'));
+    }
+
+    
+
+    public function viewReservations()
+    {
+        return view('coworker_side.reservations');
+    }
+
 
 }

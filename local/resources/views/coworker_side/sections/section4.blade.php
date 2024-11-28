@@ -1,7 +1,47 @@
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCiYegG-lDsQcjOdCUirT6WBk-gTh6xT7Y&callback=initMap">
+</script>
+
 <div class="form-section" id="step4">
-    <h2>COMPLETE THE DETAILS BELOW</h2>
+
+    <h2>LETS FIND YOUR SPACE</h2>
     <hr class="separator-line" />
     <form id="section4">
+        <div class="container mb-5">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <label for="longitude" class="form-label">Longitude</label>
+                        <input type="text" class="form-control mb-4" id="longitude" name="longitude" readonly>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <label for="latitude" class="form-label">Latitude</label>
+                        <input type="text" class="form-control mb-2" id="latitude" name="latitude" readonly>
+                    </div>
+                </div>
+            </div>
+
+            {{-- <div class="form-check">
+                <input type="text" class="form-control" id="addressInput" placeholder="Enter your space name AND city, your street address" style="width: 60%; margin: 0 auto;" />
+            </div> --}}
+
+            <div class="d-flex justify-content-center mb-3">
+                <span style="font-size: .75rem;">
+                    <i class="bi bi-geo-alt-fill"></i> Verify that the pin is positioned correctly. If it isn't, simply drag and drop it to the correct location
+                </span>
+            </div>
+
+            <div class="form-check">
+                <div id="map" class="map-container d-flex align-items-center justify-content-center" 
+                    style="border: 1px solid #000000; height: 300px; width: 80%; border-radius: 5px; margin: 0 auto;">
+                </div>
+            </div>
+        </div>
+
+        <h2>COMPLETE THE DETAILS BELOW</h2>
+        <hr class="separator-line" />
         <div class="row">
             <div class="col-md-4">
                 <div class="form-check mb-3">
