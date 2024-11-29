@@ -61,13 +61,13 @@
                             Clients
                         </a>
                     </li>
-                    <li class="sidebar-item {{ Route::is('reviews') ? 'active' : '' }}">
-                        <a href="{{ route('reviews') }}" class="sidebar-link">
+                    <li class="sidebar-item {{ Route::is('admin.spaces') ? 'active' : '' }}">
+                        <a href="{{ route('admin.spaces') }}" class="sidebar-link">
                             <i class="bi bi-building"></i>
                             Spaces
                         </a>
                     </li>
-                    <li class="sidebar-item {{ Route::is('reviews') ? 'active' : '' }}">
+                    <li class="sidebar-item {{ Route::is('admin.transactions') ? 'active' : '' }}">
                         <a href="{{ route('admin.transactions') }}" class="sidebar-link">
                             <i class="bi bi-receipt"></i>
                             Transactions
