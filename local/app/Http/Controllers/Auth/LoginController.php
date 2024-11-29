@@ -89,7 +89,7 @@ class LoginController extends Controller
                 case "2": // Coworker
                     return redirect()->route('coworker_side.coworker');
                 case "3": // Admin
-                    return redirect()->route('users');
+                    return redirect()->route('admin_side.admin');
                 default:
                     abort(404); // Abort if user_type is unexpected
             }
