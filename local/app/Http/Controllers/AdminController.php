@@ -13,10 +13,10 @@ use Yajra\DataTables\DataTables;
 
 class AdminController extends Controller
 {
-    public function viewDashboard()
-    {
-        return view('admin_side.admin');
-    }
+    // public function viewDashboard()
+    // {
+    //     return view('admin_side.admin');
+    // }
 
     public function viewUsers(Request $request)
     {

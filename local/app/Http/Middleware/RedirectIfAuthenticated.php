@@ -35,7 +35,7 @@ class RedirectIfAuthenticated
                 case 2:
                     return redirect()->route('coworker_side.coworker');
                 case 3:
-                    return redirect()->route('admin_side.admin');
+                    return redirect()->route('users');
                 default:
                     // Handle unexpected user type if necessary
                     return redirect()->route('home'); // Redirect to a default route
