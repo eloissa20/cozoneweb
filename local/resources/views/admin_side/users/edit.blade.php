@@ -2,17 +2,17 @@
 
 @section('content')
 <style>
-    .card {
+    .card{
         border: 1px solid #000000;
     }
 </style>
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <div>
-    <h3 class="fw-bold mb-4">Edit User</h3>
+  <h3 class="fw-bold mb-4">Edit User</h3>
     <form action="{{ route('user.update', $user->id) }}" method="POST" class="border p-5 rounded">
         @csrf
         @method('PUT')
-
+        
         <div class="container">
             <div class="row">
                 <div class="col-md-6">

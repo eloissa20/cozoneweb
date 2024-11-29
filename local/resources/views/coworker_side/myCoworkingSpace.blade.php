@@ -491,12 +491,6 @@
             }
         });
     }
-
-
-
-
-
-
 </script>
 
 @endsection

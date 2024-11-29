@@ -35,7 +35,7 @@
                 </div>
                 <ul class="sidebar-nav">
                     <li class="sidebar-header">
-                        Admin Dashboard
+                        Admin Pannel
                     </li>
                     <li class="sidebar-item {{ Route::is('admin_side.admin') ? 'active' : '' }}">
                         <a href="{{ route('admin_side.admin') }}" class="sidebar-link">

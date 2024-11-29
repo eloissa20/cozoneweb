@@ -2,7 +2,7 @@
 
 @section('content')
 <style>
-    .card {
+    .card{
         border: 1px solid #000000;
     }
 </style>
@@ -30,45 +30,34 @@
 
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         loadtableData();
     })
     const loadtableData = () => {
-        $('#clients-table').DataTable({
-            'scrollX': true,
-
-            'serverSide': true,
-            'ajax': {
-                'headers': {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            $('#clients-table').DataTable({
+                'scrollX': true,
+            
+                'serverSide': true,
+                'ajax': {
+                    'headers': {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    'url': './clients',
+                    'type': 'GET',
                 },
-                'url': './clients',
-                'type': 'GET',
-            },
-            order: [
-                [0, "asc"],
-            ],
-            'columns': [{
-                    data: 'id'
-                },
-                {
-                    data: 'name'
-                },
-                {
-                    data: 'email'
-                },
-                {
-                    data: 'address'
-                },
-                {
-                    data: 'created_at'
-                },
-                {
-                    data: 'updated_at'
-                }
-            ]
-        });
-    }
+                order: [
+                    [0, "asc"],
+                ],
+                'columns': [
+                    {data: 'id'},
+                    {data: 'name'},
+                    {data: 'email'},
+                    {data: 'address'},
+                    {data: 'created_at'},
+                    {data: 'updated_at'}
+                ]
+            });
+        }
 </script>
 
 @endsection

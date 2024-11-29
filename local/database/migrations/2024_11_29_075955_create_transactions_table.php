@@ -9,20 +9,19 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::table('list_space_tbl', function (Blueprint $table) {
+        Schema::create('transactions', function (Blueprint $table) {
+            $table->id();
+            $table->decimal('amount', 10, 2);
             $table->timestamps();
         });
     }
-
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::table('list_space_tbl', function (Blueprint $table) {
-            $table->timestamps();
-        });
+        Schema::dropIfExists('transactions');
     }
 };

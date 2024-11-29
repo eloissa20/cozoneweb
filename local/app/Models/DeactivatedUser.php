@@ -26,3 +26,5 @@ class DeactivatedUser extends Model
         'updated_at',
     ];
 }
+
+

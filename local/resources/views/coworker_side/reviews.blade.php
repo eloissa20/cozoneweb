@@ -81,21 +81,21 @@
     </div>
 
     <div class="d-flex justify-content-end align-items-center mb-3">
-        <div class="me-2">57 reviews sorted by :</div>
+        <div class="me-2"><span id="reviewCount">{{ $totalReviews }}</span> reviews sorted by :</div>
         <div>
-            <select class="form-select d-inline-block me-2" style="width: auto;">
-                <option>All Reviews</option>
-                <option>Positive</option>
-                <option>Critical</option>
+            <select class="form-select d-inline-block me-2" id="filterType" style="width: auto;">
+                <option value="all">All Reviews</option>
+                <option value="positive">Positive</option>
+                <option value="critical">Critical</option>
             </select>
-            <select class="form-select d-inline-block" style="width: auto;">
-                <option>Newest to Oldest</option>
-                <option>Oldest to Newest</option>
+            <select class="form-select d-inline-block" id="sortType" style="width: auto;">
+                <option value="newest_to_oldest">Newest to Oldest</option>
+                <option value="oldest_to_newest">Oldest to Newest</option>
             </select>
         </div>
     </div>
     
-    <div class="row">
+    <div class="row" id="reviewsContainer">
         @foreach ($reviews as $review)
             <div class="col-md-4 mb-4">
                 <div class="card h-100">
@@ -161,4 +161,81 @@
     </div>
     
 </div>
+
+<script>
+    $(document).ready(function() {
+        $('#filterType, #sortType').on('change', function() {
+            let filterType = $('#filterType').val();
+            let sortType = $('#sortType').val();
+
+            $.ajax({
+                url: "{{ route('reviews.filter') }}",  // Ensure this route exists
+                method: 'GET',
+                data: {
+                    filter_type: filterType,
+                    sort_type: sortType
+                },
+                success: function(response) {
+                    let reviews = response.reviews;
+                    let reviewHTML = '';
+
+                    reviews.forEach(function(review) {
+                        // Construct the star rating
+                        let stars = '';
+                        for (let i = 1; i <= 5; i++) {
+                            if (i <= review.rating) {
+                                stars += '★'; // Full star
+                            } else {
+                                stars += '☆'; // Empty star
+                            }
+                        }
+
+                        // Construct the review card HTML
+                        reviewHTML += `
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body position-relative">
+                                        <button class="btn btn-outline-secondary btn-sm position-absolute top-0 end-0 me-2 mt-2">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </button>
+                                        <div class="text-center mb-3">
+                                            <img src="{{ asset('assets/img/profile.png') }}" class="img-fluid rounded-circle" alt="Client image" style="width: 60px; height:60px;">
+                                            <h5 class="card-title">${review.reviewer_name}</h5>
+                                        </div>
+                                        <div class="d-flex mb-3 justify-content-between">
+                                            <img src="{{ asset('${review.header_image}') }}" class="img-fluid rounded me-3" alt="Space image" style="width: 60%; object-fit:cover;">
+                                            <div>
+                                                <p class="mb-0">COWORKING SPACE NAME:</p>
+                                                <p class="mb-1"><strong>${review.space_name}</strong></p>
+                                                <p class="mb-0">Location:</p>
+                                                <p class="mb-1">${review.space_location}</p>
+                                                <p class="mb-0">Open Hours:</p>
+                                                <p class="mb-1">${review.open_hours}</p>
+                                            </div>
+                                        </div>
+                                        <p class="text-muted">${new Date(review.created_at).toLocaleDateString()}</p>
+                                        <div class="bg-light p-3 rounded border border-1">
+                                            <p class="mb-1"><strong>${review.space_name}</strong></p>
+                                            <div class="text-warning text-end mt-2">
+                                                ${stars}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    // Update the reviews container with the new reviews
+                    $('#reviewsContainer').html(reviewHTML);
+                    // Optionally update the total reviews count
+                    $('#reviewCount').text(response.totalReviews);
+                },
+                error: function() {
+                    alert('Error fetching reviews');
+                }
+            });
+        });
+    });
+</script>
 @endsection
