@@ -37,12 +37,12 @@
                     <li class="sidebar-header">
                         Admin Pannel
                     </li>
-                    {{-- <li class="sidebar-item {{ Route::is('admin_side.admin') ? 'active' : '' }}">
+                    <li class="sidebar-item {{ Route::is('admin_side.admin') ? 'active' : '' }}">
                         <a href="{{ route('admin_side.admin') }}" class="sidebar-link">
                             <i class="bi bi-graph-up"></i>
                             Analytics
                         </a>
-                    </li> --}}
+                    </li>
                     <li class="sidebar-item {{ Route::is('users') ? 'active' : '' }}">
                         <a href="{{ route('users') }}" class="sidebar-link">
                             <i class="bi bi-people"></i>

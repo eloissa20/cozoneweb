@@ -8,15 +8,44 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\DeactivatedUser;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\DataTables;
 
 class AdminController extends Controller
 {
-    // public function viewDashboard()
-    // {
-    //     return view('admin_side.admin');
-    // }
+    public function viewDashboard()
+    {
+        $totalRevenue = Transaction::whereYear('created_at', Carbon::now()->year)
+                                ->whereMonth('created_at', Carbon::now()->month)
+                                ->sum('amount');
+        $dailyRevenue = Transaction::whereYear('created_at', Carbon::now()->year)
+                                ->whereMonth('created_at', Carbon::now()->month)
+                                ->whereDay('created_at', Carbon::now()->day)
+                                ->sum('amount');
+        $totalCoworker = User::where('user_type', '=', 2)->count();
+        $totalTransaction = Transaction::whereYear('created_at', Carbon::now()->year)
+                                ->whereMonth('created_at', Carbon::now()->month)
+                                ->count();
+        $dailyTransaction = Transaction::whereYear('created_at', Carbon::now()->year)
+                                ->whereMonth('created_at', Carbon::now()->month)
+                                ->whereDay('created_at', Carbon::now()->day)
+                                ->count();
+        $totalUsers = User::all()->count();
+        $totalDeactivated = DeactivatedUser::all()->count();
+        $totalSpaces = Cowork::all()->count();
+
+        return view('admin_side.admin', compact(
+            'totalRevenue', 
+            'dailyRevenue', 
+            'totalCoworker', 
+            'totalTransaction', 
+            'dailyTransaction',
+            'totalUsers',
+            'totalDeactivated',
+            'totalSpaces',
+        ));
+    }
 
     public function viewUsers(Request $request)
     {

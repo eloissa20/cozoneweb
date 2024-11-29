@@ -132,7 +132,7 @@ Route::middleware(['preventBackHistory'])->group(function () {
     });
 
     Route::middleware(['auth', 'userAuth:3'])->group(function () {
-        // Route::get('/admin_side/admin', [AdminController::class, 'viewDashboard'])->name('admin_side.admin');
+        Route::get('/admin_side/admin', [AdminController::class, 'viewDashboard'])->name('admin_side.admin');
 
         Route::get('/admin_side/users', [AdminController::class, 'viewUsers'])->name('users');
         Route::get('/admin_side/users/create', [AdminController::class, 'createUser'])->name('user.create');
