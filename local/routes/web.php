@@ -1,15 +1,16 @@
 <?php
 
-use App\Http\Controllers\FilterController;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TransactionController;
+use App\Models\Cowork;
+use App\Models\Favorites;
+use App\Models\Transactions;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CoworkerController;
 use App\Http\Controllers\AdminController;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +23,10 @@ use App\Http\Controllers\AdminController;
 |
 */
 
+// Route::get('/', function () {
+//     return view('auth.login');
+// });
+
 Route::get('/', function () {
     return view('landing');
 })->name('landing');
@@ -31,12 +36,35 @@ Route::middleware(['preventBackHistory'])->group(function () {
     Auth::routes();
 
     Route::middleware(['auth', 'userAuth:1'])->group(function () {
-        //home
-        Route::get('/client_side/home', [FilterController::class, 'client_home'])->name('client_side.home');
+
+        Route::get('/client_side/home', function (Request $request) {
+            $query = Cowork::query();
+
+            if ($request->has('search')) {
+                $query->where('coworking_space_name', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('coworking_space_address', 'LIKE', '%' . $request->search . '%');
+            }
+
+            $spaces = $query->paginate(6);
+
+            $user = Auth::user();
+            $favoritedSpaceIds = [];
+
+            if ($user) {
+                $favoritedSpaceIds = Favorites::where('user_id', $user->id)->pluck('space_id')->toArray();
+            }
+
+            foreach ($spaces as $space) {
+                $space->isFavorite = in_array($space->id, $favoritedSpaceIds);
+            }
+
+            return view('client_side.home_client', ['spaces' => $spaces]);
+        })->name('client_side.home');
 
         //details
-        Route::get('/client_side/details/{id}', [ClientController::class, 'show_cowork_details'])->name('client_side.details');
+        Route::post('/client_side/details/{id}', [ClientController::class, 'show_cowork_details'])->name('client_side.details');
         Route::post('/client_side/details/reserve/{id}', [TransactionController::class, 'processReservation'])->name('client_side.details.reserve');
+
 
         //reviews
         Route::post('/client_side/reviews/add/{spaceId}', [ReviewController::class, 'store'])->name('client_side.review.add');
@@ -44,12 +72,50 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::delete('/client_side/reviews/delete/{id}', [ReviewController::class, 'destroy'])->name('client_side.review.delete');
 
         //payment
-        Route::get('/client_side/payment/pay/{id}/{transactionId}', [PaymentController::class, 'client_payment'])->name('client_side.payment');
-        Route::post('/client_side/payment/process/{id}/{transactionId}', [TransactionController::class, 'paymentProcess'])->name('client_side.payment.process');
-        Route::get('/client_side/payment/success/{id}/{transactionId}', [PaymentController::class, 'client_payment_success'])->name('client_side.payment.success');
+        Route::get('/client_side/payment/pay/{id}/{transactionId}', function ($id, $transactionId) {
+            $space = Cowork::find($id);
+            if (!$space) {
+                return abort(404, 'Space not found');
+            }
+
+            $transaction = Transactions::find($transactionId);
+            if(!$transaction){
+                return abort( 404, 'Transaction not found');
+            }
+            return view('client_side.payment.payment_client', ['space' => $space, 'transaction' => $transaction]);
+        })->name('client_side.payment');
+
+        Route::get('/client_side/payment/success/{id}', function ($id) {
+            $space = Cowork::find($id);
+            if (!$space) {
+                return abort(404, 'Space not found');
+            }
+            return view('client_side.payment.payment_success_client', ['space' => $space]);
+        })->name('client_side.payment.success');
 
         //list of spaces
-        Route::get('/client_side/lists', [FilterController::class, 'client_list'])->name('client_side.lists');
+        Route::get('/client_side/lists', function (Request $request) {
+            $query = Cowork::query();
+
+            if ($request->has('search')) {
+                $query->where('coworking_space_name', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('coworking_space_address', 'LIKE', '%' . $request->search . '%');
+            }
+
+            $spaces = $query->paginate(6);
+
+            $user = Auth::user();
+            $favoritedSpaceIds = [];
+
+            if ($user) {
+                $favoritedSpaceIds = Favorites::where('user_id', $user->id)->pluck('space_id')->toArray();
+            }
+
+            foreach ($spaces as $space) {
+                $space->isFavorite = in_array($space->id, $favoritedSpaceIds);
+            }
+            return view('client_side.lists_client', ['spaces' => $spaces]);
+        })->name('client_side.lists');
 
         //how to
         Route::get('/client_side/how/faqs', function () {
@@ -89,17 +155,12 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::post('/client_side/profile/favorite/add', [ClientController::class, 'add_to_favorite'])->name('client_side.profile.favorite.add');
 
         Route::get('/client_side/profile/favorites', function () {
-            $favorites = auth()->user()
-                ->user_favorites()
-                ->with('cowork')
-                ->orderBy('created_at', 'desc')
-                ->get();
+            $favorites = auth()->user()->user_favorites()->with('cowork')->get(); //how can i access the cowork attributes
 
-            return view('client_side.profile.favorites_client', ['favorites' => $favorites]);
+            return view('client_side.profile.favorites_client', ['favorites' => $favorites,]);
         })->name('client_side.profile.favorites');
 
-        //notifications
-        Route::get('/client_side/notifications/all', [NotificationController::class, 'showAll'])->name('client_side.notifications.all');
+
     });
 
     Route::middleware(['auth', 'userAuth:2'])->group(function () {
@@ -113,20 +174,14 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('/coworker_side/myCoworkingSpace', [CoworkerController::class, 'viewmyCoworkingSpace'])->name('myCoworkingSpace');
 
         Route::get('/coworker_side/reviews', [CoworkerController::class, 'viewReviews'])->name('reviews');
-
+        
         Route::get('/coworker_side/reservations', [CoworkerController::class, 'viewReservations'])->name('reservations');
 
         Route::get('/coworker_side/viewSpaceDetails/{id}', [CoworkerController::class, 'viewSpaceDetails'])->name('viewSpaceDetails');
 
         Route::delete('/coworker_side/deleteSpace/{id}', [CoworkerController::class, 'deleteSpace'])->name('deleteSpace');
-
+        
         Route::get('/coworker_side/editSpace/{id}', [CoworkerController::class, 'editSpace'])->name('editSpace');
-
-        Route::put('/coworker_side/editSpace/{id}', [CoworkerController::class, 'updateSpace'])->name('coworker_side.updateSpace');
-
-
-
-
 
 
     });
@@ -149,6 +204,9 @@ Route::middleware(['preventBackHistory'])->group(function () {
 
         Route::get('/admin_side/clients', [AdminController::class, 'viewClients'])->name('clients');
 
+        Route::get('/admin_side/spaces', [AdminController::class, 'viewSpaces'])->name('admin.spaces');
+        Route::get('/admin_side/viewSpaceDetails/{id}', [AdminController::class, 'viewSpaceDetails'])->name('viewSpaceDetails');
+        
         Route::get('/admin_side/transactions', [AdminController::class, 'viewTransactions'])->name('admin.transactions');
         Route::get('/admin_side/viewTransactionDetails/{id}', [AdminController::class, 'viewTransactionDetails'])->name('viewTransactionDetails');
     });

@@ -13,14 +13,15 @@
         <h6 class="card-subtitle text-muted">List of transactions in the database</h6>
     </div>
     <div class="card-body">
-        <table id="transactions-table" class="table table-hover" style="width: 100%;">
+        <table id="spaces-table" class="table table-hover" style="width: 100%;">
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>User</th>
-                    <th>Space</th>
-                    <th>Reservation Date</th>
-                    <th>Created At</th>
+                    <th>Space Name</th>
+                    <th>Address</th>
+                    <th>Available Days</th>
+                    <th>Operating Hours</th>
+                    <th>Email</th>
+                    <th>Phone</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -28,7 +29,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="viewTransactionModal" tabindex="-1" aria-labelledby="viewTransactionModalLabel" aria-hidden="true">
+<div class="modal fade" id="viewSpaceModal" tabindex="-1" aria-labelledby="viewSpaceModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-body">
@@ -43,32 +44,30 @@
                   </div>
                   <div class="d-flex flex-row">
                     <div class="col">
-                      <div class="row">
-                        <p class="m-0">Name</p>
-                        <p class="" id="name"></p>
-                      </div>
-                      <p class="m-0">Reservation Date</p>
-                      <p id="reservation_date"></p>
-                      <p class="m-0">Hours</p>
+                        <p class="m-0">Space Name</p>
+                        <p class="m-0" id="space"></p>
+                      <p class="m-0">Address</p>
+                      <p id="address"></p>
+                      <p class="m-0">Operating Days</p>
+                      <p id="days"></p>
+                      <p class="m-0">Close At</p>
+                      <p id="close"></p>
+                      <p class="m-0">Operating Hours</p>
                       <p id="hours"></p>
-                      <p class="m-0">Number of Guest</p>
-                      <p id="guests"></p>
                       <p class="m-0">Email</p>
                       <p id="email"></p>
-                      <p class="m-0">Contact</p>
-                      <p id="contact"></p>
-                      <p class="m-0">Time of Arrival</p>
-                      <p id="arrival_time"></p>
+                      <p class="m-0">Phone</p>
+                      <p id="phone"></p>
                     </div>
                     <div class="col">
-                      <p class="m-0">Payment Method</p>
-                      <p id="payment_method"></p>
-                      <p class="m-0">Amount</p>
-                      <p id="amount"></p>
-                      <p class="m-0">Status</p>
-                      <p id="status"></p>
-                      <p class="m-0">Company</p>
-                      <p id="company"></p>
+                      <p class="m-0">Instagram</p>
+                      <p id="ig"></p>
+                      <p class="m-0">Facebook</p>
+                      <p id="fb"></p>
+                      <p class="m-0">Contact Number</p>
+                      <p id="contact"></p>
+                      <p class="m-0">Description</p>
+                      <p id="desc"></p>
                       <p class="m-0">Created At</p>
                       <p id="created_at"></p>
                     </div>
@@ -85,7 +84,7 @@
         loadtableData();
     })
     const loadtableData = () => {
-            $('#transactions-table').DataTable({
+            $('#spaces-table').DataTable({
                 'scrollX': true,
             
                 'serverSide': true,
@@ -93,26 +92,37 @@
                     'headers': {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    'url': './transactions',
+                    'url': './spaces',
                     'type': 'GET',
                 },
                 order: [
                     [0, "asc"],
                 ],
                 'columns': [
-                    {data: 'id'},
-                    {data: 'name'},
-                    {data: 'cowork.coworking_space_name'},
-                    {data: 'reservation_date'},
-                    {data: 'created_at'},
+                    {data: 'space_name'},
+                    {data: 'coworking_space_address'},
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            return `${row.available_days_from} - ${row.available_days_to}`;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            return `${row.operating_hours_from} - ${row.operating_hours_to}`;
+                        }
+                    },
+                    {data: 'email'},
+                    {data: 'phone'},
                     {data: 'actions'},
                 ]
             });
         }
 
-        function viewTransactionDetails(id) {
+        function viewSpaceDetails(id) {
         $.ajax({
-            url: './viewTransactionDetails/' + id,
+            url: './viewSpaceDetails/' + id,
             type: 'GET',
             success: function (response) {
 
@@ -121,24 +131,19 @@
                     return new Date(dateString).toLocaleDateString(undefined, options);
                 };
 
-                const timeOptions = { hour: '2-digit', minute: '2-digit' };
-                const formatTime = (timeString) => {
-                    return new Date('1970-01-01T' + timeString).toLocaleTimeString(undefined, timeOptions);
-                };
-                $('#space').text(response.cowork.coworking_space_name);
-                $('#name').text(response.name);
-                $('#reservation_date').text(formatDate(response.reservation_date));
-                $('#hours').text(response.hours);
-                $('#guests').text(response.guests);
+                $('#space').text(response.coworking_space_name);
+                $('#adress').text(response.coworking_space_location);
+                $('#type').text(response.type_of_space);
+                $('#days').text(response.available_days_from + " - " + response.available_days_to);
+                $('#hours').text(response.operating_hours_from + " - " + response.operating_hours_to);
                 $('#email').text(response.email);
-                $('#contact').text(response.contact);
-                $('#arrival_time').text(formatTime(response.arrival_time));
-                $('#payment_method').text(response.payment_method  || 'Unknown');
-                $('#status').text(response.status);
-                $('#amount').text(response.amount || 'Unknown');
-                $('#company').text(response.company || 'Unknown');
+                $('#ig').text(response.instagram);
+                $('#close').text(response.exceptions);
+                $('#fb').text(response.facebook);
+                $('#contact').text(response.contact_no);
+                $('#desc').text(response.description);
                 $('#created_at').text(formatDate(response.created_at));
-                $('#viewTransactionModal').modal('show');
+                $('#viewSpaceModal').modal('show');
             },
             error: function(xhr, status, error) {
                 console.error('Error fetching space details:', xhr.responseText);
