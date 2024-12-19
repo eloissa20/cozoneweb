@@ -12,6 +12,8 @@
                     <label for="typeOfSpace" class="form-label">Type of Space</label>
                     <select class="form-select" id="typeOfSpace">
                         <option selected>Coworking</option>
+                        <option>Desk Space</option>
+                        <option>Meeting Room</option>
                     </select>
                 </div>
                 <div class="form-check mb-3">
