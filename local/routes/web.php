@@ -105,11 +105,6 @@ Route::middleware(['preventBackHistory'])->group(function () {
     Route::middleware(['auth', 'userAuth:2'])->group(function () {
 
         Route::get('/coworker_side/coworker', [CoworkerController::class, 'viewDashboard'])->name('coworker_side.coworker');
-        Route::get('/count-free-pass', [CoworkerController::class, 'countFreePass'])->name('countFreePass');
-        Route::get('/reservation-transactions', [CoworkerController::class, 'showReservationTransactions'])->name('reservationTransactions');
-        Route::get('/reservation-type-counts', [CoworkerController::class, 'getReservationTypeCounts']);
-        Route::get('/daily-sales-chart-data', [CoworkerController::class, 'dailySalesChartData']);
-
 
         Route::get('/coworker_side/listSpace', [CoworkerController::class, 'viewListSpace'])->name('coworker_side.listSpace');
 
@@ -118,12 +113,8 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('/coworker_side/myCoworkingSpace', [CoworkerController::class, 'viewmyCoworkingSpace'])->name('myCoworkingSpace');
 
         Route::get('/coworker_side/reviews', [CoworkerController::class, 'viewReviews'])->name('reviews');
-        Route::get('/coworker_side/reviews/filter', [CoworkerController::class, 'filterReviews'])->name('reviews.filter');
-
 
         Route::get('/coworker_side/reservations', [CoworkerController::class, 'viewReservations'])->name('reservations');
-        Route::post('/coworker_side/update-status', [CoworkerController::class, 'updateStatus'])->name('updateStatus');
-
 
         Route::get('/coworker_side/viewSpaceDetails/{id}', [CoworkerController::class, 'viewSpaceDetails'])->name('viewSpaceDetails');
 
@@ -132,13 +123,6 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('/coworker_side/editSpace/{id}', [CoworkerController::class, 'editSpace'])->name('editSpace');
 
         Route::put('/coworker_side/editSpace/{id}', [CoworkerController::class, 'updateSpace'])->name('coworker_side.updateSpace');
-        
-
-
-
-
-
-
     });
 
     Route::middleware(['auth', 'userAuth:3'])->group(function () {
@@ -161,11 +145,10 @@ Route::middleware(['preventBackHistory'])->group(function () {
 
         Route::get('/admin_side/spaces', [AdminController::class, 'viewSpaces'])->name('admin.spaces');
         Route::get('/admin_side/viewSpaceDetails/{id}', [AdminController::class, 'viewSpaceDetails'])->name('viewSpaceDetails');
-        
+
         Route::get('/admin_side/transactions', [AdminController::class, 'viewTransactions'])->name('admin.transactions');
         Route::get('/admin_side/viewTransactionDetails/{id}', [AdminController::class, 'viewTransactionDetails'])->name('viewTransactionDetails');
     });
-
 });
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

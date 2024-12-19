@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Http\Controllers;
 
 namespace App\Http\Controllers;
+
 use App\Models\Transaction;
 use App\Models\Cowork;
 use Illuminate\Support\Facades\DB;
@@ -17,29 +19,29 @@ class AdminController extends Controller
     public function viewDashboard()
     {
         $totalRevenue = Transaction::whereYear('created_at', Carbon::now()->year)
-                                ->whereMonth('created_at', Carbon::now()->month)
-                                ->sum('amount');
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->sum('amount');
         $dailyRevenue = Transaction::whereYear('created_at', Carbon::now()->year)
-                                ->whereMonth('created_at', Carbon::now()->month)
-                                ->whereDay('created_at', Carbon::now()->day)
-                                ->sum('amount');
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->whereDay('created_at', Carbon::now()->day)
+            ->sum('amount');
         $totalCoworker = User::where('user_type', '=', 2)->count();
         $totalTransaction = Transaction::whereYear('created_at', Carbon::now()->year)
-                                ->whereMonth('created_at', Carbon::now()->month)
-                                ->count();
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->count();
         $dailyTransaction = Transaction::whereYear('created_at', Carbon::now()->year)
-                                ->whereMonth('created_at', Carbon::now()->month)
-                                ->whereDay('created_at', Carbon::now()->day)
-                                ->count();
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->whereDay('created_at', Carbon::now()->day)
+            ->count();
         $totalUsers = User::all()->count();
         $totalDeactivated = DeactivatedUser::all()->count();
         $totalSpaces = Cowork::all()->count();
 
         return view('admin_side.admin', compact(
-            'totalRevenue', 
-            'dailyRevenue', 
-            'totalCoworker', 
-            'totalTransaction', 
+            'totalRevenue',
+            'dailyRevenue',
+            'totalCoworker',
+            'totalTransaction',
             'dailyTransaction',
             'totalUsers',
             'totalDeactivated',
@@ -82,7 +84,8 @@ class AdminController extends Controller
     }
 
 
-    public function createUser() {
+    public function createUser()
+    {
         return view('admin_side.users.create');
     }
 
@@ -109,7 +112,8 @@ class AdminController extends Controller
     }
 
 
-    public function editUser($id) {
+    public function editUser($id)
+    {
         $user = User::findOrFail($id);
 
         return view('admin_side.users.edit', compact('user'));
@@ -213,7 +217,8 @@ class AdminController extends Controller
         return view('admin_side.deactivated');
     }
 
-    public function deleteUser($id) {
+    public function deleteUser($id)
+    {
         $user = DeactivatedUser::findOrFail($id);
         $user->delete();
 
@@ -281,7 +286,8 @@ class AdminController extends Controller
         return response()->json($userDetails);
     }
 
-    public function viewSpaces(Request $request) {
+    public function viewSpaces(Request $request)
+    {
         if ($request->ajax()) {
             $requests = DB::table('list_space_tbl')
                 ->select('*')
@@ -305,15 +311,16 @@ class AdminController extends Controller
     public function viewSpaceDetails($id)
     {
         $spaceDetails = Cowork::where('id', $id)->first();
-    
+
         if (!$spaceDetails) {
             return response()->json(['error' => 'Space not found.'], 404);
         }
-    
+
         return response()->json($spaceDetails);
     }
 
-    public function viewTransactions(Request $request) {
+    public function viewTransactions(Request $request)
+    {
         if ($request->ajax()) {
             $transactions = Transaction::with('cowork')
                 ->select('*')
