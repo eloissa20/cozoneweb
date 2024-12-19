@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -133,22 +134,24 @@ class CoworkerController extends Controller
 
     public function dailySalesChartData()
     {
-        $days = [];
-        for ($i = 0; $i < 7; $i++) {
-            $days[] = Carbon::today()->subDays($i)->format('Y-m-d');
+        $days = Carbon::today()->subDays(7)->toArray();
+
+        $dailySales = [];
+
+        foreach ($days as $day) {
+            $dailySales[] = DB::table('transactions')
+                ->whereDate('created_at', $day)
+                ->sum('amount');
         }
 
-        $dailySales = array_map(function ($day) {
-            return DB::table('transactions')
-                ->whereDate('created_at', $day)
-                ->sum('amount') ?: 0;
-        }, $days);
-
-        $labels = array_map(fn($day) => Carbon::parse($day)->format('M d'), $days);
+        $labels = [];
+        foreach ($days as $day) {
+            $labels[] = Carbon::parse($day)->format('M d');
+        }
 
         return response()->json([
-            'dailySales' => array_reverse($dailySales),
-            'labels' => array_reverse($labels),
+            'dailySales' => $dailySales,
+            'labels' => $labels,
         ]);
     }
 
@@ -184,40 +187,40 @@ class CoworkerController extends Controller
     public function viewSpaceDetails($id)
     {
         $spaceDetails = DB::table('list_space_tbl')->where('id', $id)->first();
-    
+
         if (!$spaceDetails) {
             return response()->json(['error' => 'Space not found.'], 404);
         }
-    
+
         $spaceDetails->header_image = asset($spaceDetails->header_image);
-    
+
         if (!empty($spaceDetails->additional_images)) {
             $additionalImages = json_decode($spaceDetails->additional_images);
-            $spaceDetails->additional_images = array_map(function($image) {
+            $spaceDetails->additional_images = array_map(function ($image) {
                 return asset($image);
             }, $additionalImages);
         }
-    
+
         if (!empty($spaceDetails->basics)) {
             $spaceDetails->basics = json_decode(stripslashes(trim($spaceDetails->basics, '"')));
         }
-    
+
         if (!empty($spaceDetails->seats)) {
             $spaceDetails->seats = json_decode(stripslashes(trim($spaceDetails->seats, '"')));
         }
-    
+
         if (!empty($spaceDetails->equipment)) {
             $spaceDetails->equipment = json_decode(stripslashes(trim($spaceDetails->equipment, '"')));
         }
-    
+
         if (!empty($spaceDetails->facilities)) {
             $spaceDetails->facilities = json_decode(stripslashes(trim($spaceDetails->facilities, '"')));
         }
-    
+
         if (!empty($spaceDetails->accessibility)) {
             $spaceDetails->accessibility = json_decode(stripslashes(trim($spaceDetails->accessibility, '"')));
         }
-    
+
         if (!empty($spaceDetails->perks)) {
             $spaceDetails->perks = json_decode(stripslashes(trim($spaceDetails->perks, '"')));
         }
@@ -235,7 +238,7 @@ class CoworkerController extends Controller
         } else {
             $spaceDetails->desk_fields = [];
         }
-        
+
         if (!empty($spaceDetails->meeting_fields)) {
             $decodedMeetingFields = json_decode($spaceDetails->meeting_fields, true);
             if (is_array($decodedMeetingFields)) {
@@ -249,12 +252,12 @@ class CoworkerController extends Controller
         } else {
             $spaceDetails->meeting_fields = [];
         }
-        
-    
+
+
         return response()->json($spaceDetails);
     }
-    
-    
+
+
 
     public function deleteSpace($id)
     {
@@ -272,11 +275,11 @@ class CoworkerController extends Controller
     public function editSpace($id)
     {
         $space = DB::table('list_space_tbl')->where('id', $id)->first();
-    
+
         if (!$space) {
             return redirect()->back()->with('error', 'Space not found.');
         }
-    
+
         $basics = json_decode(stripslashes(trim($space->basics, '"')), true);
         $seats = json_decode(stripslashes(trim($space->seats, '"')), true);
         // $equipment = json_decode($space->equipment, true);
@@ -284,19 +287,19 @@ class CoworkerController extends Controller
         $facilities = json_decode(stripslashes(trim($space->facilities, '"')), true);
         $accessibility = json_decode(stripslashes(trim($space->accessibility, '"')), true);
         $perks = json_decode(stripslashes(trim($space->perks, '"')), true);
-        
-    
+
+
         $additionalImages = $space->additional_images ? json_decode($space->additional_images, true) : [];
-        
+
         $deskFields = json_decode($space->desk_fields, true);
         $meetingFields = json_decode($space->meeting_fields, true);
 
         // dd($space);
         // dd($equipment);
-    
+
         return view('coworker_side.editSpace', compact('space', 'basics', 'seats', 'equipment', 'facilities', 'accessibility', 'perks', 'additionalImages', 'deskFields', 'meetingFields'));
     }
-    
+
 
     public function updateSpace(Request $request, $id)
     {
@@ -346,7 +349,7 @@ class CoworkerController extends Controller
             'opening_date' => $request->input('openingDate'),
             'available_days_from' => $request->input('availableDaysFrom'),
             'available_days_to' => $request->input('availableDaysTo'),
-            'exceptions'=> $request->input('exceptions'),
+            'exceptions' => $request->input('exceptions'),
             'operating_hours_from' => $request->input('operatingHoursFrom'),
             'operating_hours_to' => $request->input('operatingHoursTo'),
             'email' => $request->input('email'),
@@ -354,14 +357,14 @@ class CoworkerController extends Controller
             'instagram' => $request->input('instagram'),
             'facebook' => $request->input('facebook'),
             'contact_no' => $request->input('contactNo'),
-            
+
             'basics' => json_encode($request->input('basics', [])),
             'seats' => json_encode($request->input('seats', [])),
             'equipment' => json_encode($request->input('equipment', [])),
             'facilities' => json_encode($request->input('facilities', [])),
             'accessibility' => json_encode($request->input('accessibility', [])),
             'perks' => json_encode($request->input('perks', [])),
-            
+
             'location' => $request->input('location'),
             'telephone' => $request->input('telephone'),
             'country' => $request->input('country'),
@@ -445,7 +448,7 @@ class CoworkerController extends Controller
             'opening_date' => $request->input('openingDate'),
             'available_days_from' => $request->input('availableDaysFrom'),
             'available_days_to' => $request->input('availableDaysTo'),
-            'exceptions'=> $request->input('exceptions'),
+            'exceptions' => $request->input('exceptions'),
             'operating_hours_from' => $request->input('operatingHoursFrom'),
             'operating_hours_to' => $request->input('operatingHoursTo'),
             'email' => $request->input('email'),
@@ -535,32 +538,7 @@ class CoworkerController extends Controller
         return view('coworker_side.reviews', compact('reviews', 'totalReviews', 'fiveStar', 'fourStar', 'threeStar', 'twoStar', 'oneStar', 'averageRating'));
     }
 
-    public function filterReviews(Request $request)
-    {
-        $query = DB::table('reviews');
 
-        if ($request->has('filter_type') && $request->filter_type != 'All Reviews') {
-            if ($request->filter_type == 'Positive') {
-                $query->where('rating', '>=', 3);
-            } elseif ($request->filter_type == 'Critical') {
-                $query->where('rating', '<', 3);
-            }
-        }
-
-        if ($request->has('sort_type')) {
-            if ($request->sort_type == 'Newest to Oldest') {
-                $query->orderBy('created_at', 'desc');
-            } else {
-                $query->orderBy('created_at', 'asc');
-            }
-        }
-
-        $reviews = $query->get();
-
-        return response()->json([
-            'reviews' => $reviews
-        ]);
-    }
 
     public function viewReservations(Request $request)
     {
@@ -572,55 +550,17 @@ class CoworkerController extends Controller
             return DataTables::of($requests)
                 // ->addIndexColumn()
                 ->addColumn('actions', function ($row) {
-                    $statuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED', 'REFUNDED'];
-                
-                    $dropdown = "<div class='dropdown'>
-                        <button class='btn btn-outline-dark btn-sm dropdown-toggle' type='button' data-bs-toggle='dropdown' aria-expanded='false'>
-                            Change Status
-                        </button>
-                        <ul class='dropdown-menu'>";
-                
-                    foreach ($statuses as $status) {
-                        $dropdown .= "<li>
-                            <a class='dropdown-item status-btn' href='#' data-id='{$row->id}' data-status='{$status}'>
-                                {$status}
-                            </a>
-                        </li>";
-                    }
-                
-                    $dropdown .= "</ul></div>";
-                
-                    return $dropdown;
+                    $editUrl = route('editSpace', $row->id);
+                    $str = "<button class='btn btn-outline-dark btn-sm me-2'><i class='bi bi-pencil-square'></i> Update</button>
+                            <button class='btn btn-outline-dark btn-sm me-2')'><i class='bi bi-trash'></i> Delete</button>
+                            <button class='btn btn-outline-dark btn-sm me-2')'><i class='bi bi-eye'></i> View</button>";
+                    return $str;
                 })
                 ->rawColumns(['actions'])
                 ->make(true);
         }
         return view('coworker_side.reservations');
     }
-
-    public function updateStatus(Request $request)
-    {
-        $transactionId = $request->input('transaction_id');
-        $newStatus = $request->input('status');
-    
-        $transaction = DB::table('transactions')->where('id', $transactionId)->first();
-    
-        if ($transaction) {
-            DB::table('transactions')->where('id', $transactionId)->update(['status' => $newStatus]);
-    
-            return response()->json([
-                'success' => true,
-                'message' => 'Status updated successfully!',
-            ]);
-        }
-    
-        return response()->json([
-            'success' => false,
-            'message' => 'Transaction not found!',
-        ]);
-    }
-    
-
 
     public function countFreePass()
     {
@@ -633,14 +573,17 @@ class CoworkerController extends Controller
 
     public function showReservationTransactions()
     {
+        // Define all possible statuses
         $allStatuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED', 'CANCELLED', 'REFUNDED'];
 
+        // Fetch counts for existing statuses
         $existingStatuses = DB::table('transactions')
             ->select('status', DB::raw('count(*) as count'))
             ->groupBy('status')
             ->pluck('count', 'status')
             ->toArray();
 
+        // Combine existing statuses with all possible statuses, ensuring missing ones are set to 0
         $statuses = array_merge(array_fill_keys($allStatuses, 0), $existingStatuses);
 
         return response()->json($statuses);
@@ -655,10 +598,10 @@ class CoworkerController extends Controller
             ->whereNotNull('list_space_tbl.meeting_rooms')
             ->orWhereNotNull('list_space_tbl.virtual_offices')
             ->get();
-    
+
         $meetingRoomsCount = 0;
         $virtualOfficesCount = 0;
-    
+
         foreach ($counts as $count) {
             if ($count->meeting_rooms) {
                 $meetingRoomsCount++;
@@ -667,7 +610,7 @@ class CoworkerController extends Controller
                 $virtualOfficesCount++;
             }
         }
-    
+
         return response()->json([
             'meetingRoomsCount' => $meetingRoomsCount,
             'virtualOfficesCount' => $virtualOfficesCount,

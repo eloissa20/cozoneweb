@@ -105,6 +105,11 @@ Route::middleware(['preventBackHistory'])->group(function () {
     Route::middleware(['auth', 'userAuth:2'])->group(function () {
 
         Route::get('/coworker_side/coworker', [CoworkerController::class, 'viewDashboard'])->name('coworker_side.coworker');
+        Route::get('/count-free-pass', [CoworkerController::class, 'countFreePass'])->name('countFreePass');
+        Route::get('/reservation-transactions', [CoworkerController::class, 'showReservationTransactions'])->name('reservationTransactions');
+        Route::get('/reservation-type-counts', [CoworkerController::class, 'getReservationTypeCounts']);
+        Route::get('/daily-sales-chart-data', [CoworkerController::class, 'dailySalesChartData']);
+
 
         Route::get('/coworker_side/listSpace', [CoworkerController::class, 'viewListSpace'])->name('coworker_side.listSpace');
 

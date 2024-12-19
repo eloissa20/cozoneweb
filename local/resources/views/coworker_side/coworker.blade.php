@@ -1,63 +1,63 @@
-
 @extends('coworker_side.side')
 
 @section('content')
 
 <style>
-    
-.separator-line {
-    border: none;
-    height: 2px;
-    background-color: #1f1f1f;
-    margin: 10px 0;
-}
-.status-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
-    font-size: 1rem;
-}
+    .separator-line {
+        border: none;
+        height: 2px;
+        background-color: #1f1f1f;
+        margin: 10px 0;
+    }
 
-.status-color {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    margin-right: 8px;
-}
+    .status-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+        font-size: 1rem;
+    }
 
-.status-label {
-    flex: 1;
-}
+    .status-color {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 8px;
+    }
 
-.status-count {
-    font-weight: bold;
-}
+    .status-label {
+        flex: 1;
+    }
 
-.doughnut-center-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1.5rem;
-    font-weight: bold;
-}
-.doughnut-center-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1.5rem;
-    font-weight: bold;
-}
+    .status-count {
+        font-weight: bold;
+    }
 
-label {
-    font-size: 0.9rem;
-    margin-bottom: 5px;
-}
+    .doughnut-center-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
 
-input[type="checkbox"] {
-    margin-right: 5px;
-}
+    .doughnut-center-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    label {
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+    }
+
+    input[type="checkbox"] {
+        margin-right: 5px;
+    }
 </style>
 <div class="mb-3">
     {{-- <h4>Admin : {{ Auth::user()->name }}</h4> --}}
@@ -72,41 +72,41 @@ input[type="checkbox"] {
                     <div class="col">
                         <div class="p-3 m-1">
                             <h4>Welcome Back, {{ Auth::user()->name }}</h4>
-                            <p class="mb-0">Admin Dashboard</p>
-                        </div>
-                    </div>
-                    <div class="col-6 align-self-end text-end">
-                        <img src="{{ asset('img/poster.jpg') }}" class="img-fluid illustration-img"
-                            alt="">
+<p class="mb-0">Admin Dashboard</p>
+</div>
+</div>
+<div class="col-6 align-self-end text-end">
+    <img src="{{ asset('img/poster.jpg') }}" class="img-fluid illustration-img"
+        alt="">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-12 col-md-6 d-flex">
+    <div class="card flex-fill border-0">
+        <div class="card-body py-4">
+            <div class="d-flex align-items-start">
+                <div class="flex-grow-1">
+                    <h4 class="mb-2">
+                        {{ $data['total_users'] }}
+                    </h4>
+                    <p class="mb-2">
+                        Total Users
+                    </p>
+                    <div class="mb-0">
+                        <span class="badge text-success me-2">
+                            {{ $data['percentage_change'] > 0 ? '+' : '' }}{{ $data['percentage_change'] }}%
+                        </span>
+                        <span class="text-muted">
+                            Since Last Month
+                        </span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-12 col-md-6 d-flex">
-        <div class="card flex-fill border-0">
-            <div class="card-body py-4">
-                <div class="d-flex align-items-start">
-                    <div class="flex-grow-1">
-                        <h4 class="mb-2">
-                            {{ $data['total_users'] }}
-                        </h4>
-                        <p class="mb-2">
-                            Total Users
-                        </p>
-                        <div class="mb-0">
-                            <span class="badge text-success me-2">
-                                {{ $data['percentage_change'] > 0 ? '+' : '' }}{{ $data['percentage_change'] }}%
-                            </span>
-                            <span class="text-muted">
-                                Since Last Month
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+</div>
 </div> --}}
 
 {{-- <div class="card border-0">
@@ -128,14 +128,14 @@ input[type="checkbox"] {
                 @foreach($data['users'] as $user)
                 <tr>
                     <td>{{ $user->id }}</td>
-                    <td>{{ $user->name }}</td>
-                    <td>{{ $user->email }}</td>
-                    <td>{{ $user->created_at }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+<td>{{ $user->name }}</td>
+<td>{{ $user->email }}</td>
+<td>{{ $user->created_at }}</td>
+</tr>
+@endforeach
+</tbody>
+</table>
+</div>
 </div> --}}
 
 
@@ -158,17 +158,17 @@ input[type="checkbox"] {
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-12">
                 <div class="rounded-4 border shadow text-center m-auto p-3" style="background-color: #ffffff; min-height: 100px;">
                     <h2 id="freePassCount" style="font-weight: bold; font-size: 36px; margin: 0;">0</h2>
                     <hr style="border: 0.5px solid #ddd; width: 100%; margin: 8px auto;" />
                     <p style="font-size: 14px; font-weight: bold; color: #333; margin: 0;">Free Day Passes</p>
                 </div>
-            </div>       
+            </div>
         </div>
     </div>
-    
+
     <div class="col-12 col-md-6">
         <div class="rounded-4 border p-4 mb-3 shadow" style="background-color: #ffffff; min-height: 320px;">
             <h5 class="fw-bold mb-0">Reservation Type</h5>
@@ -222,7 +222,7 @@ input[type="checkbox"] {
             </div>
         </div>
     </div>
-    
+
     <div class="col-12 col-md-6">
         <div class="rounded-4 border mb-3 p-4 shadow" style="background-color: #ffffff; min-height: 300px;">
             Total Revenue
@@ -312,7 +312,7 @@ input[type="checkbox"] {
             </div>
         </div>
     </div>
-    
+
 </div>
 
 
@@ -345,20 +345,22 @@ input[type="checkbox"] {
         getFreePassCount();
     });
 
-    
-    $(document).ready(function () {
-    let transactionChart = null;
+
+    $(document).ready(function() {
+        let transactionChart = null;
 
         $.ajax({
             url: "{{ route('reservationTransactions') }}",
             type: 'GET',
-            success: function (statuses) {
+            success: function(statuses) {
                 const statusLabels = Object.keys(statuses);
                 const statusCounts = Object.values(statuses);
                 const totalCount = statusCounts.reduce((sum, count) => sum + count, 0);
 
+                // Update total transaction count
                 $('#alltransacCount').text(totalCount);
 
+                // Define colors for each status
                 const colors = {
                     PENDING: '#FFC107',
                     CONFIRMED: '#4CAF50',
@@ -374,12 +376,12 @@ input[type="checkbox"] {
                     const count = statusCounts[index];
 
                     const legendItem = `
-                        <div class="status-item">
-                            <div class="status-color" style="background-color: ${color};"></div>
-                            <div class="status-label">${label}=</div>
-                            <div class="status-count">${count}</div>
-                        </div>
-                    `;
+                    <div class="status-item">
+                        <div class="status-color" style="background-color: ${color};"></div>
+                        <div class="status-label">${label}=</div>
+                        <div class="status-count">${count}</div>
+                    </div>
+                `;
                     legendContainer.append(legendItem);
                 });
 
@@ -400,13 +402,15 @@ input[type="checkbox"] {
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
-                            legend: { display: false },
+                            legend: {
+                                display: false
+                            },
                         },
                         cutout: '75%'
                     }
                 });
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
                 console.error('Error fetching reservation transactions:', error);
             }
         });
@@ -414,11 +418,11 @@ input[type="checkbox"] {
 
 
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         $.ajax({
             url: "{{ url('/reservation-type-counts') }}",
             type: 'GET',
-            success: function (data) {
+            success: function(data) {
                 const meetingRoomsCount = data.meetingRoomsCount;
                 const virtualOfficesCount = data.virtualOfficesCount;
                 const totalCount = meetingRoomsCount + virtualOfficesCount;
@@ -446,7 +450,7 @@ input[type="checkbox"] {
                             },
                             tooltip: {
                                 callbacks: {
-                                    label: function (tooltipItem) {
+                                    label: function(tooltipItem) {
                                         const label = tooltipItem.label;
                                         const value = tooltipItem.raw;
                                         const type = label === 'Meeting Rooms' ? 'Meeting Room' : 'Virtual Office';
@@ -458,28 +462,20 @@ input[type="checkbox"] {
                     }
                 });
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
                 console.error('Error fetching reservation type counts:', error);
             }
         });
     });
 
-    fetch('{{ url('/daily-sales-chart-data') }}')
+    fetch('{{ url(' / daily - sales - chart - data ') }}')
         .then(response => response.json())
         .then(data => {
-            console.log(data);
-
-            if (!Array.isArray(data.dailySales) || !Array.isArray(data.labels)) {
-                console.error('Invalid data format:', data);
-                return;
-            }
-
             const dailySalesData = data.dailySales;
             const labels = data.labels;
 
             const ctx = document.getElementById('dailySalesChart').getContext('2d');
-
-            new Chart(ctx, {
+            const dailySalesChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
@@ -521,49 +517,53 @@ input[type="checkbox"] {
         })
         .catch(error => console.error('Error fetching the daily sales data:', error));
 
-
-    $(document).ready(function () {
+    $(document).ready(function() {
+        // Initialize date and time
         const currentDate = new Date().toLocaleString('en-US', {
             weekday: 'short',
             year: 'numeric',
             month: 'short',
             day: 'numeric'
         });
-        const currentTime = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        const currentTime = new Date().toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
         $('#currentDate').text(currentDate);
         $('#lastUpdated').text(`Last Updated on ${currentDate} ${currentTime}`);
 
+        // Dummy data
         const maxOccupancy = 20;
         const currentOccupancy = 12;
 
+        // Update occupancy data
         $('#currentOccupancy').text(currentOccupancy);
         $('#maxOccupancy').text(maxOccupancy);
         const percentage = Math.round((currentOccupancy / maxOccupancy) * 100);
         $('#occupancyPercentage').text(`${percentage}%`);
 
+        // Doughnut chart
         const ctx = document.getElementById('occupancyChart').getContext('2d');
         new Chart(ctx, {
             type: 'doughnut',
             data: {
                 labels: ['Occupied', 'Available'],
-                datasets: [
-                    {
-                        data: [currentOccupancy, maxOccupancy - currentOccupancy],
-                        backgroundColor: ['#4CAF50', '#E0E0E0'],
-                    },
-                ],
+                datasets: [{
+                    data: [currentOccupancy, maxOccupancy - currentOccupancy],
+                    backgroundColor: ['#4CAF50', '#E0E0E0'], // Colors for occupied and available
+                }, ],
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                cutout: '75%',
+                cutout: '75%', // Creates the hollow center
                 plugins: {
-                    legend: { display: false },
+                    legend: {
+                        display: false
+                    },
                 },
             },
         });
     });
-
 </script>
 @endsection
-
