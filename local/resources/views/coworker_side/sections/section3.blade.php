@@ -1,5 +1,5 @@
 <div class="form-section" id="step3">
-    <h2>WHAT YOU SPACE OFFERS</h2>
+    <h2>WHAT YOUR SPACE OFFERS</h2>
     <hr class="separator-line" />
     <form id="section3">
         <div class="row">
