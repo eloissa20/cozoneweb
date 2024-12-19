@@ -50,8 +50,9 @@ function loadLocalStorageStep4() {
         $('#longitude').val(data.longitude);
 
         const savedPosition = { lat: parseFloat(data.latitude), lng: parseFloat(data.longitude) };
-        marker.setPosition(savedPosition);
-        map.setCenter(savedPosition);
+        
+        marker.setLatLng(savedPosition);
+        map.setView(savedPosition, map.getZoom());
     }
 }
 

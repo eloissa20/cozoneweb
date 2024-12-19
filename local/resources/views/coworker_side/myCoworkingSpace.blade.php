@@ -2,10 +2,9 @@
 
 @section('content')
 <style>
-    .card {
+    .card{
         border: 1px solid #000000;
     }
-
     .modal-body {
         max-height: 70vh;
         overflow-y: auto;
@@ -41,7 +40,6 @@
         background-color: transparent;
         border: none;
     }
-
     .separator-line {
         border: none;
         height: 2px;
@@ -92,7 +90,7 @@
 
                 <!-- Space Details -->
                 <div class="space-details">
-                    <hr class="separator-line" />
+                    <hr class="separator-line"/>
                     <div class="row">
                         <div class="col-md-6">
                             <p><strong>Space Name:</strong> <span id="spaceName"></span></p>
@@ -105,8 +103,8 @@
                             <p><strong>Operating Hours:</strong> <span id="operatingHoursFrom"></span> - <span id="operatingHoursTo"></span></p>
                         </div>
                     </div>
-
-                    <hr class="separator-line" />
+                    
+                    <hr class="separator-line"/>
                     <div class="row">
                         <div class="col-md-6">
                             <p><strong>Email:</strong> <span id="email"></span></p>
@@ -118,17 +116,17 @@
                             <p><strong>Contact No:</strong> <span id="contact_no"></span></p>
                         </div>
                     </div>
-
-                    <hr class="separator-line" />
+                    
+                    <hr class="separator-line"/>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="">
                                 <h6 class="fw-bold">Basics:</h6>
                                 <ul id="basics" class="list-unstyled"></ul>
-
+            
                                 <h6 class="fw-bold mt-3">Seats:</h6>
                                 <ul id="seats" class="list-unstyled"></ul>
-
+            
                                 <h6 class="fw-bold mt-3">Equipments:</h6>
                                 <ul id="equipment" class="list-unstyled"></ul>
                             </div>
@@ -136,16 +134,16 @@
                         <div class="col-md-6">
                             <h6 class="fw-bold mt-3">Facilities:</h6>
                             <ul id="facilities" class="list-unstyled"></ul>
-
+        
                             <h6 class="fw-bold mt-3">Accessibility:</h6>
                             <ul id="accessibility" class="list-unstyled"></ul>
-
+        
                             <h6 class="fw-bold mt-3">Perks:</h6>
                             <ul id="perks" class="list-unstyled"></ul>
                         </div>
                     </div>
-
-                    <hr class="separator-line" />
+                    
+                    <hr class="separator-line"/>
                     <div class="row">
                         <div class="col-md-6">
                             <p><strong>Latitude:</strong> <span id="latitude"></span></p>
@@ -166,8 +164,8 @@
                             <p><strong>City:</strong> <span id="city"></span></p>
                         </div>
                     </div>
-
-                    <hr class="separator-line" />
+                    
+                    <hr class="separator-line"/>
                     <div class="row">
                         <div class="col-md-6">
                             <p><strong>Tables:</strong> <span id="tables"></span></p>
@@ -182,7 +180,7 @@
                     </div>
                 </div>
 
-                <hr class="separator-line" />
+                <hr class="separator-line"/>
                 <!-- Image Carousel -->
                 <p><strong>Additional Images:</strong></p>
                 <div id="additionalImagesCarousel" class="carousel slide mt-3" data-bs-ride="carousel">
@@ -211,7 +209,7 @@
                     </div>
                 </div>
 
-                <hr class="separator-line" />
+                <hr class="separator-line"/>
                 <div class="row">
                     <div class="col-md-6">
                         <p><strong>Short term:</strong> <span id="short_term"></span></p>
@@ -223,6 +221,14 @@
                     </div>
                 </div>
 
+                <hr class="separator-line"/>
+                <div class="row">
+                    <p><strong>Price:</strong> <span id="price"></span></p>
+                </div>
+
+                <div id="map" class="map-container d-flex align-items-center justify-content-center" 
+                    style="border: 1px solid #000000; height: 300px; width: 80%; border-radius: 5px; margin: 0 auto;">
+                </div>
             </div>
         </div>
     </div>
@@ -231,50 +237,49 @@
 
 
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 <script>
     // Load DataTables
-    $(document).ready(function() {
+    $(document).ready(function () {
         loadtableData();
     })
     const loadtableData = () => {
-        $('#data-table').DataTable({
-            'scrollX': true,
-
-            'serverSide': true,
-            'ajax': {
-                'headers': {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            $('#data-table').DataTable({
+                'scrollX': true,
+            
+                'serverSide': true,
+                'ajax': {
+                    'headers': {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    'url': './myCoworkingSpace',
+                    'type': 'GET',
                 },
-                'url': './myCoworkingSpace',
-                'type': 'GET',
-            },
-            order: [
-                [0, "asc"],
-            ],
-            'columns': [{
-                    data: 'id'
-                },
-                {
-                    data: 'space_name'
-                },
-                {
-                    data: 'city'
-                },
-                {
-                    data: 'actions'
-                }
-
-            ]
-        });
-    }
+                order: [
+                    [0, "asc"],
+                ],
+                'columns': [
+                    {data: 'id'},
+                    {data: 'coworking_space_name'},
+                    {data: 'coworking_space_address'},
+                    {data: 'actions'}
+                    
+                ]
+            });
+        }
 
     // View Space
+    let map = null;
+let marker = null;
+
     function viewSpaceDetails(id) {
-        // console.log('Fetching details for space ID:', id);
+    // console.log('Fetching details for space ID:', id);
         $.ajax({
             url: './viewSpaceDetails/' + id,
             type: 'GET',
-            success: function(response) {
+            success: function (response) {
                 // console.log(response);
                 $('#role').text(response.role);
                 $('#coworkingSpaceName').text(response.coworking_space_name);
@@ -326,10 +331,7 @@
                         const imgElement = $('<img>')
                             .attr('src', imageUrl)
                             .addClass('d-block w-100')
-                            .css({
-                                height: '400px',
-                                objectFit: 'cover'
-                            });
+                            .css({ height: '400px', objectFit: 'cover' });
 
                         carouselItem.append(imgElement);
                         carouselContainer.append(carouselItem);
@@ -349,7 +351,7 @@
                 }
 
                 const seats = response.seats || [];
-                $('#seats').empty();
+                $('#seats').empty(); 
                 if (seats.length > 0) {
                     seats.forEach(function(seat) {
                         console.log(seat);
@@ -360,7 +362,7 @@
                 }
 
                 const equipment = response.equipment || [];
-                $('#equipment').empty();
+                $('#equipment').empty(); 
                 if (equipment.length > 0) {
                     equipment.forEach(function(item) {
                         console.log(item);
@@ -402,22 +404,20 @@
                 } else {
                     $('#perks').append('<li>No perks available</li>');
                 }
-
+                
                 const deskFields = response.desk_fields || [];
 
                 $('#desk_fields').empty();
 
                 if (Array.isArray(deskFields) && deskFields.length > 0) {
                     deskFields.forEach(function(field, index) {
-                        const duration = (field && field.duration) ? field.duration : "N/A";
-                        const price = (field && field.price) ? field.price : "N/A";
-                        const hours = (field && field.hours) ? field.hours : "N/A";
-
-                        console.log(`Desk ${index + 1} - Duration: ${duration}, Price: ${price}, Hours: ${hours}`);
+                        const duration = field.duration || "N/A";
+                        const price = field.price || "N/A";
+                        const hours = field.hours || "N/A";
 
                         $('#desk_fields').append(`
                             <div class="desk-field">
-                                <p>Desk ${index + 1}:</p>
+                                <p><strong>Desk ${index + 1}:</strong></p>
                                 <p>Duration: ${duration}</p>
                                 <p>Price: ${price}</p>
                                 <p>Hours: ${hours}</p>
@@ -428,22 +428,19 @@
                     $('#desk_fields').append('<p>No desk fields available</p>');
                 }
 
-                const meetingFields = Array.isArray(response.meeting_fields) ?
-                    response.meeting_fields.map(field => typeof field === 'string' ? JSON.parse(field) : field) : [];
-
-                console.log('Parsed Meeting Fields:', meetingFields);
+                const meetingFields = response.meeting_fields || [];
 
                 $('#meeting_fields').empty();
 
-                if (meetingFields.length > 0) {
+                if (Array.isArray(meetingFields) && meetingFields.length > 0) {
                     meetingFields.forEach(function(field, index) {
-                        const numPeople = field.numPeople || 'N/A';
-                        const price = field.price || 'N/A';
-                        const hours = field.hours || 'N/A';
+                        const numPeople = field.num_people || "N/A";
+                        const price = field.price || "N/A";
+                        const hours = field.hours || "N/A";
 
                         $('#meeting_fields').append(`
                             <div class="meeting-field">
-                                <p>Meeting ${index + 1}:</p>
+                                <p><strong>Meeting ${index + 1}:</strong></p>
                                 <p>Number of People: ${numPeople}</p>
                                 <p>Price: ${price}</p>
                                 <p>Hours: ${hours}</p>
@@ -451,9 +448,33 @@
                         `);
                     });
                 } else {
-                    $('#meeting_fields').html('<p>No available meetings</p>');
+                    $('#meeting_fields').append('<p>No meeting rooms available</p>');
                 }
 
+                const latitude = parseFloat(response.latitude) || 14.587186; // Default latitude
+                const longitude = parseFloat(response.longitude) || -239.015398; // Default longitude
+
+                if (map) {
+                    map.remove();
+                    map = null;
+                }
+
+                map = L.map('map').setView([latitude, longitude], 13);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+
+                L.marker([latitude, longitude])
+                    .addTo(map)
+                    .bindPopup(`<b>${response.space_name}</b><br>${response.coworking_space_address}`)
+                    .openPopup();
+
+                $('#viewSpaceModal').on('shown.bs.modal', function () {
+                    if (map) {
+                        map.invalidateSize();
+                    }
+                });
 
                 $('#viewSpaceModal').modal('show');
             },

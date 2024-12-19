@@ -112,6 +112,23 @@ Route::middleware(['preventBackHistory'])->group(function () {
 
 
         Route::get('/coworker_side/listSpace', [CoworkerController::class, 'viewListSpace'])->name('coworker_side.listSpace');
+        
+        Route::get('/coworker_side/addDesks/{id}', [CoworkerController::class, 'addDesks'])->name('addDesks');
+        // Route::post('/coworker_side/addDesks/{id}', [CoworkerController::class, 'saveDesks'])->name('saveDesks');
+        // Route::delete('/coworker_side/deleteDesk/{id}', [CoworkerController::class, 'deleteDesk'])->name('deleteDesk');
+        Route::post('/coworker_side/addDesks/{id}', [CoworkerController::class, 'saveDesks'])->name('saveDesks');
+        Route::delete('/coworker_side/deleteDesk/{id}', [CoworkerController::class, 'deleteDesk'])->name('deleteDesk');
+        Route::post('/coworker_side/edit-desk/{id}', [CoworkerController::class, 'editDesk'])->name('editDesk');
+
+        
+
+
+
+        Route::get('/coworker_side/addMeetings/{id}', [CoworkerController::class, 'addMeetings'])->name('addMeetings');
+        Route::post('/coworker_side/addMeetings/{id}', [CoworkerController::class, 'saveMeetings'])->name('saveMeetings');
+        Route::delete('/coworker_side/deleteMeeting/{id}', [CoworkerController::class, 'deleteMeeting'])->name('deleteMeeting');
+        Route::post('/coworker_side/editMeeting/{id}', [CoworkerController::class, 'editMeeting'])->name('editMeeting');
+
 
         Route::post('/coworker_side/listSpace', [CoworkerController::class, 'submitListSpace'])->name('listSpace');
 
@@ -135,6 +152,7 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::put('/coworker_side/editSpace/{id}', [CoworkerController::class, 'updateSpace'])->name('coworker_side.updateSpace');
 
         Route::get('/coworker_side/about_us', [CoworkerController::class, 'aboutUs'])->name('aboutUs');
+        
     });
 
     Route::middleware(['auth', 'userAuth:3'])->group(function () {
@@ -157,10 +175,11 @@ Route::middleware(['preventBackHistory'])->group(function () {
 
         Route::get('/admin_side/spaces', [AdminController::class, 'viewSpaces'])->name('admin.spaces');
         Route::get('/admin_side/viewSpaceDetails/{id}', [AdminController::class, 'viewSpaceDetails'])->name('viewSpaceDetails');
-
+        
         Route::get('/admin_side/transactions', [AdminController::class, 'viewTransactions'])->name('admin.transactions');
         Route::get('/admin_side/viewTransactionDetails/{id}', [AdminController::class, 'viewTransactionDetails'])->name('viewTransactionDetails');
     });
+
 });
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
