@@ -270,6 +270,34 @@ class CoworkerController extends Controller
         return response()->json(['message' => 'Space deleted successfully.']);
     }
 
+    // public function editSpace($id)
+    // {
+    //     $space = DB::table('list_space_tbl')->where('id', $id)->first();
+
+    //     if (!$space) {
+    //         return redirect()->back()->with('error', 'Space not found.');
+    //     }
+
+    //     $basics = json_decode(stripslashes(trim($space->basics, '"')), true);
+    //     $seats = json_decode(stripslashes(trim($space->seats, '"')), true);
+    //     // $equipment = json_decode($space->equipment, true);
+    //     $equipment = json_decode(stripslashes(trim($space->equipment, '"')), true);
+    //     $facilities = json_decode(stripslashes(trim($space->facilities, '"')), true);
+    //     $accessibility = json_decode(stripslashes(trim($space->accessibility, '"')), true);
+    //     $perks = json_decode(stripslashes(trim($space->perks, '"')), true);
+
+
+    //     $additionalImages = $space->additional_images ? json_decode($space->additional_images, true) : [];
+
+    //     $deskFields = json_decode($space->desk_fields, true);
+    //     $meetingFields = json_decode($space->meeting_fields, true);
+
+    //     // dd($space);
+    //     // dd($equipment);
+
+    //     return view('coworker_side.editSpace', compact('space', 'basics', 'seats', 'equipment', 'facilities', 'accessibility', 'perks', 'additionalImages', 'deskFields', 'meetingFields'));
+    // }
+
     public function editSpace($id)
     {
         $space = DB::table('list_space_tbl')->where('id', $id)->first();
@@ -278,25 +306,157 @@ class CoworkerController extends Controller
             return redirect()->back()->with('error', 'Space not found.');
         }
 
+        // Decode general fields
         $basics = json_decode(stripslashes(trim($space->basics, '"')), true);
         $seats = json_decode(stripslashes(trim($space->seats, '"')), true);
-        // $equipment = json_decode($space->equipment, true);
         $equipment = json_decode(stripslashes(trim($space->equipment, '"')), true);
         $facilities = json_decode(stripslashes(trim($space->facilities, '"')), true);
         $accessibility = json_decode(stripslashes(trim($space->accessibility, '"')), true);
         $perks = json_decode(stripslashes(trim($space->perks, '"')), true);
-
-
         $additionalImages = $space->additional_images ? json_decode($space->additional_images, true) : [];
 
-        $deskFields = json_decode($space->desk_fields, true);
-        $meetingFields = json_decode($space->meeting_fields, true);
+        // Decode desk and meeting fields with enhanced logic
+        $jsonWithObject = ['desk_fields', 'meeting_fields'];
+        foreach ($jsonWithObject as $field) {
+            if (is_string($space->$field) && !empty(trim($space->$field))) {
+                $decodedArray = json_decode($space->$field, true);
 
-        // dd($space);
-        // dd($equipment);
+                if (is_array($decodedArray)) {
+                    foreach ($decodedArray as $key => $value) {
+                        if (is_string($value)) {
+                            $decodedArray[$key] = json_decode(trim($value, '"'), true) ?: [];
+                        }
+                    }
+                    $space->$field = $decodedArray;
+                } else {
+                    $space->$field = [];
+                }
+            } else {
+                $space->$field = [];
+            }
+        }
 
-        return view('coworker_side.editSpace', compact('space', 'basics', 'seats', 'equipment', 'facilities', 'accessibility', 'perks', 'additionalImages', 'deskFields', 'meetingFields'));
+        $deskFields = $space->desk_fields;
+        $meetingFields = $space->meeting_fields;
+
+        return view('coworker_side.editSpace', compact(
+            'space',
+            'basics',
+            'seats',
+            'equipment',
+            'facilities',
+            'accessibility',
+            'perks',
+            'additionalImages',
+            'deskFields',
+            'meetingFields'
+        ));
     }
+
+
+    // public function updateSpace(Request $request, $id)
+    // {
+    //     $request->validate([
+    //         'headerImage' => 'nullable|mimes:png,jpg,jpeg,webp',
+    //         'additionalImages.*' => 'nullable|mimes:png,jpg,jpeg,webp|max:2048',
+    //     ], [
+    //         'headerImage.mimes' => 'The header image must be a file of type: png, jpg, jpeg, webp.',
+    //         'additionalImages.*.mimes' => 'Each additional image must be a file of type: png, jpg, jpeg, webp.',
+    //         'additionalImages.*.max' => 'Each additional image may not be larger than 2MB.',
+    //     ]);
+
+    //     $space = DB::table('list_space_tbl')->where('id', $id)->first();
+    //     if (!$space) {
+    //         return response()->json(['error' => 'Space not found.'], 404);
+    //     }
+
+    //     if ($request->hasFile('headerImage')) {
+    //         $file = $request->file('headerImage');
+    //         $extension = $file->getClientOriginalExtension();
+    //         $filename = time() . '.' . $extension;
+    //         $path = 'uploads/header/';
+    //         $file->move($path, $filename);
+    //         $headerImagePath = $path . $filename;
+    //     } else {
+    //         $headerImagePath = $space->header_image;
+    //     }
+
+    //     $additionalImages = [];
+    //     if ($request->hasFile('additionalImages')) {
+    //         foreach ($request->file('additionalImages') as $image) {
+    //             $imageName = time() . '_' . $image->getClientOriginalName();
+    //             $image->move('uploads/additional_images/', $imageName);
+    //             $additionalImages[] = 'uploads/additional_images/' . $imageName;
+    //         }
+    //     } else {
+    //         $additionalImages = json_decode($space->additional_images, true);
+    //     }
+
+    //     $data = [
+    //         'role' => $request->input('role'),
+    //         'coworking_space_name' => $request->input('coworkingSpaceName'),
+    //         'coworking_space_address' => $request->input('coworkingSpaceAddress'),
+    //         'space_name' => $request->input('spaceName'),
+    //         'type_of_space' => $request->input('typeOfSpace'),
+    //         'description' => $request->input('description'),
+    //         'opening_date' => $request->input('openingDate'),
+    //         'available_days_from' => $request->input('availableDaysFrom'),
+    //         'available_days_to' => $request->input('availableDaysTo'),
+    //         'exceptions'=> $request->input('exceptions'),
+    //         'operating_hours_from' => $request->input('operatingHoursFrom'),
+    //         'operating_hours_to' => $request->input('operatingHoursTo'),
+    //         'email' => $request->input('email'),
+    //         'phone' => $request->input('phone'),
+    //         'instagram' => $request->input('instagram'),
+    //         'facebook' => $request->input('facebook'),
+    //         'contact_no' => $request->input('contactNo'),
+
+    //         'basics' => json_encode($request->input('basics', [])),
+    //         'seats' => json_encode($request->input('seats', [])),
+    //         'equipment' => json_encode($request->input('equipment', [])),
+    //         'facilities' => json_encode($request->input('facilities', [])),
+    //         'accessibility' => json_encode($request->input('accessibility', [])),
+    //         'perks' => json_encode($request->input('perks', [])),
+
+    //         'location' => $request->input('location'),
+    //         'telephone' => $request->input('telephone'),
+    //         'country' => $request->input('country'),
+    //         'unit' => $request->input('unit'),
+    //         'postal' => $request->input('postal'),
+    //         'city' => $request->input('city'),
+    //         'latitude' => $request->input('latitude'),
+    //         'longitude' => $request->input('longitude'),
+    //         'tables' => $request->input('tables'),
+    //         'capacity' => $request->input('capacity'),
+    //         'meeting_rooms' => $request->input('meetingRooms'),
+    //         'virtual_offices' => $request->input('virtualOffices'),
+    //         'size' => $request->input('size'),
+    //         'measurement_unit' => $request->input('measurementUnit'),
+    //         'header_image' => $headerImagePath,
+    //         'additional_images' => json_encode($additionalImages),
+    //         'pay_online' => $request->input('payOnline'),
+    //         'credit_cards' => $request->input('creditCards'),
+    //         'eWallet' => $request->input('eWallet'),
+
+    //         // 'desk_fields' => json_encode($request->input('desks', [])),
+    //         // 'meeting_fields' => json_encode($request->input('meetingRooms', [])),
+    //         'virtual_service' => $request->input('virtualService'),
+
+    //         'membership' => $request->input('membership'),
+    //         'membership_duration' => $request->input('membershipDuration'),
+    //         'membership_price' => $request->input('membershipPrice'),
+    //         'short_term' => $request->input('shortTerm'),
+    //         'short_term_details' => $request->input('shortTermDetails'),
+    //         'free_pass' => $request->input('freePass'),
+    //         'free_pass_details' => $request->input('freePassDetails'),
+    //         'price' => $request->input('price'),
+    //         'user_id' => Auth::id(),
+    //     ];
+
+    //     DB::table('list_space_tbl')->where('id', $id)->update($data);
+
+    //     return redirect()->route('myCoworkingSpace')->with('success', 'Space updated successfully.');
+    // }
 
 
     public function updateSpace(Request $request, $id)
@@ -304,10 +464,12 @@ class CoworkerController extends Controller
         $request->validate([
             'headerImage' => 'nullable|mimes:png,jpg,jpeg,webp',
             'additionalImages.*' => 'nullable|mimes:png,jpg,jpeg,webp|max:2048',
-        ], [
-            'headerImage.mimes' => 'The header image must be a file of type: png, jpg, jpeg, webp.',
-            'additionalImages.*.mimes' => 'Each additional image must be a file of type: png, jpg, jpeg, webp.',
-            'additionalImages.*.max' => 'Each additional image may not be larger than 2MB.',
+            'desks.*.duration' => 'nullable|string|max:255',
+            'desks.*.price' => 'nullable|numeric',
+            'desks.*.hours' => 'nullable|string|max:255',
+            'meeting_fields.*.num_people' => 'nullable|string|max:255',
+            'meeting_fields.*.price' => 'nullable|numeric',
+            'meeting_fields.*.hours' => 'nullable|string|max:255',
         ]);
 
         $space = DB::table('list_space_tbl')->where('id', $id)->first();
@@ -317,8 +479,7 @@ class CoworkerController extends Controller
 
         if ($request->hasFile('headerImage')) {
             $file = $request->file('headerImage');
-            $extension = $file->getClientOriginalExtension();
-            $filename = time() . '.' . $extension;
+            $filename = time() . '.' . $file->getClientOriginalExtension();
             $path = 'uploads/header/';
             $file->move($path, $filename);
             $headerImagePath = $path . $filename;
@@ -326,16 +487,29 @@ class CoworkerController extends Controller
             $headerImagePath = $space->header_image;
         }
 
-        $additionalImages = [];
+        $additionalImages = json_decode($space->additional_images, true) ?? [];
         if ($request->hasFile('additionalImages')) {
             foreach ($request->file('additionalImages') as $image) {
                 $imageName = time() . '_' . $image->getClientOriginalName();
                 $image->move('uploads/additional_images/', $imageName);
                 $additionalImages[] = 'uploads/additional_images/' . $imageName;
             }
-        } else {
-            $additionalImages = json_decode($space->additional_images, true);
         }
+
+        $existingDeskFields = json_decode($space->desk_fields, true) ?? [];
+        $existingMeetingFields = json_decode($space->meeting_fields, true) ?? [];
+
+        $newDeskFields = $request->input('desks', []);
+        foreach ($newDeskFields as &$desk) {
+            $desk = json_encode($desk);
+        }
+        $updatedDeskFields = array_merge($existingDeskFields, $newDeskFields);
+
+        $newMeetingFields = $request->input('meeting_fields', []);
+        foreach ($newMeetingFields as &$meeting) {
+            $meeting = json_encode($meeting);
+        }
+        $updatedMeetingFields = array_merge($existingMeetingFields, $newMeetingFields);
 
         $data = [
             'role' => $request->input('role'),
@@ -355,14 +529,12 @@ class CoworkerController extends Controller
             'instagram' => $request->input('instagram'),
             'facebook' => $request->input('facebook'),
             'contact_no' => $request->input('contactNo'),
-
             'basics' => json_encode($request->input('basics', [])),
             'seats' => json_encode($request->input('seats', [])),
             'equipment' => json_encode($request->input('equipment', [])),
             'facilities' => json_encode($request->input('facilities', [])),
             'accessibility' => json_encode($request->input('accessibility', [])),
             'perks' => json_encode($request->input('perks', [])),
-
             'location' => $request->input('location'),
             'telephone' => $request->input('telephone'),
             'country' => $request->input('country'),
@@ -382,14 +554,17 @@ class CoworkerController extends Controller
             'pay_online' => $request->input('payOnline'),
             'credit_cards' => $request->input('creditCards'),
             'eWallet' => $request->input('eWallet'),
+            'desk_fields' => json_encode($updatedDeskFields),
+            'meeting_fields' => json_encode($updatedMeetingFields),
+            // 'virtual_service' => $request->input('virtualService'),
+            // 'membership' => $request->input('membership'),
+            // 'membership_duration' => $request->input('membershipDuration'),
+            // 'membership_price' => $request->input('membershipPrice'),
 
-            // 'desk_fields' => json_encode($request->input('desks', [])),
-            // 'meeting_fields' => json_encode($request->input('meetingRooms', [])),
-            'virtual_service' => $request->input('virtualService'),
-
-            'membership' => $request->input('membership'),
-            'membership_duration' => $request->input('membershipDuration'),
-            'membership_price' => $request->input('membershipPrice'),
+            'virtual_service' => $request->input('virtualService', $space->virtual_service),
+            'membership' => $request->input('membership', $space->membership),
+            'membership_duration' => $request->input('membershipDuration', $space->membership_duration),
+            'membership_price' => $request->input('membershipPrice', $space->membership_price),
             'short_term' => $request->input('shortTerm'),
             'short_term_details' => $request->input('shortTermDetails'),
             'free_pass' => $request->input('freePass'),
@@ -398,6 +573,7 @@ class CoworkerController extends Controller
             'user_id' => Auth::id(),
         ];
 
+        // Update the database
         DB::table('list_space_tbl')->where('id', $id)->update($data);
 
         return redirect()->route('myCoworkingSpace')->with('success', 'Space updated successfully.');
@@ -479,8 +655,8 @@ class CoworkerController extends Controller
             'pay_online' => $request->input('payOnline'),
             'credit_cards' => $request->input('creditCards'),
             'eWallet' => $request->input('eWallet'),
-            'desk_fields' => json_encode($request->input('desks')),
-            'meeting_fields' => json_encode($request->input('meetingRooms')),
+            'desk_fields' => json_encode($request->input('desks')), // Make sure it's JSON encoded
+            'meeting_fields' => json_encode($request->input('meeting_fields')),
             'virtual_service' => $request->input('virtualService'),
             'membership' => $request->input('membership'),
             'membership_duration' => $request->input('membershipDuration'),
@@ -498,13 +674,70 @@ class CoworkerController extends Controller
         return response()->json(['message' => 'Data inserted successfully.']);
     }
 
-    public function viewReviews()
+    // public function viewReviews()
+    // {
+    //     $reviews = DB::table('reviews')
+    //         ->join('users', 'reviews.user_id', '=', 'users.id')
+    //         ->join('list_space_tbl', 'reviews.cowork_id', '=', 'list_space_tbl.id')
+    //         ->select('reviews.*', 'users.name as reviewer_name', 'list_space_tbl.space_name', 'list_space_tbl.header_image')
+    //         ->get();
+
+    //     if ($reviews->isEmpty()) {
+    //         return view('coworker_side.reviews', [
+    //             'reviews' => [],
+    //             'totalReviews' => 0,
+    //             'fiveStar' => 0,
+    //             'fourStar' => 0,
+    //             'threeStar' => 0,
+    //             'twoStar' => 0,
+    //             'oneStar' => 0,
+    //             'averageRating' => 0,
+    //         ]);
+    //     }
+
+    //     $reviews->transform(function ($review) {
+    //         $review->created_at = Carbon::parse($review->created_at);
+    //         return $review;
+    //     });
+
+    //     $totalReviews = $reviews->count();
+    //     $fiveStar = $reviews->where('rating', 5)->count();
+    //     $fourStar = $reviews->where('rating', 4)->count();
+    //     $threeStar = $reviews->where('rating', 3)->count();
+    //     $twoStar = $reviews->where('rating', 2)->count();
+    //     $oneStar = $reviews->where('rating', 1)->count();
+
+    //     $averageRating = $totalReviews > 0 ? $reviews->sum('rating') / $totalReviews : 0;
+
+    //     return view('coworker_side.reviews', compact('reviews', 'totalReviews', 'fiveStar', 'fourStar', 'threeStar', 'twoStar', 'oneStar', 'averageRating'));
+    // }
+
+
+    public function viewReviews(Request $request)
     {
-        $reviews = DB::table('reviews')
+        // Get filter and sort values from request
+        $filter = $request->input('filter', 'all');
+        $sort = $request->input('sort', 'newest_to_oldest');
+
+        // Start with the base query
+        $query = DB::table('reviews')
             ->join('users', 'reviews.user_id', '=', 'users.id')
             ->join('list_space_tbl', 'reviews.cowork_id', '=', 'list_space_tbl.id')
-            ->select('reviews.*', 'users.name as reviewer_name', 'list_space_tbl.space_name', 'list_space_tbl.header_image')
-            ->get();
+            ->select('reviews.*', 'users.name as reviewer_name', 'list_space_tbl.space_name', 'list_space_tbl.header_image');
+
+        if ($filter === 'positive') {
+            $query->where('rating', '>=', 3);
+        } elseif ($filter === 'critical') {
+            $query->where('rating', '<=', 2);
+        }
+
+        if ($sort === 'newest_to_oldest') {
+            $query->orderBy('reviews.created_at', 'desc');
+        } elseif ($sort === 'oldest_to_newest') {
+            $query->orderBy('reviews.created_at', 'asc');
+        }
+
+        $reviews = $query->get();
 
         if ($reviews->isEmpty()) {
             return view('coworker_side.reviews', [
@@ -530,53 +763,101 @@ class CoworkerController extends Controller
         $threeStar = $reviews->where('rating', 3)->count();
         $twoStar = $reviews->where('rating', 2)->count();
         $oneStar = $reviews->where('rating', 1)->count();
-
         $averageRating = $totalReviews > 0 ? $reviews->sum('rating') / $totalReviews : 0;
 
-        return view('coworker_side.reviews', compact('reviews', 'totalReviews', 'fiveStar', 'fourStar', 'threeStar', 'twoStar', 'oneStar', 'averageRating'));
+        return view('coworker_side.reviews', compact(
+            'reviews',
+            'totalReviews',
+            'fiveStar',
+            'fourStar',
+            'threeStar',
+            'twoStar',
+            'oneStar',
+            'averageRating'
+        ));
     }
 
-    public function filterReviews(Request $request)
-    {
-        $query = DB::table('reviews');
+    // public function filterReviews(Request $request)
+    // {
+    //     $query = DB::table('reviews');
 
-        if ($request->has('filter_type') && $request->filter_type != 'All Reviews') {
-            if ($request->filter_type == 'Positive') {
-                $query->where('rating', '>=', 3);
-            } elseif ($request->filter_type == 'Critical') {
-                $query->where('rating', '<', 3);
-            }
-        }
+    //     if ($request->has('filter_type') && $request->filter_type != 'All Reviews') {
+    //         if ($request->filter_type == 'Positive') {
+    //             $query->where('rating', '>=', 3);
+    //         } elseif ($request->filter_type == 'Critical') {
+    //             $query->where('rating', '<', 3);
+    //         }
+    //     }
 
-        if ($request->has('sort_type')) {
-            if ($request->sort_type == 'Newest to Oldest') {
-                $query->orderBy('created_at', 'desc');
-            } else {
-                $query->orderBy('created_at', 'asc');
-            }
-        }
+    //     if ($request->has('sort_type')) {
+    //         if ($request->sort_type == 'Newest to Oldest') {
+    //             $query->orderBy('created_at', 'desc');
+    //         } else {
+    //             $query->orderBy('created_at', 'asc');
+    //         }
+    //     }
 
-        $reviews = $query->get();
+    //     $reviews = $query->get();
 
-        return response()->json([
-            'reviews' => $reviews
-        ]);
-    }
+    //     return response()->json([
+    //         'reviews' => $reviews
+    //     ]);
+    // }
+
+    // public function viewReservations(Request $request)
+    // {
+    //     if ($request->ajax()) {
+    //         $requests = DB::table('transactions')
+    //             ->select('*')
+    //             ->get();
+
+    //         return DataTables::of($requests)
+    //             // ->addIndexColumn()
+    //             ->addColumn('actions', function ($row) {
+    //                 $statuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED', 'REFUNDED'];
+
+    //                 $dropdown = "<div class='dropdown'>
+    //                     <button class='btn btn-outline-dark btn-sm dropdown-toggle' type='button' data-bs-toggle='dropdown' aria-expanded='false'>
+    //                         Change Status
+    //                     </button>
+    //                     <ul class='dropdown-menu'>";
+
+    //                 foreach ($statuses as $status) {
+    //                     $dropdown .= "<li>
+    //                         <a class='dropdown-item status-btn' href='#' data-id='{$row->id}' data-status='{$status}'>
+    //                             {$status}
+    //                         </a>
+    //                     </li>";
+    //                 }
+
+    //                 $dropdown .= "</ul></div>";
+
+    //                 return $dropdown;
+    //             })
+    //             ->rawColumns(['actions'])
+    //             ->make(true);
+    //     }
+    //     return view('coworker_side.reservations');
+    // }
 
     public function viewReservations(Request $request)
     {
         if ($request->ajax()) {
-            $requests = DB::table('transactions')
-                ->select('*')
-                ->get();
+            $status = $request->input('status', 'ALL');
+            $query = DB::table('transactions')->select('*');
+
+            if ($status !== 'ALL') {
+                $query->where('status', $status);
+            }
+
+            $requests = $query->get();
 
             return DataTables::of($requests)
-                // ->addIndexColumn()
                 ->addColumn('actions', function ($row) {
                     $statuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED', 'REFUNDED'];
 
-                    $dropdown = "<div class='dropdown'>
-                        <button class='btn btn-outline-dark btn-sm dropdown-toggle' type='button' data-bs-toggle='dropdown' aria-expanded='false'>
+                    $dropdown = "<div class='dropdown dropdown-hover'>
+                        <button class='btn btn-outline-dark btn-sm dropdown-toggle' type='button'>
                             Change Status
                         </button>
                         <ul class='dropdown-menu'>";
@@ -591,13 +872,16 @@ class CoworkerController extends Controller
 
                     $dropdown .= "</ul></div>";
 
+
                     return $dropdown;
                 })
                 ->rawColumns(['actions'])
                 ->make(true);
         }
+
         return view('coworker_side.reservations');
     }
+
 
     public function updateStatus(Request $request)
     {
@@ -674,5 +958,28 @@ class CoworkerController extends Controller
             'virtualOfficesCount' => $virtualOfficesCount,
             'totalCount' => $meetingRoomsCount + $virtualOfficesCount,
         ]);
+    }
+
+    public function replyToReview(Request $request, $reviewId)
+    {
+        $validated = $request->validate([
+            'reply' => 'required|string|max:500',
+        ]);
+
+        DB::table('replies')->insert([
+            'cowork_id' => auth()->id(),
+            'review_id' => $reviewId,
+            'reply' => $request->input('reply'),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // Redirect or respond
+        return back()->with('success', 'Your reply has been posted!');
+    }
+
+    public function aboutUs()
+    {
+        return view('coworker_side.about_us');
     }
 }

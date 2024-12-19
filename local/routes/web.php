@@ -118,6 +118,7 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('/coworker_side/myCoworkingSpace', [CoworkerController::class, 'viewmyCoworkingSpace'])->name('myCoworkingSpace');
 
         Route::get('/coworker_side/reviews', [CoworkerController::class, 'viewReviews'])->name('reviews');
+        Route::post('/coworker_side/reviews/{reviewId}/reply', [CoworkerController::class, 'replyToReview'])->name('coworker_side.replyToReview');
         Route::get('/coworker_side/reviews/filter', [CoworkerController::class, 'filterReviews'])->name('reviews.filter');
 
 
@@ -132,6 +133,8 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('/coworker_side/editSpace/{id}', [CoworkerController::class, 'editSpace'])->name('editSpace');
 
         Route::put('/coworker_side/editSpace/{id}', [CoworkerController::class, 'updateSpace'])->name('coworker_side.updateSpace');
+
+        Route::get('/coworker_side/about_us', [CoworkerController::class, 'aboutUs'])->name('aboutUs');
     });
 
     Route::middleware(['auth', 'userAuth:3'])->group(function () {

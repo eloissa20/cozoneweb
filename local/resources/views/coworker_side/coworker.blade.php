@@ -306,10 +306,8 @@
     </div>
     <div class="col-12">
         <div class="rounded-4 border p-4" style="background-color: #ffffff; min-height: 150px;">
-            <div class="col border rounded-4 p-2 mt-3">
-                <h5>Daily Sales</h5>
-                <canvas id="dailySalesChart" style="max-width: 100%; max-height: 300px;"></canvas>
-            </div>
+            <h5>Daily Sales</h5>
+            <canvas id="dailySalesChart" style="max-width: 100%; max-height: 300px;"></canvas>
         </div>
     </div>
 
@@ -489,7 +487,7 @@
                         label: 'Daily Sales',
                         data: dailySalesData,
                         fill: false,
-                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderColor: '#404040',
                         tension: 0.1
                     }]
                 },
@@ -497,7 +495,8 @@
                     responsive: true,
                     plugins: {
                         legend: {
-                            position: 'top',
+                            // position: 'top',
+                            display: false,
                         },
                         tooltip: {
                             mode: 'index',
