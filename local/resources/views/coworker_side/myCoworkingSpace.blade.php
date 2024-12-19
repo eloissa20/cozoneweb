@@ -2,9 +2,10 @@
 
 @section('content')
 <style>
-    .card{
+    .card {
         border: 1px solid #000000;
     }
+
     .modal-body {
         max-height: 70vh;
         overflow-y: auto;
@@ -40,6 +41,7 @@
         background-color: transparent;
         border: none;
     }
+
     .separator-line {
         border: none;
         height: 2px;
@@ -90,7 +92,7 @@
 
                 <!-- Space Details -->
                 <div class="space-details">
-                    <hr class="separator-line"/>
+                    <hr class="separator-line" />
                     <div class="row">
                         <div class="col-md-6">
                             <p><strong>Space Name:</strong> <span id="spaceName"></span></p>
@@ -103,8 +105,8 @@
                             <p><strong>Operating Hours:</strong> <span id="operatingHoursFrom"></span> - <span id="operatingHoursTo"></span></p>
                         </div>
                     </div>
-                    
-                    <hr class="separator-line"/>
+
+                    <hr class="separator-line" />
                     <div class="row">
                         <div class="col-md-6">
                             <p><strong>Email:</strong> <span id="email"></span></p>
@@ -116,17 +118,17 @@
                             <p><strong>Contact No:</strong> <span id="contact_no"></span></p>
                         </div>
                     </div>
-                    
-                    <hr class="separator-line"/>
+
+                    <hr class="separator-line" />
                     <div class="row">
                         <div class="col-md-6">
                             <div class="">
                                 <h6 class="fw-bold">Basics:</h6>
                                 <ul id="basics" class="list-unstyled"></ul>
-            
+
                                 <h6 class="fw-bold mt-3">Seats:</h6>
                                 <ul id="seats" class="list-unstyled"></ul>
-            
+
                                 <h6 class="fw-bold mt-3">Equipments:</h6>
                                 <ul id="equipment" class="list-unstyled"></ul>
                             </div>
@@ -134,16 +136,16 @@
                         <div class="col-md-6">
                             <h6 class="fw-bold mt-3">Facilities:</h6>
                             <ul id="facilities" class="list-unstyled"></ul>
-        
+
                             <h6 class="fw-bold mt-3">Accessibility:</h6>
                             <ul id="accessibility" class="list-unstyled"></ul>
-        
+
                             <h6 class="fw-bold mt-3">Perks:</h6>
                             <ul id="perks" class="list-unstyled"></ul>
                         </div>
                     </div>
-                    
-                    <hr class="separator-line"/>
+
+                    <hr class="separator-line" />
                     <div class="row">
                         <div class="col-md-6">
                             <p><strong>Latitude:</strong> <span id="latitude"></span></p>
@@ -164,8 +166,8 @@
                             <p><strong>City:</strong> <span id="city"></span></p>
                         </div>
                     </div>
-                    
-                    <hr class="separator-line"/>
+
+                    <hr class="separator-line" />
                     <div class="row">
                         <div class="col-md-6">
                             <p><strong>Tables:</strong> <span id="tables"></span></p>
@@ -180,7 +182,7 @@
                     </div>
                 </div>
 
-                <hr class="separator-line"/>
+                <hr class="separator-line" />
                 <!-- Image Carousel -->
                 <p><strong>Additional Images:</strong></p>
                 <div id="additionalImagesCarousel" class="carousel slide mt-3" data-bs-ride="carousel">
@@ -209,7 +211,7 @@
                     </div>
                 </div>
 
-                <hr class="separator-line"/>
+                <hr class="separator-line" />
                 <div class="row">
                     <div class="col-md-6">
                         <p><strong>Short term:</strong> <span id="short_term"></span></p>
@@ -220,7 +222,7 @@
                         <p><strong>Free pass details:</strong> <span id="free_pass_details"></span></p>
                     </div>
                 </div>
-                
+
             </div>
         </div>
     </div>
@@ -231,41 +233,48 @@
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
 <script>
     // Load DataTables
-    $(document).ready(function () {
+    $(document).ready(function() {
         loadtableData();
     })
     const loadtableData = () => {
-            $('#data-table').DataTable({
-                'scrollX': true,
-            
-                'serverSide': true,
-                'ajax': {
-                    'headers': {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    'url': './myCoworkingSpace',
-                    'type': 'GET',
+        $('#data-table').DataTable({
+            'scrollX': true,
+
+            'serverSide': true,
+            'ajax': {
+                'headers': {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                order: [
-                    [0, "asc"],
-                ],
-                'columns': [
-                    {data: 'id'},
-                    {data: 'space_name'},
-                    {data: 'city'},
-                    {data: 'actions'}
-                    
-                ]
-            });
-        }
+                'url': './myCoworkingSpace',
+                'type': 'GET',
+            },
+            order: [
+                [0, "asc"],
+            ],
+            'columns': [{
+                    data: 'id'
+                },
+                {
+                    data: 'space_name'
+                },
+                {
+                    data: 'city'
+                },
+                {
+                    data: 'actions'
+                }
+
+            ]
+        });
+    }
 
     // View Space
     function viewSpaceDetails(id) {
-    // console.log('Fetching details for space ID:', id);
+        // console.log('Fetching details for space ID:', id);
         $.ajax({
             url: './viewSpaceDetails/' + id,
             type: 'GET',
-            success: function (response) {
+            success: function(response) {
                 // console.log(response);
                 $('#role').text(response.role);
                 $('#coworkingSpaceName').text(response.coworking_space_name);
@@ -317,7 +326,10 @@
                         const imgElement = $('<img>')
                             .attr('src', imageUrl)
                             .addClass('d-block w-100')
-                            .css({ height: '400px', objectFit: 'cover' });
+                            .css({
+                                height: '400px',
+                                objectFit: 'cover'
+                            });
 
                         carouselItem.append(imgElement);
                         carouselContainer.append(carouselItem);
@@ -337,7 +349,7 @@
                 }
 
                 const seats = response.seats || [];
-                $('#seats').empty(); 
+                $('#seats').empty();
                 if (seats.length > 0) {
                     seats.forEach(function(seat) {
                         console.log(seat);
@@ -348,7 +360,7 @@
                 }
 
                 const equipment = response.equipment || [];
-                $('#equipment').empty(); 
+                $('#equipment').empty();
                 if (equipment.length > 0) {
                     equipment.forEach(function(item) {
                         console.log(item);
@@ -390,7 +402,7 @@
                 } else {
                     $('#perks').append('<li>No perks available</li>');
                 }
-                
+
                 const deskFields = response.desk_fields || [];
 
                 $('#desk_fields').empty();
@@ -416,9 +428,8 @@
                     $('#desk_fields').append('<p>No desk fields available</p>');
                 }
 
-                const meetingFields = Array.isArray(response.meeting_fields) 
-                ? response.meeting_fields.map(field => typeof field === 'string' ? JSON.parse(field) : field)
-                : [];
+                const meetingFields = Array.isArray(response.meeting_fields) ?
+                    response.meeting_fields.map(field => typeof field === 'string' ? JSON.parse(field) : field) : [];
 
                 console.log('Parsed Meeting Fields:', meetingFields);
 
@@ -443,7 +454,7 @@
                     $('#meeting_fields').html('<p>No available meetings</p>');
                 }
 
-            
+
                 $('#viewSpaceModal').modal('show');
             },
             error: function(xhr, status, error) {

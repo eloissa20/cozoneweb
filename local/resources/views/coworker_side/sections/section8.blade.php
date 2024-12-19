@@ -2,7 +2,7 @@
     <h2>MANAGE PRICING</h2>
     <hr class="separator-line" />
     <form id="section8">
-        
+
         <!-- DESKS Section -->
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 class="d-flex align-items-center">DESKS <input type="checkbox" class="ms-3" id="isdeskCheck" onchange="toggleDeskButtons()"></h3>
@@ -13,19 +13,19 @@
                 <div class="col-md-4">
                     <div class="form-check mb-3">
                         <label for="duration" class="form-label">Duration</label>
-                        <input type="text" class="form-control form-control-sm" id="duration" placeholder="1 hour - 2 hours"/>
+                        <input type="text" class="form-control form-control-sm" id="duration" placeholder="1 hour - 2 hours" />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-check mb-3">
                         <label for="deskPrice" class="form-label">Price</label>
-                        <input type="text" class="form-control form-control-sm" id="deskPrice" placeholder="PHP"/>
+                        <input type="text" class="form-control form-control-sm" id="deskPrice" placeholder="PHP" />
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-check mb-3">
                         <label for="deskHours" class="form-label">Hours</label>
-                        <input type="text" class="form-control form-control-sm" id="deskHours" placeholder="1 - 2"/>
+                        <input type="text" class="form-control form-control-sm" id="deskHours" placeholder="1 - 2" />
                     </div>
                 </div>
                 <div class="col-auto ms-auto">
@@ -44,19 +44,19 @@
                 <div class="col-md-4">
                     <div class="form-check mb-3">
                         <label for="numPeople" class="form-label">No. of people</label>
-                        <input type="text" class="form-control form-control-sm" id="numPeople" placeholder="1 - 5 persons"/>
+                        <input type="text" class="form-control form-control-sm" id="numPeople" placeholder="1 - 5 persons" />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-check mb-3">
                         <label for="meetingPrice" class="form-label">Price</label>
-                        <input type="text" class="form-control form-control-sm" id="meetingPrice" placeholder="PHP"/>
+                        <input type="text" class="form-control form-control-sm" id="meetingPrice" placeholder="PHP" />
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="form-check mb-3">
                         <label for="meetingHours" class="form-label">Hours</label>
-                        <input type="text" class="form-control form-control-sm" id="meetingHours" placeholder="1 hour - 2 hours"/>
+                        <input type="text" class="form-control form-control-sm" id="meetingHours" placeholder="1 hour - 2 hours" />
                     </div>
                 </div>
                 <div class="col-auto ms-auto">
@@ -102,20 +102,20 @@
                 <div class="col-md-6">
                     <div class="form-check mb-3">
                         <label for="membershipDuration" class="form-label">Duration</label>
-                        <input type="text" class="form-control form-control-sm" id="membershipDuration" placeholder="Starting Price per Week"/>
+                        <input type="text" class="form-control form-control-sm" id="membershipDuration" placeholder="Starting Price per Week" />
                     </div>
                     <div class="form-check mb-3">
                         <label for="membershipPrice" class="form-label">Price</label>
-                        <input type="text" class="form-control form-control-sm" id="membershipPrice" placeholder="PHP"/>
+                        <input type="text" class="form-control form-control-sm" id="membershipPrice" placeholder="PHP" />
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="d-flex justify-content-end mt-4">
-            <button type="button" class="btn btn-outline-secondary" id="prevButton8">Previous</button>
+            <button type="button" class="btn btn-light" id="prevButton8">Previous</button>
             <button type="button" class="btn btn-dark ms-3" id="nextButton8">Next</button>
-        </div>   
+        </div>
     </form>
 </div>
 
@@ -125,7 +125,7 @@
         const deskFields = document.querySelectorAll('.desk-fields input');
         const addDeskBtn = document.getElementById('add-desk-btn');
         const removeDeskBtns = document.querySelectorAll('.remove-desk');
-        
+
         deskFields.forEach(field => {
             field.disabled = !isDeskChecked;
         });
@@ -141,7 +141,7 @@
         const meetingFields = document.querySelectorAll('.meeting-fields input');
         const addMeetingBtn = document.getElementById('add-meeting-btn');
         const removeMeetingBtns = document.querySelectorAll('.remove-meeting');
-        
+
         meetingFields.forEach(field => {
             field.disabled = !isMeetingChecked;
         });
@@ -155,7 +155,7 @@
     function toggleVirtualOfficeFields() {
         const isVirtualChecked = document.getElementById('isvirtualCheck').checked;
         const virtualFields = document.querySelectorAll('.virtual-fields input, .virtual-fields .form-check-input');
-        
+
         virtualFields.forEach(field => {
             field.disabled = !isVirtualChecked;
         });
@@ -164,7 +164,7 @@
     function toggleVirtualOfficeFields() {
         const isVirtualChecked = document.getElementById('isvirtualCheck').checked;
         const virtualFields = document.querySelectorAll('.virtual-fields input, .virtual-fields .form-check-input');
-        
+
         virtualFields.forEach(field => {
             field.disabled = !isVirtualChecked;
         });
@@ -173,11 +173,11 @@
     document.querySelector('.add-desk').addEventListener('click', function() {
         const deskSection = document.querySelector('.desk-section');
         const newDeskFields = document.querySelector('.desk-fields').cloneNode(true);
-        
+
         newDeskFields.querySelectorAll('[id]').forEach(function(item) {
             item.removeAttribute('id');
         });
-        
+
         deskSection.appendChild(newDeskFields);
         toggleDeskButtons();
     });
@@ -186,7 +186,7 @@
     document.querySelector('.add-meeting').addEventListener('click', function() {
         const meetingSection = document.querySelector('.meeting-section');
         const newMeetingFields = document.querySelector('.meeting-fields').cloneNode(true);
-        
+
         newMeetingFields.querySelectorAll('[id]').forEach(function(item) {
             item.removeAttribute('id');
         });
