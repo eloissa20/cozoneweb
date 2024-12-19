@@ -134,24 +134,22 @@ class CoworkerController extends Controller
 
     public function dailySalesChartData()
     {
-        $days = Carbon::today()->subDays(7)->toArray();
+        $days = [];
+        for ($i = 0; $i < 7; $i++) {
+            $days[] = Carbon::today()->subDays($i)->format('Y-m-d');
+        }
 
-        $dailySales = [];
-
-        foreach ($days as $day) {
-            $dailySales[] = DB::table('transactions')
+        $dailySales = array_map(function ($day) {
+            return DB::table('transactions')
                 ->whereDate('created_at', $day)
-                ->sum('amount');
-        }
+                ->sum('amount') ?: 0;
+        }, $days);
 
-        $labels = [];
-        foreach ($days as $day) {
-            $labels[] = Carbon::parse($day)->format('M d');
-        }
+        $labels = array_map(fn($day) => Carbon::parse($day)->format('M d'), $days);
 
         return response()->json([
-            'dailySales' => $dailySales,
-            'labels' => $labels,
+            'dailySales' => array_reverse($dailySales),
+            'labels' => array_reverse($labels),
         ]);
     }
 
@@ -538,7 +536,32 @@ class CoworkerController extends Controller
         return view('coworker_side.reviews', compact('reviews', 'totalReviews', 'fiveStar', 'fourStar', 'threeStar', 'twoStar', 'oneStar', 'averageRating'));
     }
 
+    public function filterReviews(Request $request)
+    {
+        $query = DB::table('reviews');
 
+        if ($request->has('filter_type') && $request->filter_type != 'All Reviews') {
+            if ($request->filter_type == 'Positive') {
+                $query->where('rating', '>=', 3);
+            } elseif ($request->filter_type == 'Critical') {
+                $query->where('rating', '<', 3);
+            }
+        }
+
+        if ($request->has('sort_type')) {
+            if ($request->sort_type == 'Newest to Oldest') {
+                $query->orderBy('created_at', 'desc');
+            } else {
+                $query->orderBy('created_at', 'asc');
+            }
+        }
+
+        $reviews = $query->get();
+
+        return response()->json([
+            'reviews' => $reviews
+        ]);
+    }
 
     public function viewReservations(Request $request)
     {
@@ -550,17 +573,55 @@ class CoworkerController extends Controller
             return DataTables::of($requests)
                 // ->addIndexColumn()
                 ->addColumn('actions', function ($row) {
-                    $editUrl = route('editSpace', $row->id);
-                    $str = "<button class='btn btn-outline-dark btn-sm me-2'><i class='bi bi-pencil-square'></i> Update</button>
-                            <button class='btn btn-outline-dark btn-sm me-2')'><i class='bi bi-trash'></i> Delete</button>
-                            <button class='btn btn-outline-dark btn-sm me-2')'><i class='bi bi-eye'></i> View</button>";
-                    return $str;
+                    $statuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED', 'REFUNDED'];
+
+                    $dropdown = "<div class='dropdown'>
+                        <button class='btn btn-outline-dark btn-sm dropdown-toggle' type='button' data-bs-toggle='dropdown' aria-expanded='false'>
+                            Change Status
+                        </button>
+                        <ul class='dropdown-menu'>";
+
+                    foreach ($statuses as $status) {
+                        $dropdown .= "<li>
+                            <a class='dropdown-item status-btn' href='#' data-id='{$row->id}' data-status='{$status}'>
+                                {$status}
+                            </a>
+                        </li>";
+                    }
+
+                    $dropdown .= "</ul></div>";
+
+                    return $dropdown;
                 })
                 ->rawColumns(['actions'])
                 ->make(true);
         }
         return view('coworker_side.reservations');
     }
+
+    public function updateStatus(Request $request)
+    {
+        $transactionId = $request->input('transaction_id');
+        $newStatus = $request->input('status');
+
+        $transaction = DB::table('transactions')->where('id', $transactionId)->first();
+
+        if ($transaction) {
+            DB::table('transactions')->where('id', $transactionId)->update(['status' => $newStatus]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Status updated successfully!',
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Transaction not found!',
+        ]);
+    }
+
+
 
     public function countFreePass()
     {
@@ -573,17 +634,14 @@ class CoworkerController extends Controller
 
     public function showReservationTransactions()
     {
-        // Define all possible statuses
         $allStatuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED', 'CANCELLED', 'REFUNDED'];
 
-        // Fetch counts for existing statuses
         $existingStatuses = DB::table('transactions')
             ->select('status', DB::raw('count(*) as count'))
             ->groupBy('status')
             ->pluck('count', 'status')
             ->toArray();
 
-        // Combine existing statuses with all possible statuses, ensuring missing ones are set to 0
         $statuses = array_merge(array_fill_keys($allStatuses, 0), $existingStatuses);
 
         return response()->json($statuses);

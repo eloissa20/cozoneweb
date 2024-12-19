@@ -118,8 +118,12 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('/coworker_side/myCoworkingSpace', [CoworkerController::class, 'viewmyCoworkingSpace'])->name('myCoworkingSpace');
 
         Route::get('/coworker_side/reviews', [CoworkerController::class, 'viewReviews'])->name('reviews');
+        Route::get('/coworker_side/reviews/filter', [CoworkerController::class, 'filterReviews'])->name('reviews.filter');
+
 
         Route::get('/coworker_side/reservations', [CoworkerController::class, 'viewReservations'])->name('reservations');
+        Route::post('/coworker_side/update-status', [CoworkerController::class, 'updateStatus'])->name('updateStatus');
+
 
         Route::get('/coworker_side/viewSpaceDetails/{id}', [CoworkerController::class, 'viewSpaceDetails'])->name('viewSpaceDetails');
 

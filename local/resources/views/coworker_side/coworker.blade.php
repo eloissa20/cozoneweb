@@ -357,10 +357,8 @@
                 const statusCounts = Object.values(statuses);
                 const totalCount = statusCounts.reduce((sum, count) => sum + count, 0);
 
-                // Update total transaction count
                 $('#alltransacCount').text(totalCount);
 
-                // Define colors for each status
                 const colors = {
                     PENDING: '#FFC107',
                     CONFIRMED: '#4CAF50',
@@ -376,12 +374,12 @@
                     const count = statusCounts[index];
 
                     const legendItem = `
-                    <div class="status-item">
-                        <div class="status-color" style="background-color: ${color};"></div>
-                        <div class="status-label">${label}=</div>
-                        <div class="status-count">${count}</div>
-                    </div>
-                `;
+                        <div class="status-item">
+                            <div class="status-color" style="background-color: ${color};"></div>
+                            <div class="status-label">${label}=</div>
+                            <div class="status-count">${count}</div>
+                        </div>
+                    `;
                     legendContainer.append(legendItem);
                 });
 
@@ -471,11 +469,19 @@
     fetch('{{ url(' / daily - sales - chart - data ') }}')
         .then(response => response.json())
         .then(data => {
+            console.log(data);
+
+            if (!Array.isArray(data.dailySales) || !Array.isArray(data.labels)) {
+                console.error('Invalid data format:', data);
+                return;
+            }
+
             const dailySalesData = data.dailySales;
             const labels = data.labels;
 
             const ctx = document.getElementById('dailySalesChart').getContext('2d');
-            const dailySalesChart = new Chart(ctx, {
+
+            new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
@@ -517,8 +523,8 @@
         })
         .catch(error => console.error('Error fetching the daily sales data:', error));
 
+
     $(document).ready(function() {
-        // Initialize date and time
         const currentDate = new Date().toLocaleString('en-US', {
             weekday: 'short',
             year: 'numeric',
@@ -532,17 +538,14 @@
         $('#currentDate').text(currentDate);
         $('#lastUpdated').text(`Last Updated on ${currentDate} ${currentTime}`);
 
-        // Dummy data
         const maxOccupancy = 20;
         const currentOccupancy = 12;
 
-        // Update occupancy data
         $('#currentOccupancy').text(currentOccupancy);
         $('#maxOccupancy').text(maxOccupancy);
         const percentage = Math.round((currentOccupancy / maxOccupancy) * 100);
         $('#occupancyPercentage').text(`${percentage}%`);
 
-        // Doughnut chart
         const ctx = document.getElementById('occupancyChart').getContext('2d');
         new Chart(ctx, {
             type: 'doughnut',
@@ -550,13 +553,13 @@
                 labels: ['Occupied', 'Available'],
                 datasets: [{
                     data: [currentOccupancy, maxOccupancy - currentOccupancy],
-                    backgroundColor: ['#4CAF50', '#E0E0E0'], // Colors for occupied and available
+                    backgroundColor: ['#4CAF50', '#E0E0E0'],
                 }, ],
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                cutout: '75%', // Creates the hollow center
+                cutout: '75%',
                 plugins: {
                     legend: {
                         display: false
