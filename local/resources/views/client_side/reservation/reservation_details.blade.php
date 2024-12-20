@@ -123,8 +123,8 @@
 
                 <div class="box">
                     <h4>Total cost</h4>
-                    <p><strong>Payment Method:</strong> {{ $transaction->payment_method }}</p>
-                    <p><strong>Coworking Space Cost:</strong> ₱ {{ $space->price }}</p>
+                    <p style="text-transform: capitalize"><strong>Payment Method:</strong> {{ $transaction->payment_method }}</p>
+                    <p><strong>Coworking Space Cost:</strong> ₱ {{ $transaction->amount / $transaction->guests }}</p>
                     <p><strong>Discount:</strong> ₱ 0.00</p>
                     <p><strong>Total:</strong> ₱ {{ $transaction->amount }}</p>
                 </div>

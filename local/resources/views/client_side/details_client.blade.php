@@ -333,7 +333,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-3" hidden>
                                 <label for="hours2" class="form-label">Full Hours</label>
                                 <select class="form-control sync-select" id="hours2" name="price" required>
                                     <option selected disabled>Select</option>

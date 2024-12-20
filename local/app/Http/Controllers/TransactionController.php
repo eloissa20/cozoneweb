@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Cowork;
 use App\Models\Review;
+use GuzzleHttp\Client;
+use Paymongo\Paymongo;
 use App\Models\Transaction;
 use Exception;
 use Illuminate\Http\Request;
@@ -58,7 +60,7 @@ class TransactionController extends Controller
             return redirect()->route('client_side.payment', ['id' => $spaceId, 'transactionId' => $reservation->id])
                 ->with('success', 'Reservation successfully made! Proceed to payment.');
         } catch (Exception $e) {
-            return redirect()->back()->with('error', $e);
+            return redirect()->back()->with('error', $e->getMessage());
         }
 
     }
@@ -67,29 +69,47 @@ class TransactionController extends Controller
     {
         try {
             if ($request->input('payment_method') === 'gcash') {
-                dd('gcash payment');
-            } else {
-                $transaction = Transaction::find($transactionId);
+                // Initialize Guzzle HTTP client
+                $client = new Client([
+                    'base_uri' => 'https://api.paymongo.com/v1/',
+                    'auth' => [env('PAYMONGO_SECRET_KEY'), ''],
+                ]);
 
-                if (!$transaction) {
-                    return redirect()->back()->with('error', 'No transaction found!');
-                }
-
-                $data = [
-                    'amount' => $request->input('total_amount'),
-                    'payment_method' => $request->input('payment_method'),
+                // Create a GCash payment source
+                $redirectUrls = [
+                    'success' => route('client_side.payment.success', ['id' => $spaceId, 'transactionId' => $transactionId, 'paymentMethod' => $request->input('payment_method'), "amount" => $request->input('total_amount')]),
+                    'failed' => route('client_side.payment.failed'),
                 ];
 
-                $transaction->update($data);
-            }
+                $response = $client->post('sources', [
+                    'json' => [
+                        'data' => [
+                            'attributes' => [
+                                'amount' => $request->input('total_amount') * 100, // Amount
+                                'currency' => 'PHP',
+                                'type' => 'gcash',
+                                'redirect' => $redirectUrls, // Redirect URLs
+                            ],
+                        ],
+                    ],
+                ]);
 
-            return redirect()->route('client_side.payment.success', ['id' => $spaceId, 'transactionId' => $transactionId])
+                $source = json_decode($response->getBody(), true);
+
+                // Redirect user to GCash payment URL
+                return redirect($source['data']['attributes']['redirect']['checkout_url']);
+
+            } else {
+                // cash payment
+                return redirect()->route('client_side.payment.success',
+                ['id' => $spaceId, 'transactionId' => $transactionId, 'paymentMethod' => $request->input('payment_method'), "amount" => $request->input('total_amount')])
                 ->with('success', 'Reservation done! Enjoy your cowork.');
+            }
         } catch (Exception $e) {
-            return redirect()->back()->with('error', $e);
+            return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
         }
-
     }
+
 
 
     public function viewReservation($reservationId)
@@ -112,7 +132,7 @@ class TransactionController extends Controller
 
             return view('client_side.reservation.reservation_details', ['space' => $space, 'transaction' => $transaction]);
         } catch (Exception $e) {
-            return redirect()->back()->with('error', $e);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 

@@ -88,7 +88,7 @@
                             </div>
                         </div>
 
-                        <form method="POST"
+                        <form method="POST" id="paymentForm"
                             action="{{ route('client_side.payment.process', ['id' => $space->id, 'transactionId' => $transaction->id]) }}">
                             @csrf
                             {{-- <div id="credit-card">
@@ -122,22 +122,27 @@
 
                             <div id="e-wallets">
                                 <div class="row">
-                                    @if($space->pay_online === 'yes' && $space->eWallet === 'yes')
-                                    <div class="col-md-6 mb-4 text-center">
-                                        <label class="payment-label" id="gcash_payment">
-                                            <input type="radio" name="payment_method" value="gcash" class="payment-radio">
-                                            <span>GCash</span>
-                                            <div class="placeholder-box gcash" style="background-image: url('{{ asset('assets/img/gcash-logo.png') }}');">
-                                            </div>
-                                        </label>
-                                    </div>
+                                    @if ($space->pay_online === 'yes' && $space->eWallet === 'yes')
+                                        <div class="col-md-6 mb-4 text-center">
+                                            <label class="payment-label" id="gcash_payment">
+                                                <input type="radio" name="payment_method" value="gcash"
+                                                    class="payment-radio" required>
+                                                <span>GCash</span>
+                                                <div class="placeholder-box gcash"
+                                                    style="background-image: url('{{ asset('assets/img/gcash-logo.png') }}');">
+                                                </div>
+                                            </label>
+                                        </div>
                                     @endif
 
                                     <div class="col-md-6 mb-4 text-center" id="cash_payment">
                                         <label class="payment-label">
-                                            <input type="radio" name="payment_method" value="cash" class="payment-radio">
+                                            <input type="radio" name="payment_method" value="cash" class="payment-radio"
+                                                required>
                                             <span>Cash</span>
-                                            <div class="placeholder-box cash" style="background-image: url('{{ asset('assets/img/payment_in_person.png') }}');"></div>
+                                            <div class="placeholder-box cash"
+                                                style="background-image: url('{{ asset('assets/img/payment_in_person.png') }}');">
+                                            </div>
                                         </label>
                                     </div>
 
@@ -171,7 +176,7 @@
 
                             <div class="d-flex justify-content-between">
                                 <button type="button" class="btn btn-outline-secondary"><a
-                                        href="{{ route('client_side.details', ['id' => $space->id]) }}">Go Back</a></button>
+                                        href="{{ route('client_side.payment.cancel', ['spaceId' => $space->id, 'transactionId' => $transaction->id]) }}">Go Back</a></button>
                                 <button type="submit" class="btn btn-dark">Confirm Payment</button>
                             </div>
                         </form>
@@ -293,6 +298,16 @@
 
                 return total;
             }
+
+            document.getElementById('paymentForm').addEventListener('submit', function(e) {
+                try {
+                    console.log('Payment is being submitted...');
+                } catch (error) {
+                    console.error('Error during form submission:', error);
+                    alertify.error('Error: ' + error.message);
+                    event.preventDefault(); // Prevent form submission on error
+                }
+            });
 
         });
     </script>

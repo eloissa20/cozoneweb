@@ -52,8 +52,12 @@ Route::middleware(['preventBackHistory'])->group(function () {
 
         //payment
         Route::get('/client_side/payment/pay/{id}/{transactionId}', [PaymentController::class, 'client_payment'])->name('client_side.payment');
+        Route::get('/client_side/payment/cancel/{spaceId}/{transactionId}', [PaymentController::class, 'cancelPayment'])->name('client_side.payment.cancel');
         Route::post('/client_side/payment/process/{id}/{transactionId}', [TransactionController::class, 'paymentProcess'])->name('client_side.payment.process');
-        Route::get('/client_side/payment/success/{id}/{transactionId}', [PaymentController::class, 'client_payment_success'])->name('client_side.payment.success');
+        Route::get('/client_side/payment/success', [PaymentController::class, 'client_payment_success_page'])->name('client_side.payment.page.success');
+        // payment success and failed
+        Route::get('/client_side/payment/success/{id}/{transactionId}/{paymentMethod}/{amount}', [PaymentController::class, 'paymentSuccess'])->name('client_side.payment.success');
+        Route::get('/client_side/payment/failed', [PaymentController::class, 'paymentFailed'])->name('client_side.payment.failed');
 
         //list of spaces
         Route::get('/client_side/lists', [FilterController::class, 'client_list'])->name('client_side.lists');
