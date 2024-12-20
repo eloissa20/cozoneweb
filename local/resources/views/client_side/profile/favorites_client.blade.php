@@ -124,7 +124,7 @@
                 favorites.forEach(item => {
                     favoritesContainer.innerHTML += `
                 <div class="coworking-card">
-                    <img src="{{ asset('${item.cowork.header_image}') }}" alt="Coworking Space">
+                    <img src="{{ asset('${item.cowork.header_image}') }}" alt="Coworking Space" onerror="this.onerror=null;this.src='{{ asset('assets/img/no-image-available.jpeg') }}';">
                     <h5>${item.cowork.coworking_space_name}</h5>
                     <p class="mb-3">${item.cowork.coworking_space_name}</p>
                     <a href="${detailsRouteBase}/${item.space_id}" class="btn btn-outline-dark btn-sm">View Details</a>

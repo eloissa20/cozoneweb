@@ -129,7 +129,7 @@
                     <div class="col-md-4 d-flex gap-2">
                         <select class="form-select" id="filter-spaces">
                             <option selected disabled>Select Type</option>
-                            <option value="Private Room">Private Room</option>
+                            <option value="Coworking">Coworking Space</option>
                             <option value="Meeting Room">Meeting Room</option>
                             <option value="Desk Space">Desk Space</option>
                         </select>
@@ -142,7 +142,8 @@
                     @foreach ($spaces as $item)
                         <div class="col-md-4 space-card">
                             <div class="coworking-card position-relative">
-                                <img src="{{ asset($item->header_image) }}" alt="Coworking Space Image" class="img-fluid">
+                                <img src="{{ asset($item->header_image) }}" alt="Coworking Space Image" class="img-fluid"
+                                    onerror="this.onerror=null;this.src='{{ asset('assets/img/no-image-available.jpeg') }}';">
                                 <i class="favorite-heart bi bi-heart-fill fs-3 btn
                                     {{ $item->isFavorite ? 'text-danger remove_to_favorite' : 'add_to_favorite' }}"
                                     data-id="{{ $item->id }}"></i>
@@ -170,7 +171,7 @@
                                 @else
                                     <p class="text-muted fs-5">☆☆☆☆☆</p>
                                 @endif
-                                <p class="price-tag">Price at ₱{{ $item->price }}</p>
+                                <p class="price-tag">Price starts at ₱{{ $item->lowestPrice ?? '0.00' }}</p>
                                 <a href="{{ route('client_side.details', ['id' => $item->id]) }}" type="submit"
                                     class="btn btn-outline-dark btn-sm">View Details</a>
                             </div>
@@ -199,18 +200,19 @@
                    ${'<span style="color: lightgray;" class="fs-5">☆</span>'.repeat(emptyStars)}`;
 
                     const detailsRouteBase = "{{ url('client_side/details') }}";
+                    const assetBaseUrl = "{{ asset('') }}";
 
                     spaceContainer.append(`
                         <div class="col-md-4 space-card">
                             <div class="coworking-card position-relative">
-                                <img src="{{ asset('${space.header_image}') }}" alt="Coworking Space Image" class="img-fluid">
+                                <img src="{{ asset('${space.header_image}') }}" alt="Coworking Space Image" class="img-fluid" onerror="this.onerror=null;this.src='${assetBaseUrl}assets/img/no-image-available.jpeg';">
                                 <i class="favorite-heart bi bi-heart-fill fs-3 btn
                                     ${space.isFavorite ? 'text-danger remove_to_favorite' : 'add_to_favorite'}"
                                     data-id="${space.id}"></i>
                                 <h6 class="mt-2">${space.coworking_space_name}</h6>
                                 <p class="text-muted">${space.coworking_space_address}</p>
                                 <p>${stars}</p>
-                                <p class="price-tag">Price at ₱${space.price}</p>
+                                <p class="price-tag">Price starts at ₱${space.lowestPrice ?? '0.00'}</p>
                                 <a href="${detailsRouteBase}/${space.id}" type="submit" class="btn btn-outline-dark btn-sm">View Details</a>
                             </div>
                         </div>
@@ -219,40 +221,126 @@
 
             }
 
-            $('#search').on('keyup', _.debounce(function() {
-                const searchTerm = $(this).val().toLowerCase();
-                const filteredSpaces = _.filter(spaces.data, function(space) {
-                    return space.coworking_space_name.toLowerCase().includes(searchTerm) ||
-                        space.coworking_space_address.toLowerCase().includes(searchTerm);
+            function renderSearchSpaces(spaces, searchTerm) {
+                let spaceContainer = $('#spacesContainer');
+                spaceContainer.html('');
+
+                if (searchTerm) {
+                    spaceContainer.append(`
+                        <div style="margin-bottom: 20px;">
+                            <h5 style="font-weight: bold;"><i class="bi bi-geo-alt-fill"></i> Viewing ${spaces.length} Locations in or near ${searchTerm}</h5>
+                        </div>
+                    `);
+                }
+
+                spaces.forEach(space => {
+                    const fullStars = Math.floor(space.averageRating || 0);
+                    const halfStar = (space.averageRating - fullStars >= 0.5) ? 1 : 0;
+                    const emptyStars = 5 - (fullStars + halfStar);
+
+                    const stars = `${'<span style="color: gold;" class="fs-5">★</span>'.repeat(fullStars)}
+                   ${halfStar ? '<span style="color: gold;" class="fs-5">☆</span>' : ''}
+                   ${'<span style="color: lightgray;" class="fs-5">☆</span>'.repeat(emptyStars)}`;
+
+                    const detailsRouteBase = "{{ url('client_side/details') }}";
+                    const assetBaseUrl = "{{ asset('') }}";
+
+                    spaceContainer.append(`
+                        <div class="col-md-4 space-card">
+                            <div class="coworking-card position-relative">
+                                <img src="{{ asset('${space.header_image}') }}" alt="Coworking Space Image" class="img-fluid" onerror="this.onerror=null;this.src='${assetBaseUrl}assets/img/no-image-available.jpeg';">
+                                <i class="favorite-heart bi bi-heart-fill fs-3 btn
+                                    ${space.isFavorite ? 'text-danger remove_to_favorite' : 'add_to_favorite'}"
+                                    data-id="${space.id}"></i>
+                                <h6 class="mt-2">${space.coworking_space_name}</h6>
+                                <p class="text-muted">${space.coworking_space_address}</p>
+                                <p>${stars}</p>
+                                <p class="price-tag">Price starts at ₱${space.lowestPrice ?? '0.00'}</p>
+                                <a href="${detailsRouteBase}/${space.id}" type="submit" class="btn btn-outline-dark btn-sm">View Details</a>
+                            </div>
+                        </div>
+                    `);
                 });
 
-                renderSpaces(filteredSpaces);
+            }
+
+            function renderEmptySpaceMessage(spaces, searchTerm = null) {
+                let spaceContainer = $('#spacesContainer');
+                spaceContainer.html('');
+
+                if (searchTerm) {
+                    spaceContainer.append(`
+                        <div class="col-md-4">
+                            <p class="text-center">No available cowork space with keyword "${searchTerm}"</p>
+                        </div>
+                    `);
+                } else {
+
+                    spaceContainer.append(`
+                        <div class="col-md-4">
+                            <p class="text-center">No available cowork space</p>
+                        </div>
+                    `);
+                }
+
+            }
+
+
+            $('#search').on('keyup', _.debounce(function() {
+                const searchTerm = $(this).val().toLowerCase();
+
+                const filteredSpaces = _.filter(spaces, function(space) {
+                    return space.coworking_space_address.toLowerCase().includes(searchTerm)
+                });
+
+                if (filteredSpaces.length === 0) {
+                    renderEmptySpaceMessage(filteredSpaces, searchTerm)
+                } else {
+                    renderSearchSpaces(filteredSpaces, searchTerm);
+                }
+
+
             }, 300));
 
             $('#filter-spaces').on('change', function() {
                 const filterType = $(this).val();
-                const filteredSpaces = spaces.data.filter(item => item.type_of_space === filterType);
+                const filteredSpaces = spaces.filter(item => item.type_of_space === filterType);
                 $('#remove-type-filter').removeAttr('hidden');
-                renderSpaces(filteredSpaces);
+
+                if (filteredSpaces.length === 0) {
+                    renderEmptySpaceMessage(filteredSpaces)
+                } else {
+                    renderSpaces(filteredSpaces);
+                }
+
             });
 
             $('#remove-type-filter').on('click', function() {
                 $('#remove-type-filter').attr('hidden', true);
-                renderSpaces(spaces.data);
+                renderSpaces(spaces);
             });
 
             function applyPriceFilter() {
                 let minPrice = parseFloat($('#minPrice').val()) || 0;
                 let maxPrice = parseFloat($('#maxPrice').val()) || Infinity;
 
-                let filteredSpaces = spaces.data.filter(space => {
-                    let spacePrice = space.price;
-                    let priceMatches = spacePrice >= minPrice && spacePrice <= maxPrice;
+                let filteredSpaces = spaces.filter(space => {
+                    // Extract the array of prices from the space's pricing
+                    let spacePrices = space.pricing.map(item => item.price);
+
+                    // Check if any price within the array matches the criteria
+                    let priceMatches = spacePrices.some(price => price >= minPrice && price <= maxPrice);
 
                     return priceMatches;
+
                 });
 
-                renderSpaces(filteredSpaces);
+
+                if (filteredSpaces.length === 0) {
+                    renderEmptySpaceMessage(filteredSpaces)
+                } else {
+                    renderSpaces(filteredSpaces);
+                }
 
                 // Show the remove filter button if filters are applied
                 if (minPrice > 0 || maxPrice < Infinity) {
@@ -297,7 +385,7 @@
                 }
 
                 // Filter spaces based on price and selected duration
-                let filteredSpaces = spaces.data.filter(space => {
+                let filteredSpaces = spaces.filter(space => {
                     let spaceMinTime = timeToMinutes(space.operating_hours_from); // Example: "08:00:00"
                     let spaceMaxTime = timeToMinutes(space.operating_hours_to); // Example: "17:00:00"
 
@@ -323,7 +411,11 @@
                     return durationMatches;
                 });
 
-                renderSpaces(filteredSpaces);
+                if (filteredSpaces.length === 0) {
+                    renderEmptySpaceMessage(filteredSpaces)
+                } else {
+                    renderSpaces(filteredSpaces);
+                }
 
                 // Show the remove filter button if filters are applied
                 if (selectedDuration1 || selectedDuration2 ||
@@ -342,8 +434,9 @@
                 $('#minPrice').val('');
                 $('#maxPrice').val('');
                 $('#duration1, #duration2, #duration3, #duration4').prop('checked', false);
-                applyPriceFilter(); // Reapply filters to show all spaces
-                applyDurationFilter();
+                const filteredSpaces = spaces;
+                renderSpaces(filteredSpaces);
+                $('#remove-filters').attr('hidden', true);
             });
 
             $(document).on('click', '.add_to_favorite, .remove_to_favorite', function() {
@@ -365,16 +458,16 @@
                         } else {
                             alertify.success('Cozone added to favorites!')
                         }
-                        let spaceIndex = _.findIndex(spaces.data, {
+                        let spaceIndex = _.findIndex(spaces, {
                             id: itemId
                         });
                         if (spaceIndex !== -1) {
-                            spaces.data[spaceIndex].isFavorite = !
+                            spaces[spaceIndex].isFavorite = !
                                 isFavorite;
                         }
 
                         const searchTerm = $('#search').val().toLowerCase();
-                        const filteredSpaces = _.filter(spaces.data, function(space) {
+                        const filteredSpaces = _.filter(spaces, function(space) {
                             return space.coworking_space_name.toLowerCase().includes(
                                     searchTerm) ||
                                 space.coworking_space_address.toLowerCase().includes(

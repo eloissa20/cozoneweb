@@ -26,12 +26,14 @@
         }
 
         .placeholder-box {
-            background-color: #e0e0e0;
-            height: 50px;
-            width: 120px;
+            height: 84px;
+            width: 150px;
             border-radius: 5px;
             border: 1px solid #ccc;
             margin-top: 10px;
+            object-fit: cover;
+            background-repeat: no-repeat;
+            background-position: center;
         }
 
         .payment-label {
@@ -48,12 +50,13 @@
         }
 
         .payment-radio:checked+span+.placeholder-box {
-            background-color: #007bff;
+            background-color: #007bff3b;
             border-color: #007bff;
         }
 
         .payment-radio:checked+span {
             color: #007bff;
+            font-weight: 900;
         }
 
         .payment-label:hover {
@@ -76,7 +79,7 @@
                     </h2>
                     <div>
                         <div class="mb-3">
-                            <label class="form-label">Payment Methods</label>
+                            <label class="form-label">Available Payment Methods</label>
                             <div class="d-flex gap-2">
                                 {{-- <button type="button" class="btn btn-outline-dark btn-payment-method active"
                                     id="btnCreditCard">Credit Card</button> --}}
@@ -119,15 +122,27 @@
 
                             <div id="e-wallets">
                                 <div class="row">
+                                    @if($space->pay_online === 'yes' && $space->eWallet === 'yes')
                                     <div class="col-md-6 mb-4 text-center">
-                                        <label class="payment-label">
-                                            <input type="radio" name="payment" value="gcash" class="payment-radio">
+                                        <label class="payment-label" id="gcash_payment">
+                                            <input type="radio" name="payment_method" value="gcash" class="payment-radio">
                                             <span>GCash</span>
-                                            <div class="placeholder-box"></div>
+                                            <div class="placeholder-box gcash" style="background-image: url('{{ asset('assets/img/gcash-logo.png') }}');">
+                                            </div>
+                                        </label>
+                                    </div>
+                                    @endif
+
+                                    <div class="col-md-6 mb-4 text-center" id="cash_payment">
+                                        <label class="payment-label">
+                                            <input type="radio" name="payment_method" value="cash" class="payment-radio">
+                                            <span>Cash</span>
+                                            <div class="placeholder-box cash" style="background-image: url('{{ asset('assets/img/payment_in_person.png') }}');"></div>
                                         </label>
                                     </div>
 
-                                    <div class="col-md-6 mb-4 text-center">
+
+                                    {{-- <div class="col-md-6 mb-4 text-center">
                                         <label class="payment-label">
                                             <input type="radio" name="payment" value="maya" class="payment-radio">
                                             <span>Maya</span>
@@ -149,7 +164,7 @@
                                             <span>PayPal</span>
                                             <div class="placeholder-box"></div>
                                         </label>
-                                    </div>
+                                    </div> --}}
                                     <input hidden type="text" name="total_amount" id="total_amount" value="0">
                                 </div>
                             </div>
@@ -197,8 +212,8 @@
                     </div>
                     <div class="card-body summary-section">
                         <p><strong>{{ $transaction->guests }} Guest</strong> <br> {{ $transaction->reservation_date }}</p>
-                        <p>₱ <span id="amount">{{ $space->price }}</span> x <span
-                                id="hours">{{ $transaction->hours }}</span></p>
+                        <p>₱ <span id="amount">{{ $transaction->amount }}</span> x <span
+                                id="guests">{{ $transaction->guests }}</span></p>
 
                         <div class="d-flex justify-content-between">
                             <p>Subtotal</p>
@@ -254,10 +269,10 @@
             // });
 
             const amount = document.getElementById("amount").textContent;
-            const hours = document.getElementById("hours").textContent;
+            const guests = document.getElementById("guests").textContent;
 
             // Calculate subtotal and total
-            const subtotal = calculateTotal(amount, hours);
+            const subtotal = calculateTotal(amount, guests);
             const total = subtotal; // Modify this if there are additional charges or tax
 
             // Update HTML elements with calculated values
@@ -265,16 +280,16 @@
             document.getElementById("total").textContent = total.toFixed(2);
             document.getElementById("total_amount").value = total.toFixed(2);
 
-            function calculateTotal(amount, hours) {
+            function calculateTotal(amount, guests) {
                 const amountNum = parseFloat(amount);
-                const hoursNum = parseFloat(hours);
+                const guestsNum = parseFloat(guests);
 
-                if (isNaN(amountNum) || isNaN(hoursNum)) {
-                    console.error("Invalid input: amount and hours should be numeric strings.");
+                if (isNaN(amountNum) || isNaN(guestsNum)) {
+                    console.error("Invalid input: amount and guests should be numeric strings.");
                     return null;
                 }
 
-                const total = amountNum * hoursNum;
+                const total = amountNum * guestsNum;
 
                 return total;
             }

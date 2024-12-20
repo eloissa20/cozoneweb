@@ -16,9 +16,10 @@ class NotificationController extends Controller
 
     public function showAll(Notification $notification)
     {
-        $notifications = auth()->user()->user_notifications;
+        // Fetch notifications and order them (e.g., by created_at in descending order)
+        $notifications = auth()->user()->user_notifications()->orderBy('created_at', 'desc')->get();
 
-        // Ensure $notifications contains the data
+        // Return the notifications as a JSON response
         return response()->json([
             'success' => true,
             'data' => $notifications,

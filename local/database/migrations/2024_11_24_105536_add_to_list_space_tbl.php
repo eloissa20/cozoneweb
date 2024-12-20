@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,7 +12,8 @@ return new class extends Migration
     {
         Schema::table('list_space_tbl', function (Blueprint $table) {
             $table->string('price')->nullable();
-            $table->string('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -23,8 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('list_space_tbl', function (Blueprint $table) {
-            $table->string('price');
-            $table->string('user_id');
+            $table->dropForeign(['user_id']); // Drop foreign key constraint
+            $table->dropColumn(['price', 'user_id']); // Drop the columns
         });
     }
 };

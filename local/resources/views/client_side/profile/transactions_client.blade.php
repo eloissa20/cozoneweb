@@ -87,7 +87,21 @@
                     {
                         data: 'status'
                     }
-                ]
+                ],
+                createdRow: function(row, data, dataIndex) {
+                    $(row).find('td').each(function() {
+                        $(this).css('cursor', 'pointer')
+                            .attr('title', 'View Reservation Details')
+                            .on('click', function() {
+                                const id = data
+                                    .id;
+                                const routeUrl =
+                                    `{{ route('client_side.reservation.details', ':id') }}`
+                                    .replace(':id', data.id);
+                                window.location.href = routeUrl;
+                            });
+                    });
+                },
             });
 
             $('#logout').on('click', function() {
@@ -113,8 +127,7 @@
                             }
                         });
                     },
-                    function() {
-                    });
+                    function() {});
             }
         });
     </script>
