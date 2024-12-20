@@ -10,23 +10,22 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('replies', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(User::class)->constrained()->onDelete('cascade');
-            $table->integer('review_id');
-            $table->foreign('review_id')->references('id')->on('reviews');
-            $table->text('reply');
-            $table->timestamps();
+            $table->id(); // Auto-incrementing primary key
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Foreign key to users (coworkers)
+            $table->integer('cowork_id');
+            $table->foreign('cowork_id')->references('id')->on('list_space_tbl')->onDelete('cascade');
+            $table->foreignId('review_id')->constrained('reviews')->onDelete('cascade'); // Foreign key to reviews table
+            $table->text('reply'); // The reply content
+            $table->timestamps(); // Created at, updated at
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('replies');
     }
+
 };

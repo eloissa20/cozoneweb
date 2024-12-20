@@ -51,10 +51,9 @@
                 <div class="form-check mb-3">
                     <label for="typeOfSpace" class="form-label">Type of Space</label>
                     <select class="form-select" id="typeOfSpace" name="typeOfSpace">
-                        <option value="coworking" {{ (isset($space->type_of_space) && $space->type_of_space == 'coworking') ? 'selected' : '' }}>Coworking</option>
-                        <option value="sample1" {{ (isset($space->type_of_space) && $space->type_of_space == 'sample1') ? 'selected' : '' }}>Sample 1</option>
-                        <option value="sample2" {{ (isset($space->type_of_space) && $space->type_of_space == 'sample2') ? 'selected' : '' }}>Sample 2</option>
-                        <option value="sample3" {{ (isset($space->type_of_space) && $space->type_of_space == 'sample3') ? 'selected' : '' }}>Sample 3</option>
+                        <option value="Coworking" {{ (isset($space->type_of_space) && $space->type_of_space == 'Coworking') ? 'selected' : '' }}>Coworking</option>
+                        <option value="Desk Space" {{ (isset($space->type_of_space) && $space->type_of_space == 'Desk Space') ? 'selected' : '' }}>Desk Space</option>
+                        <option value="Meeting Room" {{ (isset($space->type_of_space) && $space->type_of_space == 'Meeting Room') ? 'selected' : '' }}>Meeting Room</option>
                     </select>
                 </div>
                 <div class="form-check mb-3">
@@ -100,11 +99,11 @@
                     <div class="row">
                         <div class="col-md-6 d-flex align-items-center">
                             <label for="operatingHoursFrom" class="form-label mb-0 me-2">From</label>
-                            <input type="text" class="form-control" value="{{ $space->operating_hours_from ?? '' }}" id="operatingHoursFrom" name="operatingHoursFrom"/>
+                            <input type="time" class="form-control" value="{{ $space->operating_hours_from ?? '' }}" id="operatingHoursFrom" name="operatingHoursFrom"/>
                         </div>
                         <div class="col-md-6 d-flex align-items-center">
                             <label for="operatingHoursTo" class="form-label mb-0 me-2">To</label>
-                            <input type="text" class="form-control" value="{{ $space->operating_hours_to ?? '' }}" id="operatingHoursTo" name="operatingHoursTo"/>
+                            <input type="time" class="form-control" value="{{ $space->operating_hours_to ?? '' }}" id="operatingHoursTo" name="operatingHoursTo"/>
                         </div>
                     </div>
                     <div class="row">

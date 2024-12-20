@@ -1,5 +1,5 @@
 @extends('layouts.client_header')
-@section('title', 'Payment Success')
+@section('title', 'Reservation Details')
 @section('content')
     <style>
         .reservation-confirmation {
@@ -54,7 +54,7 @@
         <a href="{{ route('client_side.profile.transactions') }}" class="back-button text-decoration-none">
             <i class="bi bi-arrow-left"></i> My Reserved Space
         </a>
-        <h2>Your reservation is pending!</h2>
+        <h2>Your reservation is {{ $transaction->status }}!</h2>
         <div class="row">
             <div class="col-lg-6">
                 <div class="box">
@@ -124,7 +124,7 @@
                 <div class="box">
                     <h4>Total cost</h4>
                     <p><strong>Payment Method:</strong> {{ $transaction->payment_method }}</p>
-                    <p><strong>Coworking Space Cost:</strong> ₱ {{ $transaction->amount }}</p>
+                    <p><strong>Coworking Space Cost:</strong> ₱ {{ $space->price }}</p>
                     <p><strong>Discount:</strong> ₱ 0.00</p>
                     <p><strong>Total:</strong> ₱ {{ $transaction->amount }}</p>
                 </div>

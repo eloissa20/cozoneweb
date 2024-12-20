@@ -89,11 +89,12 @@
                         <div class="col-md-4 d-flex gap-2">
                             <select class="form-select" id="filter-spaces">
                                 <option selected disabled>Type of Space</option>
-                                <option value="Private Room">Private Room</option>
+                                <option value="Coworking">Coworking Space</option>
                                 <option value="Meeting Room">Meeting Room</option>
                                 <option value="Desk Space">Desk Space</option>
                             </select>
-                            <button hidden type="button" id="remove-filter" class="btn btn-outline-dark"><i class="bi bi-x"></i></button>
+                            <button hidden type="button" id="remove-filter" class="btn btn-outline-dark"><i
+                                    class="bi bi-x"></i></button>
                         </div>
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-dark w-100">Find Space</button>
@@ -118,7 +119,8 @@
                     @foreach ($spaces as $item)
                         <div class="col-md-4">
                             <div class="coworking-space-card position-relative">
-                                <img src="{{ asset($item->header_image) }}" alt="Space">
+                                <img src="{{ asset($item->header_image) }}" alt="Space"
+                                    onerror="this.onerror=null;this.src='{{ asset('assets/img/no-image-available.jpeg') }}';">
                                 <i class="favorite-heart bi bi-heart-fill fs-3 btn
                                     {{ $item->isFavorite ? 'text-danger remove_to_favorite' : 'add_to_favorite' }}"
                                     data-id="{{ $item->id }}"></i>
@@ -198,21 +200,51 @@
                 });
             }
 
+            function renderEmptySpaceMessage(spaces, searchTerm = null) {
+                let spaceContainer = $('.coworking-spaces .row');
+                spaceContainer.html('');
+                if (searchTerm) {
+                    spaceContainer.append(`
+                        <div class="col-md-4 w-100">
+                            <p class="text-center">No available cowork space with keyword "${searchTerm}"</p>
+                        </div>
+                    `);
+                } else {
+                    spaceContainer.append(`
+                        <div class="col-md-4 w-100">
+                            <p class="text-center">No available space</p>
+                        </div>
+                    `);
+                }
+
+            }
+
             $('.form-control').on('keyup', _.debounce(function() {
                 const searchTerm = $(this).val().toLowerCase();
                 const filteredSpaces = _.filter(spaces.data, function(space) {
                     return space.coworking_space_name.toLowerCase().includes(searchTerm) ||
-                        space.coworking_space_address.toLowerCase().includes(searchTerm);
+                        space.coworking_space_address.toLowerCase().includes(searchTerm) ||
+                        space.type_of_space.toLowerCase().includes(searchTerm);
                 });
 
-                renderSpaces(filteredSpaces);
+                if (filteredSpaces.length === 0) {
+                    renderEmptySpaceMessage(filteredSpaces, searchTerm)
+                } else {
+                    renderSpaces(filteredSpaces);
+                }
+
             }, 300));
 
             $('#filter-spaces').on('change', function() {
                 const filterType = $(this).val();
                 const filteredSpaces = spaces.data.filter(item => item.type_of_space === filterType);
                 $('#remove-filter').removeAttr('hidden');
-                renderSpaces(filteredSpaces);
+
+                if (filteredSpaces.length === 0) {
+                    renderEmptySpaceMessage(filteredSpaces)
+                } else {
+                    renderSpaces(filteredSpaces);
+                }
             });
 
             $('#remove-filter').on('click', function() {

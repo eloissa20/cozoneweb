@@ -19,7 +19,7 @@ class UserAuth
             return $next($request);
         }
 
-        abort(401);
-        
+        return redirect()->back();
+
     }
 }

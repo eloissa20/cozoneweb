@@ -62,6 +62,8 @@ input[type="checkbox"] {
 <div class="mb-3">
     {{-- <h4>Admin : {{ Auth::user()->name }}</h4> --}}
     <h2><strong>COWORKING SPACE ACTIVITY</strong></h2>
+    <a href="{{ url('/export-transactions') }}" class="btn btn-dark">Download Transactions</a>
+
     <hr class="separator-line" />
 </div>
 {{-- <div class="row">
@@ -178,16 +180,18 @@ input[type="checkbox"] {
             </div>
             <div class="d-flex justify-content-between mt-3">
                 <div>
-                    <label>{{-- <input type="radio" name="statusFilter" value="Meeting Rooms" /> --}} Desks <b id="deskCount">0</b></label><br>
-                    <label>{{-- <input type="radio" name="statusFilter" value="Meeting Rooms" /> --}} Meeting Rooms <b id="meetingCount">0</b></label><br>
-                    <label>{{-- <input type="radio" name="statusFilter" value="Virtual Offices" /> --}} Virtual Offices <b id="virtualOfficesCount">0</b></label><br>
+                    <label>Desks <b id="deskCount">0</b> (Occupied: <b id="occupiedDeskCount">0</b>)</label><br>
+                    <label>Meeting Rooms <b id="meetingCount">0</b> (Occupied: <b id="occupiedMeetingCount">0</b>)</label><br>
+                    <label>Virtual Offices <b id="virtualOfficesCount">0</b> (Occupied: <b id="occupiedVirtualOfficesCount">0</b>)</label><br>
                 </div>
                 <div>
-                    <label>{{-- <input type="radio" name="statusFilter" value="All" /> --}} All <b id="totalCount">0</b></label>
+                    <label>Total <b id="totalCount">0</b></label><br>
+                    <label>Total Occupied <b id="totalOccupiedCount">0</b></label>
                 </div>
             </div>
         </div>
     </div>
+    
 
     {{-- <div class="col-12 col-md-6">
         <div class="rounded-4 border mb-3 p-4 shadow" style="background-color: #ffffff; min-height: 300px;">
@@ -414,55 +418,67 @@ input[type="checkbox"] {
 
 
     $(document).ready(function () {
-        $.ajax({
-            url: "{{ url('/reservation-type-counts') }}",
-            type: 'GET',
-            success: function (data) {
-                const deskCount = data.deskCount;
-                const meetingCount = data.meetingCount;
-                const virtualOfficesCount = data.virtualOfficesCount;
-                const totalCount = deskCount + meetingCount + virtualOfficesCount;
+    $.ajax({
+        url: "{{ url('/reservation-type-counts') }}",
+        type: 'GET',
+        success: function (data) {
+            const deskCount = data.deskCount;
+            const occupiedDeskCount = data.occupiedDeskCount;
+            const meetingCount = data.meetingCount;
+            const occupiedMeetingCount = data.occupiedMeetingCount;
+            const virtualOfficesCount = data.virtualOfficesCount;
+            const occupiedVirtualOfficesCount = data.occupiedVirtualOfficesCount;
 
-                $('#deskCount').text(deskCount);
-                $('#meetingCount').text(meetingCount);
-                $('#virtualOfficesCount').text(virtualOfficesCount);
-                $('#totalCount').text(totalCount);
+            const totalCount = deskCount + meetingCount + virtualOfficesCount;
+            const totalOccupiedCount = occupiedDeskCount + occupiedMeetingCount + occupiedVirtualOfficesCount;
 
-                const ctx = document.getElementById('reservationTypeChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Desk Fields', 'Meeting Fields', 'Virtual Offices'],
-                        datasets: [{
-                            data: [deskCount, meetingCount, virtualOfficesCount],
-                            backgroundColor: ['#e9ecef', '#adb5bd', '#343a40'],
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function (tooltipItem) {
-                                        const label = tooltipItem.label;
-                                        const value = tooltipItem.raw;
-                                        return `${label}: ${value}`;
-                                    }
+            // Update counts on the page
+            $('#deskCount').text(deskCount);
+            $('#occupiedDeskCount').text(occupiedDeskCount);
+            $('#meetingCount').text(meetingCount);
+            $('#occupiedMeetingCount').text(occupiedMeetingCount);
+            $('#virtualOfficesCount').text(virtualOfficesCount);
+            $('#occupiedVirtualOfficesCount').text(occupiedVirtualOfficesCount);
+            $('#totalCount').text(totalCount);
+            $('#totalOccupiedCount').text(totalOccupiedCount);
+
+            // Update the chart
+            const ctx = document.getElementById('reservationTypeChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Desk Fields', 'Meeting Fields', 'Virtual Offices'],
+                    datasets: [{
+                        data: [deskCount, meetingCount, virtualOfficesCount],
+                        backgroundColor: ['#e9ecef', '#adb5bd', '#343a40'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (tooltipItem) {
+                                    const label = tooltipItem.label;
+                                    const value = tooltipItem.raw;
+                                    return `${label}: ${value}`;
                                 }
                             }
-                        },
-                    }
-                });
-            },
-            error: function (xhr, status, error) {
-                console.error('Error fetching reservation type counts:', error);
-            }
-        });
+                        }
+                    },
+                }
+            });
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching reservation type counts:', error);
+        }
     });
+});
+
 
     fetch('{{ url('/daily-sales-chart-data') }}')
         .then(response => response.json())

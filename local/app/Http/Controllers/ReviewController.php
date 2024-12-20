@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cowork;
+use App\Models\Reply;
 use App\Models\Review;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,7 @@ class ReviewController extends Controller
     {
         $validated = $request->validate([
             'rating' => 'required|integer|min:1|max:5',
-            'review_body' => 'required|string|max:255',
+            'review_body' => 'required|string',
         ]);
 
         try {
@@ -37,6 +38,28 @@ class ReviewController extends Controller
                 'message' => 'Failed to add review.',
                 'error' => $e->getMessage(),
             ], 500);
+        }
+    }
+
+    public function add_reply(Request $request, $spaceId)
+    {
+        $validated = $request->validate([
+            'reply' => 'required|string',
+        ]);
+
+        try {
+            $reply = new Reply();
+            $reply->user_id = auth()->id();
+            $reply->cowork_id = $spaceId;
+            $reply->review_id = $request->input('reviewId');
+            $reply->reply = $validated['reply'];
+            $reply->save();
+
+            return redirect()->back()
+            ->with('success', 'Reply added successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()
+            ->with('error', $e);
         }
     }
 

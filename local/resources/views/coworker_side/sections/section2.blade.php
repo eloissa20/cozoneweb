@@ -79,12 +79,12 @@
                     <div class="row">
                         <div class="col-md-6 d-flex align-items-center">
                             <label for="operatingHoursFrom" class="form-label mb-0 me-2">From</label>
-                            <input type="text" class="form-control" id="operatingHoursFrom" />
+                            <input type="time" class="form-control" id="operatingHoursFrom" />
                         </div>
                         <div class="col-md-6 d-flex align-items-center">
                             <label for="operatingHoursTo" class="form-label mb-0 me-2">To</label>
-                            <input type="text" class="form-control" id="operatingHoursTo" />
-                        </div>
+                            <input type="time" class="form-control" id="operatingHoursTo" />
+                        </div>                        
                     </div>
                     <div class="row">
                         <div class="col-md-6 d-flex align-items-center">

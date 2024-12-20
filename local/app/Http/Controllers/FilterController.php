@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cowork;
+use App\Models\DeskField;
 use App\Models\Favorite;
+use App\Models\MeetingField;
 use Illuminate\Http\Request;
 
 class FilterController extends Controller
@@ -43,7 +45,7 @@ class FilterController extends Controller
                 ->orWhere('coworking_space_address', 'LIKE', '%' . $request->search . '%');
         }
 
-        $spaces = $query->paginate(6);
+        $spaces = $query->get();
 
         $user = auth()->user();
         $favoriteSpaceIds = [];
@@ -52,9 +54,27 @@ class FilterController extends Controller
             $favoriteSpaceIds = Favorite::where('user_id', $user->id)->pluck('space_id')->toArray();
         }
 
+
+
         foreach ($spaces as $space) {
             $space->isFavorite = in_array($space->id, $favoriteSpaceIds);
+            $deskField = DeskField::where('space_id', $space->id)->get();
+            $meetingField = MeetingField::where('space_id', $space->id)->get();
+
+            // Retrieve pricing data for desk fields and meeting fields
+            $deskField = DeskField::where('space_id', $space->id)->get();
+            $meetingField = MeetingField::where('space_id', $space->id)->get();
+
+            $pricing = $deskField->merge($meetingField);
+
+            // Attach pricing to the space
+            $space->pricing = $pricing;
+
+            // Calculate the lowest price (if pricing exists)
+            $space->lowestPrice = $pricing->min('price');
         }
+
+        // dd($spaces);
         return view('client_side.lists_client', ['spaces' => $spaces]);
     }
 }

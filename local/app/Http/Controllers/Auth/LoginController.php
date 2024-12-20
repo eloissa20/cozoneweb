@@ -58,10 +58,6 @@ class LoginController extends Controller
     //         else if (auth()->user()->user_type == "3"){
     //             return redirect()->route('admin_side.viewDashboard');
     //         }
-    //         else{
-    //             abort(404);
-    //             // return redirect()->route('home');
-    //         }
     //     }else{
     //         // $ErrorMsg = ' Invalid Email or Password';
     //         // return redirect()->back()->with(['ErrorMsg' => $ErrorMsg])->WithInput();
@@ -91,7 +87,7 @@ class LoginController extends Controller
                 case "3": // Admin
                     return redirect()->route('admin_side.admin');
                 default:
-                    abort(404); // Abort if user_type is unexpected
+                return redirect()->back();
             }
         } else {
             // Redirect back with a specific error message for invalid credentials
@@ -100,4 +96,5 @@ class LoginController extends Controller
                 ->withInput();
         }
     }
+
 }

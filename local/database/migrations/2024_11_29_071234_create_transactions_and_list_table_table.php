@@ -24,8 +24,8 @@ return new class extends Migration {
             $table->string('available_days_from')->nullable();
             $table->string('available_days_to')->nullable();
             $table->string('exceptions')->nullable();
-            $table->string('operating_hours_from')->nullable();
-            $table->string('operating_hours_to')->nullable();
+            $table->time('operating_hours_from')->nullable();
+            $table->time('operating_hours_to')->nullable();
             $table->string('email')->nullable();
             $table->string('phone', 20)->nullable();
             $table->string('instagram')->nullable();
@@ -75,7 +75,7 @@ return new class extends Migration {
             $table->integer('space_id');
             $table->foreign('space_id')->references('id')->on('list_space_tbl')->onDelete('cascade');
             $table->date('reservation_date'); // Date of the reservation
-            $table->integer('hours'); // Hours reserved
+            $table->string('hours'); // Hours reserved
             $table->integer('guests'); // Number of guests
             $table->string('name'); // Full name
             $table->string('email'); // Email address
