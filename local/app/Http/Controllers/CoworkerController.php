@@ -528,7 +528,7 @@ class CoworkerController extends Controller
             'short_term_details' => $request->input('shortTermDetails'),
             'free_pass' => $request->input('freePass'),
             'free_pass_details' => $request->input('freePassDetails'),
-            'price' => $request->input('price'),
+            // 'price' => $request->input('price'),
             'user_id' => Auth::id(),
         ];
 
