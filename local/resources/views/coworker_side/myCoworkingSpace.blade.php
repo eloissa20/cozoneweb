@@ -220,7 +220,15 @@
                         <p><strong>Free pass details:</strong> <span id="free_pass_details"></span></p>
                     </div>
                 </div>
-                
+
+                <hr class="separator-line"/>
+                {{-- <div class="row">
+                    <p><strong>Price:</strong> <span id="price"></span></p>
+                </div> --}}
+
+                <div id="map" class="map-container d-flex align-items-center justify-content-center" 
+                    style="border: 1px solid #000000; height: 300px; width: 80%; border-radius: 5px; margin: 0 auto;">
+                </div>
             </div>
         </div>
     </div>
@@ -229,6 +237,9 @@
 
 
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 <script>
     // Load DataTables
     $(document).ready(function () {
@@ -251,8 +262,8 @@
                 ],
                 'columns': [
                     {data: 'id'},
-                    {data: 'space_name'},
-                    {data: 'city'},
+                    {data: 'coworking_space_name'},
+                    {data: 'coworking_space_address'},
                     {data: 'actions'}
                     
                 ]
@@ -260,6 +271,9 @@
         }
 
     // View Space
+    let map = null;
+let marker = null;
+
     function viewSpaceDetails(id) {
     // console.log('Fetching details for space ID:', id);
         $.ajax({
@@ -304,7 +318,7 @@
                 $('#free_pass').text(response.free_pass);
                 $('#short_term_details').text(response.short_term_details);
                 $('#free_pass_details').text(response.free_pass_details);
-                $('#price').text(response.price);
+                // $('#price').text(response.price);
                 const carouselContainer = $('#carouselItemsContainer');
                 carouselContainer.empty();
 
@@ -397,15 +411,13 @@
 
                 if (Array.isArray(deskFields) && deskFields.length > 0) {
                     deskFields.forEach(function(field, index) {
-                        const duration = (field && field.duration) ? field.duration : "N/A";
-                        const price = (field && field.price) ? field.price : "N/A";
-                        const hours = (field && field.hours) ? field.hours : "N/A";
-
-                        console.log(`Desk ${index + 1} - Duration: ${duration}, Price: ${price}, Hours: ${hours}`);
+                        const duration = field.duration || "N/A";
+                        const price = field.price || "N/A";
+                        const hours = field.hours || "N/A";
 
                         $('#desk_fields').append(`
                             <div class="desk-field">
-                                <p>Desk ${index + 1}:</p>
+                                <p><strong>Desk ${index + 1}:</strong></p>
                                 <p>Duration: ${duration}</p>
                                 <p>Price: ${price}</p>
                                 <p>Hours: ${hours}</p>
@@ -416,23 +428,19 @@
                     $('#desk_fields').append('<p>No desk fields available</p>');
                 }
 
-                const meetingFields = Array.isArray(response.meeting_fields) 
-                ? response.meeting_fields.map(field => typeof field === 'string' ? JSON.parse(field) : field)
-                : [];
-
-                console.log('Parsed Meeting Fields:', meetingFields);
+                const meetingFields = response.meeting_fields || [];
 
                 $('#meeting_fields').empty();
 
-                if (meetingFields.length > 0) {
+                if (Array.isArray(meetingFields) && meetingFields.length > 0) {
                     meetingFields.forEach(function(field, index) {
-                        const numPeople = field.numPeople || 'N/A';
-                        const price = field.price || 'N/A';
-                        const hours = field.hours || 'N/A';
+                        const numPeople = field.num_people || "N/A";
+                        const price = field.price || "N/A";
+                        const hours = field.hours || "N/A";
 
                         $('#meeting_fields').append(`
                             <div class="meeting-field">
-                                <p>Meeting ${index + 1}:</p>
+                                <p><strong>Meeting ${index + 1}:</strong></p>
                                 <p>Number of People: ${numPeople}</p>
                                 <p>Price: ${price}</p>
                                 <p>Hours: ${hours}</p>
@@ -440,10 +448,34 @@
                         `);
                     });
                 } else {
-                    $('#meeting_fields').html('<p>No available meetings</p>');
+                    $('#meeting_fields').append('<p>No meeting rooms available</p>');
                 }
 
-            
+                const latitude = parseFloat(response.latitude) || 14.587186; // Default latitude
+                const longitude = parseFloat(response.longitude) || -239.015398; // Default longitude
+
+                if (map) {
+                    map.remove();
+                    map = null;
+                }
+
+                map = L.map('map').setView([latitude, longitude], 13);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+
+                L.marker([latitude, longitude])
+                    .addTo(map)
+                    .bindPopup(`<b>${response.space_name}</b><br>${response.coworking_space_address}`)
+                    .openPopup();
+
+                $('#viewSpaceModal').on('shown.bs.modal', function () {
+                    if (map) {
+                        map.invalidateSize();
+                    }
+                });
+
                 $('#viewSpaceModal').modal('show');
             },
             error: function(xhr, status, error) {
@@ -491,12 +523,6 @@
             }
         });
     }
-
-
-
-
-
-
 </script>
 
 @endsection

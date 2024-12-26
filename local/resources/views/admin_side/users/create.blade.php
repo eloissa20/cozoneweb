@@ -2,13 +2,13 @@
 
 @section('content')
 <style>
-    .card {
+    .card{
         border: 1px solid #000000;
     }
 </style>
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <div>
-    <h3 class="fw-bold mb-4">Create User</h3>
+  <h3 class="fw-bold mb-4">Create User</h3>
     <form action="{{ route('user.store') }}" method="POST" class="border p-5 rounded">
         @csrf
         <div class="container">

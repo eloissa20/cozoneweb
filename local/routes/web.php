@@ -5,11 +5,14 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TransactionController;
+use App\Models\Cowork;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CoworkerController;
 use App\Http\Controllers\AdminController;
+use App\Exports\TransactionsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,16 +40,24 @@ Route::middleware(['preventBackHistory'])->group(function () {
         //details
         Route::get('/client_side/details/{id}', [ClientController::class, 'show_cowork_details'])->name('client_side.details');
         Route::post('/client_side/details/reserve/{id}', [TransactionController::class, 'processReservation'])->name('client_side.details.reserve');
+        Route::get('/client_side/reservation/{id}', [TransactionController::class, 'viewReservation'])->name('client_side.reservation.details');
 
         //reviews
         Route::post('/client_side/reviews/add/{spaceId}', [ReviewController::class, 'store'])->name('client_side.review.add');
         Route::put('/client_side/reviews/update/{id}', [ReviewController::class, 'update'])->name('client_side.review.update');
         Route::delete('/client_side/reviews/delete/{id}', [ReviewController::class, 'destroy'])->name('client_side.review.delete');
 
+        //reply
+        Route::post('/client_side/reply/add/{spaceId}', [ReviewController::class, 'add_reply'])->name('client_side.reply.add');
+
         //payment
         Route::get('/client_side/payment/pay/{id}/{transactionId}', [PaymentController::class, 'client_payment'])->name('client_side.payment');
+        Route::get('/client_side/payment/cancel/{spaceId}/{transactionId}', [PaymentController::class, 'cancelPayment'])->name('client_side.payment.cancel');
         Route::post('/client_side/payment/process/{id}/{transactionId}', [TransactionController::class, 'paymentProcess'])->name('client_side.payment.process');
-        Route::get('/client_side/payment/success/{id}/{transactionId}', [PaymentController::class, 'client_payment_success'])->name('client_side.payment.success');
+        Route::get('/client_side/payment/success', [PaymentController::class, 'client_payment_success_page'])->name('client_side.payment.page.success');
+        // payment success and failed
+        Route::get('/client_side/payment/success/{id}/{transactionId}/{paymentMethod}/{amount}', [PaymentController::class, 'paymentSuccess'])->name('client_side.payment.success');
+        Route::get('/client_side/payment/failed', [PaymentController::class, 'paymentFailed'])->name('client_side.payment.failed');
 
         //list of spaces
         Route::get('/client_side/lists', [FilterController::class, 'client_list'])->name('client_side.lists');
@@ -61,13 +72,18 @@ Route::middleware(['preventBackHistory'])->group(function () {
         })->name('client_side.how.find');
 
         Route::get('/client_side/how/reserve', function () {
-            return view('client_side.how_to.reserve_client');
+            $coworkingSpaces = Cowork::orderBy('created_at', 'desc')->get();
+
+            return view('client_side.how_to.reserve_client', compact('coworkingSpaces'));
         })->name('client_side.how.reserve');
 
         //about
         Route::get('/client_side/about', function () {
             return view('client_side.about_client');
         })->name('client_side.about');
+
+        //contact cozone
+        Route::post('/client_side/about/contact', [ClientController::class, 'send_email'])->name('client_side.about.contact');
 
         //profile
         Route::get('/client_side/profile', function () {
@@ -105,16 +121,43 @@ Route::middleware(['preventBackHistory'])->group(function () {
     Route::middleware(['auth', 'userAuth:2'])->group(function () {
 
         Route::get('/coworker_side/coworker', [CoworkerController::class, 'viewDashboard'])->name('coworker_side.coworker');
+        Route::get('/count-free-pass', [CoworkerController::class, 'countFreePass'])->name('countFreePass');
+        Route::get('/reservation-transactions', [CoworkerController::class, 'showReservationTransactions'])->name('reservationTransactions');
+        Route::get('/reservation-type-counts', [CoworkerController::class, 'getReservationTypeCounts']);
+        Route::get('/daily-sales-chart-data', [CoworkerController::class, 'dailySalesChartData']);
+
 
         Route::get('/coworker_side/listSpace', [CoworkerController::class, 'viewListSpace'])->name('coworker_side.listSpace');
+
+        Route::get('/coworker_side/addDesks/{id}', [CoworkerController::class, 'addDesks'])->name('addDesks');
+        // Route::post('/coworker_side/addDesks/{id}', [CoworkerController::class, 'saveDesks'])->name('saveDesks');
+        // Route::delete('/coworker_side/deleteDesk/{id}', [CoworkerController::class, 'deleteDesk'])->name('deleteDesk');
+        Route::post('/coworker_side/addDesks/{id}', [CoworkerController::class, 'saveDesks'])->name('saveDesks');
+        Route::delete('/coworker_side/deleteDesk/{id}', [CoworkerController::class, 'deleteDesk'])->name('deleteDesk');
+        Route::post('/coworker_side/edit-desk/{id}', [CoworkerController::class, 'editDesk'])->name('editDesk');
+
+
+
+
+
+        Route::get('/coworker_side/addMeetings/{id}', [CoworkerController::class, 'addMeetings'])->name('addMeetings');
+        Route::post('/coworker_side/addMeetings/{id}', [CoworkerController::class, 'saveMeetings'])->name('saveMeetings');
+        Route::delete('/coworker_side/deleteMeeting/{id}', [CoworkerController::class, 'deleteMeeting'])->name('deleteMeeting');
+        Route::post('/coworker_side/editMeeting/{id}', [CoworkerController::class, 'editMeeting'])->name('editMeeting');
+
 
         Route::post('/coworker_side/listSpace', [CoworkerController::class, 'submitListSpace'])->name('listSpace');
 
         Route::get('/coworker_side/myCoworkingSpace', [CoworkerController::class, 'viewmyCoworkingSpace'])->name('myCoworkingSpace');
 
         Route::get('/coworker_side/reviews', [CoworkerController::class, 'viewReviews'])->name('reviews');
+        Route::post('/coworker_side/reviews/{reviewId}/reply', [CoworkerController::class, 'replyToReview'])->name('coworker_side.replyToReview');
+        Route::get('/coworker_side/reviews/filter', [CoworkerController::class, 'filterReviews'])->name('reviews.filter');
+
 
         Route::get('/coworker_side/reservations', [CoworkerController::class, 'viewReservations'])->name('reservations');
+        Route::post('/coworker_side/update-status', [CoworkerController::class, 'updateStatus'])->name('updateStatus');
+
 
         Route::get('/coworker_side/viewSpaceDetails/{id}', [CoworkerController::class, 'viewSpaceDetails'])->name('viewSpaceDetails');
 
@@ -124,10 +167,11 @@ Route::middleware(['preventBackHistory'])->group(function () {
 
         Route::put('/coworker_side/editSpace/{id}', [CoworkerController::class, 'updateSpace'])->name('coworker_side.updateSpace');
 
+        Route::get('/coworker_side/about_us', [CoworkerController::class, 'aboutUs'])->name('aboutUs');
 
-
-
-
+        Route::get('/export-transactions', function () {
+            return Excel::download(new TransactionsExport, 'transactions.xlsx');
+        });
 
     });
 
@@ -151,7 +195,7 @@ Route::middleware(['preventBackHistory'])->group(function () {
 
         Route::get('/admin_side/spaces', [AdminController::class, 'viewSpaces'])->name('admin.spaces');
         Route::get('/admin_side/viewSpaceDetails/{id}', [AdminController::class, 'viewSpaceDetails'])->name('viewSpaceDetails');
-        
+
         Route::get('/admin_side/transactions', [AdminController::class, 'viewTransactions'])->name('admin.transactions');
         Route::get('/admin_side/viewTransactionDetails/{id}', [AdminController::class, 'viewTransactionDetails'])->name('viewTransactionDetails');
     });

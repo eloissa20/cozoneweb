@@ -37,7 +37,8 @@
     <main class="page container">
         <section class="text-center mt-5 d-flex justify-content-center align-items-center gap-5">
             <img src="{{ asset('assets/logo.png') }}" alt="Logo" style="height: 300px; width: 300px;">
-            <p class="ms-5 p-5 h-20 bg-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+            <p class="ms-5 p-5 h-20 bg-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                incididunt ut labore et dolore
                 magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
         </section>
         <section class="management-team text-center mt-5">
@@ -89,22 +90,24 @@
                 <h2>Contact Us</h2>
                 <div class="row justify-content-center">
                     <div class="col-md-6">
-                        <form>
+                        <form method="POST" action="{{ route('client_side.about.contact') }}">
+                            @csrf
                             <div class="mb-3">
-                                <input type="text" class="form-control" placeholder="Full Name">
+                                <input type="text" class="form-control" name="fullname" placeholder="Full Name">
                             </div>
                             <div class="mb-3">
-                                <input type="email" class="form-control" placeholder="E-mail">
+                                <input type="email" class="form-control" name="email" placeholder="E-mail">
                             </div>
                             <div class="mb-3">
-                                <textarea class="form-control" rows="4" placeholder="Type your message here..."></textarea>
+                                <textarea class="form-control" rows="4" name="message" placeholder="Type your message here..."></textarea>
                             </div>
                             <button type="submit" class="btn btn-dark send-btn w-100">SEND</button>
                         </form>
                     </div>
                     <div class="col-md-4 text-start mt-4">
                         <h5>Contact</h5>
-                        <p>example@example.com</p>
+                        <p>cozoneest24@gmail.com
+                        </p>
                         <h5>Based In</h5>
                         <p>Manila, Metro Manila, PH</p>
                         <div class="social-icons">

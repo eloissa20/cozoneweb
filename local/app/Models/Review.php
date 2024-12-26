@@ -18,6 +18,6 @@ class Review extends Model
     // Define the relationship where a review belongs to a cowork (list_space_tbl)
     public function cowork()
     {
-        return $this->belongsTo(Cowork::class, 'cowork_id'); // assuming list_space_tbl is modeled as ListSpace
+        return $this->belongsTo(Cowork::class, 'cowork_id');
     }
 }

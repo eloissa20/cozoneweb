@@ -2,7 +2,7 @@
 
 @section('content')
 <style>
-    .card {
+    .card{
         border: 1px solid #000000;
     }
 </style>
@@ -42,35 +42,34 @@
         <div class="modal-content">
             <div class="modal-body">
                 <div class="p-3">
-                    <div class="d-flex flex-row">
-                        <div class="col">
-                            <h4 class="fw-bold mb-3" id="userName">
-                                </h3>
-                        </div>
-                        <div class="col d-flex justify-content-end">
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
+                  <div class="d-flex flex-row">
+                    <div class="col">
+                      <h4 class="fw-bold mb-3" id="userName"></h3>
                     </div>
-                    <div class="d-flex flex-row">
-                        <div class="col">
-                            <div class="row">
-                                <p class="m-0">Email</p>
-                                <p class="" id="userEmail"></p>
-                            </div>
-                            <p class="m-0">Contact Number</p>
-                            <p id="userContact"></p>
-                            <p class="m-0">Birthdate</p>
-                            <p id="userBirthday"></p>
-                        </div>
-                        <div class="col">
-                            <p class="m-0">Gender</p>
-                            <p id="userGender"></p>
-                            <p class="m-0">Address</p>
-                            <p id="userAddress"></p>
-                            <p class="m-0">Role</p>
-                            <p id="userRole"></p>
-                        </div>
+                    <div class="col d-flex justify-content-end">
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+                  </div>
+                  <div class="d-flex flex-row">
+                    <div class="col">
+                      <div class="row">
+                        <p class="m-0">Email</p>
+                        <p class="" id="userEmail"></p>
+                      </div>
+                      <p class="m-0">Contact Number</p>
+                      <p id="userContact"></p>
+                      <p class="m-0">Birthdate</p>
+                      <p id="userBirthday"></p>
+                    </div>
+                    <div class="col">
+                      <p class="m-0">Gender</p>
+                      <p id="userGender"></p>
+                      <p class="m-0">Address</p>
+                      <p id="userAddress"></p>
+                      <p class="m-0">Role</p>
+                      <p id="userRole"></p>
+                    </div>
+                  </div>
                 </div>
             </div>
         </div>
@@ -81,7 +80,7 @@
 
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         loadtableData();
     })
     const loadtableData = () => {
@@ -98,18 +97,15 @@
             order: [
                 [0, "asc"],
             ],
-            'columns': [{
-                    data: null,
-                    render: function(data, type, row, meta) {
+            'columns': [
+                { 
+                    data: null, 
+                    render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1; // Calculate row count
                     }
                 },
-                {
-                    data: 'name'
-                },
-                {
-                    data: 'email'
-                },
+                {data: 'name'},
+                {data: 'email'},
                 {
                     data: 'user_type',
                     render: function(data) {
@@ -125,21 +121,11 @@
                         }
                     }
                 },
-                {
-                    data: 'contact'
-                },
-                {
-                    data: 'birthday'
-                },
-                {
-                    data: 'gender'
-                },
-                {
-                    data: 'address'
-                },
-                {
-                    data: 'actions'
-                },
+                {data: 'contact'},
+                {data: 'birthday'},
+                {data: 'gender'},
+                {data: 'address'},
+                {data: 'actions'},
             ]
         });
     }
