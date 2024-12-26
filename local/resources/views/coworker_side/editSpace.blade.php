@@ -26,10 +26,12 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group mb-4">
+                    <label for="" class="form-label">Name of your coworking space</label>
                     <input type="text" class="form-control" value="{{ old('coworkingSpaceName', $space->coworking_space_name) }}" id="coworkingSpaceName" name="coworkingSpaceName" placeholder="Name of your coworking space">
                 </div>
         
                 <div class="form-group mb-4">
+                    <label for="" class="form-label">Address/City</label>
                     <input type="text" class="form-control" value="{{ old('coworkingSpaceAddress', $space->coworking_space_address) }}" id="coworkingSpaceAddress" name="coworkingSpaceAddress" placeholder="Address/City">
                 </div>
             </div>
@@ -49,10 +51,9 @@
                 <div class="form-check mb-3">
                     <label for="typeOfSpace" class="form-label">Type of Space</label>
                     <select class="form-select" id="typeOfSpace" name="typeOfSpace">
-                        <option value="coworking" {{ (isset($space->type_of_space) && $space->type_of_space == 'coworking') ? 'selected' : '' }}>Coworking</option>
-                        <option value="sample1" {{ (isset($space->type_of_space) && $space->type_of_space == 'sample1') ? 'selected' : '' }}>Sample 1</option>
-                        <option value="sample2" {{ (isset($space->type_of_space) && $space->type_of_space == 'sample2') ? 'selected' : '' }}>Sample 2</option>
-                        <option value="sample3" {{ (isset($space->type_of_space) && $space->type_of_space == 'sample3') ? 'selected' : '' }}>Sample 3</option>
+                        <option value="Coworking" {{ (isset($space->type_of_space) && $space->type_of_space == 'Coworking') ? 'selected' : '' }}>Coworking</option>
+                        <option value="Desk Space" {{ (isset($space->type_of_space) && $space->type_of_space == 'Desk Space') ? 'selected' : '' }}>Desk Space</option>
+                        <option value="Meeting Room" {{ (isset($space->type_of_space) && $space->type_of_space == 'Meeting Room') ? 'selected' : '' }}>Meeting Room</option>
                     </select>
                 </div>
                 <div class="form-check mb-3">
@@ -98,11 +99,11 @@
                     <div class="row">
                         <div class="col-md-6 d-flex align-items-center">
                             <label for="operatingHoursFrom" class="form-label mb-0 me-2">From</label>
-                            <input type="text" class="form-control" value="{{ $space->operating_hours_from ?? '' }}" id="operatingHoursFrom" name="operatingHoursFrom"/>
+                            <input type="time" class="form-control" value="{{ $space->operating_hours_from ?? '' }}" id="operatingHoursFrom" name="operatingHoursFrom"/>
                         </div>
                         <div class="col-md-6 d-flex align-items-center">
                             <label for="operatingHoursTo" class="form-label mb-0 me-2">To</label>
-                            <input type="text" class="form-control" value="{{ $space->operating_hours_to ?? '' }}" id="operatingHoursTo" name="operatingHoursTo"/>
+                            <input type="time" class="form-control" value="{{ $space->operating_hours_to ?? '' }}" id="operatingHoursTo" name="operatingHoursTo"/>
                         </div>
                     </div>
                     <div class="row">
@@ -150,7 +151,7 @@
 
     {{-- 3 --}}
     <div class="mt-3" id="step3">
-        <h2>WHAT YOU SPACE OFFERS</h2>
+        <h2>WHAT YOUR SPACE OFFERS</h2>
         <hr class="separator-line" />
         <div class="row">
             <!-- Left Column -->
@@ -412,10 +413,6 @@
     
     {{-- 4 --}}
 
-<script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCiYegG-lDsQcjOdCUirT6WBk-gTh6xT7Y&callback=initMap">
-</script>
-
     <div class="mt-4" id="step4">
         <h2>LETS FIND YOUR SPACE</h2>
         <hr class="separator-line" />
@@ -639,69 +636,121 @@
 
         {{-- <!-- DESKS Section -->
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="d-flex align-items-center">DESKS <input type="checkbox" class="ms-3" id="isdeskCheck" onchange="toggleDeskButtons()"></h3>
-            <button type="button" class="btn btn-outline-secondary add-desk" id="add-desk-btn" disabled><i class="bi bi-plus-lg"></i></button>
+            <h3 class="d-flex align-items-center">
+                DESKS
+                <input type="checkbox" class="ms-3" id="isdeskCheck" onchange="toggleDeskButtons()">
+            </h3>
+            <button type="button" class="btn btn-outline-secondary add-desk" id="add-desk-btn" disabled>
+                <i class="bi bi-plus-lg"></i>
+            </button>
         </div>
         <div class="desk-section">
-            <div class="row desk-fields align-items-center mb-2">
-                <div class="col-md-4">
-                    <div class="form-check mb-3">
-                        <label for="duration" class="form-label">Duration</label>
-                        <input type="text" class="form-control form-control-sm" id="duration" placeholder="1 hour - 2 hours"/>
+            @foreach ($deskFields as $index => $deskField)
+                <div class="row desk-fields align-items-center mb-2">
+                    <div class="col-md-4">
+                        <div class="form-check mb-3">
+                            <label for="desk_duration_{{ $index }}" class="form-label">Duration</label>
+                            <input type="text" 
+                                class="form-control form-control-sm" 
+                                name="desks[{{ $index }}][duration]" 
+                                id="desk_duration_{{ $index }}" 
+                                value="{{ $deskField['duration'] ?? '' }}" 
+                                placeholder="1 hour - 2 hours"/>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-check mb-3">
+                            <label for="desk_price_{{ $index }}" class="form-label">Price</label>
+                            <input type="text" 
+                                class="form-control form-control-sm" 
+                                name="desks[{{ $index }}][price]" 
+                                id="desk_price_{{ $index }}" 
+                                value="{{ $deskField['price'] ?? '' }}" 
+                                placeholder="PHP"/>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-check mb-3">
+                            <label for="desk_hours_{{ $index }}" class="form-label">Hours</label>
+                            <input type="text" 
+                                class="form-control form-control-sm" 
+                                name="desks[{{ $index }}][hours]" 
+                                id="desk_hours_{{ $index }}" 
+                                value="{{ $deskField['hours'] ?? '' }}" 
+                                placeholder="1 - 2"/>
+                        </div>
+                    </div>
+                    <div class="col-auto ms-auto">
+                        <button type="button" class="btn btn-outline-danger remove-desk">
+                            <i class="bi bi-dash-lg"></i>
+                        </button>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="form-check mb-3">
-                        <label for="deskPrice" class="form-label">Price</label>
-                        <input type="text" class="form-control form-control-sm" id="deskPrice" placeholder="PHP"/>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-check mb-3">
-                        <label for="deskHours" class="form-label">Hours</label>
-                        <input type="text" class="form-control form-control-sm" id="deskHours" placeholder="1 - 2"/>
-                    </div>
-                </div>
-                <div class="col-auto ms-auto">
-                    <button type="button" class="btn btn-outline-danger remove-desk" disabled><i class="bi bi-dash-lg"></i></button> <!-- Remove button -->
-                </div>
-            </div>
+            @endforeach
         </div>
 
         <!-- MEETING ROOMS Section -->
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="d-flex align-items-center">MEETING ROOMS <input type="checkbox" class="ms-3" id="ismeetingCheck" onchange="toggleMeetingButtons()"></h3>
-            <button type="button" class="btn btn-outline-secondary add-meeting" id="add-meeting-btn" disabled><i class="bi bi-plus-lg"></i></button>
+            <h3 class="d-flex align-items-center">
+                MEETING ROOMS
+                <input type="checkbox" class="ms-3" id="ismeetingCheck" onchange="toggleMeetingButtons()">
+            </h3>
+            <button type="button" class="btn btn-outline-secondary add-meeting" id="add-meeting-btn" disabled>
+                <i class="bi bi-plus-lg"></i>
+            </button>
         </div>
         <div class="meeting-section">
-            <div class="row meeting-fields align-items-center mb-2">
-                <div class="col-md-4">
-                    <div class="form-check mb-3">
-                        <label for="numPeople" class="form-label">No. of people</label>
-                        <input type="text" class="form-control form-control-sm" id="numPeople" placeholder="1 - 5 persons"/>
+            @foreach ($meetingFields as $index => $meetingField)
+                <div class="row meeting-fields align-items-center mb-2">
+                    <div class="col-md-4">
+                        <div class="form-check mb-3">
+                            <label for="meeting_num_people_{{ $index }}" class="form-label">No. of people</label>
+                            <input type="text" 
+                                class="form-control form-control-sm" 
+                                name="meeting_fields[{{ $index }}][numPeople]" 
+                                id="meeting_num_people_{{ $index }}" 
+                                value="{{ $meetingField['numPeople'] ?? '' }}" 
+                                placeholder="1 - 5 persons"/>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-check mb-3">
+                            <label for="meeting_price_{{ $index }}" class="form-label">Price</label>
+                            <input type="text" 
+                                class="form-control form-control-sm" 
+                                name="meeting_fields[{{ $index }}][price]" 
+                                id="meeting_price_{{ $index }}" 
+                                value="{{ $meetingField['price'] ?? '' }}" 
+                                placeholder="PHP"/>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-check mb-3">
+                            <label for="meeting_hours_{{ $index }}" class="form-label">Hours</label>
+                            <input type="text" 
+                                class="form-control form-control-sm" 
+                                name="meeting_fields[{{ $index }}][hours]" 
+                                id="meeting_hours_{{ $index }}" 
+                                value="{{ $meetingField['hours'] ?? '' }}" 
+                                placeholder="1 hour - 2 hours"/>
+                        </div>
+                    </div>
+                    <div class="col-auto ms-auto">
+                        <button type="button" class="btn btn-outline-danger remove-meeting">
+                            <i class="bi bi-dash-lg"></i>
+                        </button>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="form-check mb-3">
-                        <label for="meetingPrice" class="form-label">Price</label>
-                        <input type="text" class="form-control form-control-sm" id="meetingPrice" placeholder="PHP"/>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-check mb-3">
-                        <label for="meetingHours" class="form-label">Hours</label>
-                        <input type="text" class="form-control form-control-sm" id="meetingHours" placeholder="1 hour - 2 hours"/>
-                    </div>
-                </div>
-                <div class="col-auto ms-auto">
-                    <button type="button" class="btn btn-outline-danger remove-meeting" disabled><i class="bi bi-dash-lg"></i></button> <!-- Remove button -->
-                </div>
-            </div>
+            @endforeach
         </div> --}}
+
+        
 
         <!-- VIRTUAL OFFICES Section -->
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="d-flex align-items-center">VIRTUAL OFFICES <input type="checkbox" class="ms-3" id="isvirtualCheck" onchange="toggleVirtualOfficeFields()"></h3>
+            <h3 class="d-flex align-items-center">VIRTUAL OFFICES 
+                <input type="checkbox" class="ms-3" id="isvirtualCheck" onchange="toggleVirtualOfficeFields()">
+            </h3>
         </div>
         <div class="virtual-section">
             <div class="row virtual-fields align-items-center mb-2">
@@ -710,12 +759,16 @@
                         <label for="service" class="form-label">Do you offer virtual office services</label>
                     </div>
                     <div class="form-check form-group radio-group mb-3">
+                        <!-- Hidden input to ensure data is sent even if none of these is selected -->
+                        <input type="hidden" name="virtualService" value="">
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="virtualService" id="yes" value="yes" name="yes" {{ $space->virtual_service == 'yes' ? 'checked' : '' }}>
+                            <input class="form-check-input" type="radio" name="virtualService" id="yes" value="yes" 
+                                {{ $space->virtual_service == 'yes' ? 'checked' : '' }}>
                             <label class="form-check-label" for="yes"><strong>Yes</strong></label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="virtualService" id="no" value="no" name="no" {{ $space->virtual_service == 'no' ? 'checked' : '' }}>
+                            <input class="form-check-input" type="radio" name="virtualService" id="no" value="no" 
+                                {{ $space->virtual_service == 'no' ? 'checked' : '' }}>
                             <label class="form-check-label" for="no"><strong>No</strong></label>
                         </div>
                     </div>
@@ -723,12 +776,16 @@
                         <label for="memberships" class="form-label">Do you offer reduced rates for long-term memberships</label>
                     </div>
                     <div class="form-check form-group radio-group mb-3">
+                        <!-- Hidden input to ensure data is sent even if none of these is selected -->
+                        <input type="hidden" name="membership" value="">
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="membership" id="longTermYes" value="yes" name="yes" {{ $space->membership == 'yes' ? 'checked' : '' }}>
+                            <input class="form-check-input" type="radio" name="membership" id="longTermYes" value="yes" 
+                                {{ $space->membership == 'yes' ? 'checked' : '' }}>
                             <label class="form-check-label" for="longTermYes"><strong>Yes</strong></label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="membership" id="longTermNo" value="no" name="no" {{ $space->membership == 'no' ? 'checked' : '' }}>
+                            <input class="form-check-input" type="radio" name="membership" id="longTermNo" value="no" 
+                                {{ $space->membership == 'no' ? 'checked' : '' }}>
                             <label class="form-check-label" for="longTermNo"><strong>No</strong></label>
                         </div>
                     </div>
@@ -736,11 +793,15 @@
                 <div class="col-md-6">
                     <div class="form-check mb-3">
                         <label for="membershipDuration" class="form-label">Duration</label>
-                        <input type="text" class="form-control form-control-sm" id="membershipDuration" placeholder="Starting Price per Week" name="membershipDuration" value="{{ $space->membership_duration ?? '' }}"/>
+                        <input type="text" class="form-control form-control-sm" id="membershipDuration" 
+                            placeholder="Starting Price per Week" name="membershipDuration" 
+                            value="{{ $space->membership_duration ?? '' }}" />
                     </div>
                     <div class="form-check mb-3">
                         <label for="membershipPrice" class="form-label">Price</label>
-                        <input type="text" class="form-control form-control-sm" id="membershipPrice" placeholder="PHP" name="membershipPrice" value="{{ $space->membership_price ?? '' }}"/>
+                        <input type="text" class="form-control form-control-sm" id="membershipPrice" 
+                            placeholder="PHP" name="membershipPrice" 
+                            value="{{ $space->membership_price ?? '' }}" />
                     </div>
                 </div>
             </div>
@@ -771,7 +832,7 @@
                         <label for="offer" class="form-label"><strong>Offer a Free Day Pass</strong></label>
                     </div>
                     <div class="col-md-3">
-                        <input class="form-check-input" type="radio" name="freePass" id="offerEnable" value="enable" {{ $space->free_pass == 'disable' ? 'checked' : '' }}>
+                        <input class="form-check-input" type="radio" name="freePass" id="offerEnable" value="enable" {{ $space->free_pass == 'enable' ? 'checked' : '' }}>
                         <label class="form-check-label ms-2" for="offerEnable">Enable</label>
                     </div>
                     <div class="col-md-3">
@@ -789,153 +850,59 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-md-3">
                 <label for="price" class="form-label">Price of your cozone</label>
                 <input type="number" class="form-control" name="price" id="price" placeholder="Price of your space" value="{{ $space->price ?? '' }}">
             </div>
-        </div>
+        </div> --}}
     </div> 
     <div class="d-flex justify-content-end mt-4">
+        <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='{{ route('myCoworkingSpace') }}'">
+            Cancel
+        </button>
         <button type="submit" class="btn btn-dark ms-3">Save Changes</button>
-    </div>     
+    </div>       
 </form>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
     let map;
     let marker;
 
     function initMap() {
-        const initialPosition = { lat: 14.587186, lng: -239.015398 };
-        
-        map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 8,
-            center: initialPosition,
-        });
-        
-        marker = new google.maps.Marker({
-            position: initialPosition,
-            map: map,
-            draggable: true, 
+        const latitude = parseFloat(document.getElementById('latitude').value) || 14.587186;
+        const longitude = parseFloat(document.getElementById('longitude').value) || -239.015398;
+
+        map = L.map('map').setView([latitude, longitude], 8);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        marker = L.marker([latitude, longitude], {
+            draggable: true
+        }).addTo(map);
+
+        marker.on('dragend', function (e) {
+            const position = e.target.getLatLng();
+            document.getElementById('latitude').value = position.lat;
+            document.getElementById('longitude').value = position.lng;
         });
 
-        google.maps.event.addListener(marker, 'dragend', function() {
-            let position = marker.getPosition();
-            document.getElementById('latitude').value = position.lat();
-            document.getElementById('longitude').value = position.lng();
-        });
-
-        map.addListener("click", (e) => {
-            placeMarkerAndPanTo(e.latLng, map);
+        map.on('click', function (e) {
+            placeMarkerAndPanTo(e.latlng);
         });
     }
 
-    function placeMarkerAndPanTo(latLng, map) {
-        marker.setPosition(latLng);
+    function placeMarkerAndPanTo(latLng) {
+        marker.setLatLng(latLng);
         map.panTo(latLng);
-        document.getElementById('latitude').value = latLng.lat();
-        document.getElementById('longitude').value = latLng.lng();
-    }
-</script>
-<script>
-    function toggleDeskButtons() {
-        const isDeskChecked = document.getElementById('isdeskCheck').checked;
-        const deskFields = document.querySelectorAll('.desk-fields input');
-        const addDeskBtn = document.getElementById('add-desk-btn');
-        const removeDeskBtns = document.querySelectorAll('.remove-desk');
-        
-        deskFields.forEach(field => {
-            field.disabled = !isDeskChecked;
-        });
-
-        addDeskBtn.disabled = !isDeskChecked;
-        removeDeskBtns.forEach(button => {
-            button.disabled = !isDeskChecked || deskFields.length <= 1;
-        });
+        document.getElementById('latitude').value = latLng.lat;
+        document.getElementById('longitude').value = latLng.lng;
     }
 
-    function toggleMeetingButtons() {
-        const isMeetingChecked = document.getElementById('ismeetingCheck').checked;
-        const meetingFields = document.querySelectorAll('.meeting-fields input');
-        const addMeetingBtn = document.getElementById('add-meeting-btn');
-        const removeMeetingBtns = document.querySelectorAll('.remove-meeting');
-        
-        meetingFields.forEach(field => {
-            field.disabled = !isMeetingChecked;
-        });
-
-        addMeetingBtn.disabled = !isMeetingChecked;
-        removeMeetingBtns.forEach(button => {
-            button.disabled = !isMeetingChecked || meetingFields.length <= 1;
-        });
-    }
-
-    function toggleVirtualOfficeFields() {
-        const isVirtualChecked = document.getElementById('isvirtualCheck').checked;
-        const virtualFields = document.querySelectorAll('.virtual-fields input, .virtual-fields .form-check-input');
-        
-        virtualFields.forEach(field => {
-            field.disabled = !isVirtualChecked;
-        });
-    }
-
-    function toggleVirtualOfficeFields() {
-        const isVirtualChecked = document.getElementById('isvirtualCheck').checked;
-        const virtualFields = document.querySelectorAll('.virtual-fields input, .virtual-fields .form-check-input');
-        
-        virtualFields.forEach(field => {
-            field.disabled = !isVirtualChecked;
-        });
-    }
-
-    document.querySelector('.add-desk').addEventListener('click', function() {
-        const deskSection = document.querySelector('.desk-section');
-        const newDeskFields = document.querySelector('.desk-fields').cloneNode(true);
-        
-        newDeskFields.querySelectorAll('[id]').forEach(function(item) {
-            item.removeAttribute('id');
-        });
-        
-        deskSection.appendChild(newDeskFields);
-        toggleDeskButtons();
-    });
-
-
-    document.querySelector('.add-meeting').addEventListener('click', function() {
-        const meetingSection = document.querySelector('.meeting-section');
-        const newMeetingFields = document.querySelector('.meeting-fields').cloneNode(true);
-        
-        newMeetingFields.querySelectorAll('[id]').forEach(function(item) {
-            item.removeAttribute('id');
-        });
-
-        meetingSection.appendChild(newMeetingFields);
-        toggleMeetingButtons();
-    });
-
-
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('remove-desk')) {
-            const deskFields = document.querySelectorAll('.desk-fields');
-            if (deskFields.length > 1) {
-                deskFields[deskFields.length - 1].remove();
-            }
-        }
-        toggleDeskButtons();
-    });
-
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('remove-meeting')) {
-            const meetingFields = document.querySelectorAll('.meeting-fields');
-            if (meetingFields.length > 1) {
-                meetingFields[meetingFields.length - 1].remove();
-            }
-        }
-        toggleMeetingButtons();
-    });
-
-    toggleDeskButtons();
-    toggleMeetingButtons();
-    toggleVirtualOfficeFields();
+    window.onload = initMap;
 </script>
 
 @endsection
