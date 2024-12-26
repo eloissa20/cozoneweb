@@ -850,12 +850,12 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-md-3">
                 <label for="price" class="form-label">Price of your cozone</label>
                 <input type="number" class="form-control" name="price" id="price" placeholder="Price of your space" value="{{ $space->price ?? '' }}">
             </div>
-        </div>
+        </div> --}}
     </div> 
     <div class="d-flex justify-content-end mt-4">
         <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='{{ route('myCoworkingSpace') }}'">

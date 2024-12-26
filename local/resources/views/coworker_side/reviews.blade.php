@@ -14,6 +14,11 @@
     <h2><strong>WHAT OUR CLIENTS SAY</strong></h2>
     <hr class="separator-line" />
 
+    @if ($reviews->isEmpty())
+        <div class="text-center">
+            <p class="text-muted">No reviews to display yet.</p>
+        </div>
+    @else
     @php
         $fiveStarPercentage = ($fiveStar / $totalReviews) * 100;
         $fourStarPercentage = ($fourStar / $totalReviews) * 100;
@@ -113,16 +118,19 @@
                                 <p class="mb-0">COWORKING SPACE NAME:</p>
                                 <p class="mb-1"><strong>{{ $review->space_name }}</strong></p>
                                 <p class="mb-0">Location:</p>
-                                <p class="mb-1"></p>
+                                <p class="mb-1">{{ $review->location }}</p>
                                 <p class="mb-0">Open Hours</p>
-                                <p class="mb-1"></p>
+                                <p class="mb-1">
+                                    {{ \Carbon\Carbon::parse($review->operating_hours_from)->format('g:i A') }} -
+                                    {{ \Carbon\Carbon::parse($review->operating_hours_to)->format('g:i A') }}
+                                </p>
                             </div>
                         </div>
     
-                        <p class="text-muted">{{ $review->created_at->format('D M d, Y') }}</p>
+
     
                         <div class="bg-light p-3 rounded border border-1">
-                            <p class="mb-1"><strong>{{ $review->space_name }}</strong></p>
+                            <p class="mb-1"><strong>{{ $review->review_body  }}</strong></p>
                             <div class="text-warning text-end mt-2">
                                 @for ($i = 1; $i <= 5; $i++)
                                     @if ($i <= $review->rating)
@@ -166,6 +174,7 @@
         </div>
     </div> --}}
     
+    @endif
 </div>
 <script>
     function toggleReplyForm(reviewId) {
@@ -244,7 +253,7 @@
                                         </div>
                                         <p class="text-muted">${new Date(review.created_at).toLocaleDateString()}</p>
                                         <div class="bg-light p-3 rounded border border-1">
-                                            <p class="mb-1"><strong>${review.space_name}</strong></p>
+
                                             <div class="text-warning text-end mt-2">
                                                 ${stars}
                                             </div>
