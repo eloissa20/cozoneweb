@@ -29,16 +29,43 @@ Route::get('/', function () {
     return view('landing');
 })->name('landing');
 
+//the ff is open to all
+//home
+Route::get('/client_side/home', [FilterController::class, 'client_home'])->name('client_side.home');
+
+//list of spaces
+Route::get('/client_side/lists', [FilterController::class, 'client_list'])->name('client_side.lists');
+
+//details
+Route::get('/client_side/details/{id}', [ClientController::class, 'show_cowork_details'])->name('client_side.details');
+
+//how to
+Route::get('/client_side/how/faqs', function () {
+    return view('client_side.how_to.faqs_client');
+})->name('client_side.how.faqs');
+
+Route::get('/client_side/how/find', function () {
+    return view('client_side.how_to.find_client');
+})->name('client_side.how.find');
+
+Route::get('/client_side/how/reserve', function () {
+    $coworkingSpaces = Cowork::orderBy('created_at', 'desc')->get();
+
+    return view('client_side.how_to.reserve_client', compact('coworkingSpaces'));
+})->name('client_side.how.reserve');
+
+//about
+Route::get('/client_side/about', function () {
+    return view('client_side.about_client');
+})->name('client_side.about');
+
 Route::middleware(['preventBackHistory'])->group(function () {
 
     Auth::routes();
 
     Route::middleware(['auth', 'userAuth:1'])->group(function () {
-        //home
-        Route::get('/client_side/home', [FilterController::class, 'client_home'])->name('client_side.home');
-
         //details
-        Route::get('/client_side/details/{id}', [ClientController::class, 'show_cowork_details'])->name('client_side.details');
+
         Route::post('/client_side/details/reserve/{id}', [TransactionController::class, 'processReservation'])->name('client_side.details.reserve');
         Route::get('/client_side/reservation/{id}', [TransactionController::class, 'viewReservation'])->name('client_side.reservation.details');
 
@@ -58,29 +85,6 @@ Route::middleware(['preventBackHistory'])->group(function () {
         // payment success and failed
         Route::get('/client_side/payment/success/{id}/{transactionId}/{paymentMethod}/{amount}', [PaymentController::class, 'paymentSuccess'])->name('client_side.payment.success');
         Route::get('/client_side/payment/failed', [PaymentController::class, 'paymentFailed'])->name('client_side.payment.failed');
-
-        //list of spaces
-        Route::get('/client_side/lists', [FilterController::class, 'client_list'])->name('client_side.lists');
-
-        //how to
-        Route::get('/client_side/how/faqs', function () {
-            return view('client_side.how_to.faqs_client');
-        })->name('client_side.how.faqs');
-
-        Route::get('/client_side/how/find', function () {
-            return view('client_side.how_to.find_client');
-        })->name('client_side.how.find');
-
-        Route::get('/client_side/how/reserve', function () {
-            $coworkingSpaces = Cowork::orderBy('created_at', 'desc')->get();
-
-            return view('client_side.how_to.reserve_client', compact('coworkingSpaces'));
-        })->name('client_side.how.reserve');
-
-        //about
-        Route::get('/client_side/about', function () {
-            return view('client_side.about_client');
-        })->name('client_side.about');
 
         //contact cozone
         Route::post('/client_side/about/contact', [ClientController::class, 'send_email'])->name('client_side.about.contact');
@@ -172,7 +176,6 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('/export-transactions', function () {
             return Excel::download(new TransactionsExport, 'transactions.xlsx');
         });
-
     });
 
     Route::middleware(['auth', 'userAuth:3'])->group(function () {
@@ -199,7 +202,6 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('/admin_side/transactions', [AdminController::class, 'viewTransactions'])->name('admin.transactions');
         Route::get('/admin_side/viewTransactionDetails/{id}', [AdminController::class, 'viewTransactionDetails'])->name('viewTransactionDetails');
     });
-
 });
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
