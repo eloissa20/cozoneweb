@@ -176,7 +176,11 @@
 
                             <div class="d-flex justify-content-between">
                                 <button type="button" class="btn btn-outline-secondary"><a
+
+                                        href="{{ route('client_side.payment.cancel', ['spaceId' => $space->id, 'transactionId' => $transaction->id]) }}">Cancel Payment</a></button>
+=======
                                         href="{{ route('client_side.payment.cancel', ['spaceId' => $space->id, 'transactionId' => $transaction->id]) }}">Go Back</a></button>
+
                                 <button type="submit" class="btn btn-dark">Confirm Payment</button>
                             </div>
                         </form>

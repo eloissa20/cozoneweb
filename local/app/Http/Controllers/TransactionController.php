@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cowork;
+
+use GuzzleHttp\Client;
+=======
 use App\Models\Review;
 use GuzzleHttp\Client;
 use Paymongo\Paymongo;
+
 use App\Models\Transaction;
 use Exception;
 use Illuminate\Http\Request;
@@ -72,7 +76,12 @@ class TransactionController extends Controller
                 // Initialize Guzzle HTTP client
                 $client = new Client([
                     'base_uri' => 'https://api.paymongo.com/v1/',
+
+                    'auth' => [env('PAYMONGO_SECRET_KEY'), 'sk_test_sfvn2zA1qJSGdtongbiVh53H'],
+                    'verify' => false, // Disable SSL certificate verification
+=======
                     'auth' => [env('PAYMONGO_SECRET_KEY'), ''],
+
                 ]);
 
                 // Create a GCash payment source
@@ -101,9 +110,17 @@ class TransactionController extends Controller
 
             } else {
                 // cash payment
+
+                return redirect()->route(
+                    'client_side.payment.success',
+                    ['id' => $spaceId, 'transactionId' => $transactionId, 'paymentMethod' => $request->input('payment_method'), "amount" => $request->input('total_amount')]
+                )
+                    ->with('success', 'Reservation done! Enjoy your cowork.');
+=======
                 return redirect()->route('client_side.payment.success',
                 ['id' => $spaceId, 'transactionId' => $transactionId, 'paymentMethod' => $request->input('payment_method'), "amount" => $request->input('total_amount')])
                 ->with('success', 'Reservation done! Enjoy your cowork.');
+        
             }
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
