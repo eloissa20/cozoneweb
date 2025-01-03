@@ -222,9 +222,9 @@
                 </div>
 
                 <hr class="separator-line"/>
-                <div class="row">
+                {{-- <div class="row">
                     <p><strong>Price:</strong> <span id="price"></span></p>
-                </div>
+                </div> --}}
 
                 <div id="map" class="map-container d-flex align-items-center justify-content-center" 
                     style="border: 1px solid #000000; height: 300px; width: 80%; border-radius: 5px; margin: 0 auto;">
@@ -318,7 +318,7 @@ let marker = null;
                 $('#free_pass').text(response.free_pass);
                 $('#short_term_details').text(response.short_term_details);
                 $('#free_pass_details').text(response.free_pass_details);
-                $('#price').text(response.price);
+                // $('#price').text(response.price);
                 const carouselContainer = $('#carouselItemsContainer');
                 carouselContainer.empty();
 

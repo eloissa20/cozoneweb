@@ -22,6 +22,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
 
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
@@ -48,9 +49,15 @@
                         </i>
                         <span id="notification-count" class="badge text-bg-secondary"></span>
                     </button>
+                    @if(Auth::check())
                     <a href="{{ route('client_side.profile') }}" class="me-3 btn btn-light bg-white border border-0">
                         <i class="bi bi-person" style="font-size: 1.5rem;"></i>
                     </a>
+                    @else
+                    <a href="{{ route('login') }}" class="me-3 btn btn-light bg-white border border-0">
+                        Login
+                    </a>
+                    @endif
                 </div>
             </div>
         </nav>
@@ -58,30 +65,30 @@
         <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
             <!-- Success Toast -->
             @if (session('success'))
-                <div class="toast align-items-center bg-black border-0" role="alert" aria-live="assertive"
-                    aria-atomic="true" id="successToast">
-                    <div class="toast-header">
-                        <strong class="me-auto">Success</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                    </div>
-                    <div class="toast-body text-bg-light">
-                        {{ session('success') }}
-                    </div>
+            <div class="toast align-items-center bg-black border-0" role="alert" aria-live="assertive"
+                aria-atomic="true" id="successToast">
+                <div class="toast-header">
+                    <strong class="me-auto">Success</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
+                <div class="toast-body text-bg-light">
+                    {{ session('success') }}
+                </div>
+            </div>
             @endif
 
             <!-- Error Toast -->
             @if (session('error'))
-                <div class="toast align-items-center bg-black border-0" role="alert" aria-live="assertive"
-                    aria-atomic="true" id="errorToast">
-                    <div class="toast-header">
-                        <strong class="me-auto">Error</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                    </div>
-                    <div class="toast-body text-bg-danger">
-                        {{ session('error') }}
-                    </div>
+            <div class="toast align-items-center bg-black border-0" role="alert" aria-live="assertive"
+                aria-atomic="true" id="errorToast">
+                <div class="toast-header">
+                    <strong class="me-auto">Error</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
+                <div class="toast-body text-bg-danger">
+                    {{ session('error') }}
+                </div>
+            </div>
             @endif
         </div>
 
@@ -151,41 +158,20 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Show success toast if present
-            @if (session('success'))
-                var successToast = new bootstrap.Toast(document.getElementById('successToast'));
-                successToast.show();
+            @if(session('success'))
+            var successToast = new bootstrap.Toast(document.getElementById('successToast'));
+            successToast.show();
             @endif
-            // Show error toast if present
-            @if (session('error'))
-                var errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
-                errorToast.show();
+            @if(session('error'))
+            var errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
+            errorToast.show();
             @endif
-
-            // const notifications = [{
-            //         id: 1,
-            //         message: "New booking received.",
-            //         time: "5 mins ago",
-            //         url: "/details/1"
-            //     },
-            //     {
-            //         id: 2,
-            //         message: "Payment confirmed.",
-            //         time: "1 hour ago",
-            //         url: "/details/1"
-            //     },
-            //     {
-            //         id: 3,
-            //         message: "Profile updated successfully.",
-            //         time: "1 day ago",
-            //         url: "/details/1"
-            //     },
-            // ];
 
             async function fetchNotifications() {
                 try {
                     const response = await $.ajax({
-                        url: '{{ route('client_side.notifications.all') }}',
+                        url: '{{ route('
+                        client_side.notifications.all ') }}',
                         method: 'GET',
                         data: {
                             _token: '{{ csrf_token() }}'
@@ -193,38 +179,38 @@
                     });
 
                     if (response.success) {
-                        return response.data; // Return notifications array
+                        return response.data;
                     }
                 } catch (error) {
                     console.error('Error fetching notifications:', error);
                 }
-                return []; // Return an empty array on failure
+                return [];
             }
 
             async function initializeNotifications() {
                 const notifications = await fetchNotifications();
 
-                // Base URL for notification links
-                const detailsRouteBase = "{{ url('client_side/') }}";
+                const detailsRouteBase = "{{ url('client_side/reservation') }}";
 
-                // Generate HTML content for notifications
-                const notificationContent = notifications.length > 0
-                ? `
-                    <div style="max-height: 200px; overflow-y: auto; width: 300px;">
-                        ${notifications.map(notification => `
-                            <a href="${detailsRouteBase}${notification.url}"
+                const notificationContent = notifications.length > 0 ?
+                    `
+                <div style="max-height: 200px; overflow-y: auto; width: 300px;">
+                    ${notifications.map(notification => {
+                        const formattedDate = moment(notification.created_at).fromNow(); // Using Moment.js to format date
+                        return `
+                            <a href="${detailsRouteBase}/${notification.transaction_id}"
                             class="text-decoration-none text-dark d-block py-2 border-bottom">
                                 <div>
-                                    <p class="mb-0 fw-bold">${notification.message}</p>
-                                    <small class="text-muted">${notification.time}</small>
+                                    <p class="mb-0 fw-bold">${notification.content}</p>
+                                    <small class="text-muted">${formattedDate}</small>
                                 </div>
                             </a>
-                        `).join('')}
-                    </div>
-                `
-                : `<div style="width: 300px; text-align: center; padding: 10px;">No new notifications</div>`;
+                        `;
+                    }).join('')}
+                </div>
+                ` :
+                    `<div style="width: 300px; text-align: center; padding: 10px;">No new notifications</div>`;
 
-                // Initialize Bootstrap Popover
                 const notificationButton = document.getElementById('notification');
                 const popover = new bootstrap.Popover(notificationButton, {
                     content: notificationContent,
@@ -232,12 +218,10 @@
                     trigger: 'focus',
                 });
 
-                // Update notification count
                 const notificationCount = document.getElementById('notification-count');
                 notificationCount.textContent = notifications.length;
             }
 
-            // Initialize notifications on page load
             initializeNotifications();
         });
     </script>

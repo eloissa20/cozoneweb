@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,6 +20,7 @@
         text-align: center;
         padding: 100px 0;
     }
+
     .button {
         background: #fff;
         backface-visibility: hidden;
@@ -29,7 +31,7 @@
         color: #212121;
         cursor: pointer;
         display: inline-block;
-        font-family: Circular,Helvetica,sans-serif;
+        font-family: Circular, Helvetica, sans-serif;
         font-size: 1.125rem;
         font-weight: 700;
         letter-spacing: -.01em;
@@ -79,13 +81,14 @@
         transform: translateY(.125rem);
     }
 </style>
+
 <body>
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="container">
             <h1 class="display-4">Welcome to Cozone</h1>
             <p class="lead">A great place to manage your spaces and connect with others.</p>
-            <a href="{{ route('login') }}" class="button text-black">Get Started</a>
+            <a href="{{ route('client_side.home') }}" class="button text-black">Get Started</a>
 
         </div>
     </section>
@@ -125,5 +128,5 @@
     </section>
 
 </body>
-</html>
 
+</html>

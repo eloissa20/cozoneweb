@@ -5,6 +5,8 @@ namespace App\Exports;
 use App\Models\Transaction;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class TransactionsExport implements FromCollection, WithHeadings
 {
@@ -13,23 +15,34 @@ class TransactionsExport implements FromCollection, WithHeadings
      */
     public function collection()
     {
-        return Transaction::select(
-            'id',
-            'user_id',
-            'space_id',
-            'reservation_date',
-            'hours',
-            'guests',
-            'name',
-            'email',
-            'company',
-            'contact',
-            'arrival_time',
-            'amount',
-            'payment_method',
-            'status',
-            // 'created_at'
-        )->get();
+        // Get the currently logged-in user's ID
+        $currentUserId = Auth::id();
+
+        // Get the space IDs owned by the user
+        $userSpaces = DB::table('list_space_tbl')
+            ->where('user_id', $currentUserId)
+            ->pluck('id'); // Fetch all space IDs for the user
+
+        // Fetch transactions for spaces owned by the user
+        return DB::table('transactions')
+            ->whereIn('space_id', $userSpaces)
+            ->select(
+                'id',
+                'user_id',
+                'space_id',
+                'reservation_date',
+                'hours',
+                'guests',
+                'name',
+                'email',
+                'company',
+                'contact',
+                'arrival_time',
+                'amount',
+                'payment_method',
+                'status'
+            )
+            ->get();
     }
 
     /**
@@ -52,8 +65,6 @@ class TransactionsExport implements FromCollection, WithHeadings
             'Amount',
             'Payment Method',
             'Status',
-            // 'Created At',
         ];
     }
 }
-    

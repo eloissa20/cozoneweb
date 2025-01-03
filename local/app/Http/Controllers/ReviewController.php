@@ -59,7 +59,7 @@ class ReviewController extends Controller
             ->with('success', 'Reply added successfully!');
         } catch (\Exception $e) {
             return redirect()->back()
-            ->with('error', $e);
+            ->with('error', $e->getMessage());
         }
     }
 

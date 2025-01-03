@@ -33,7 +33,7 @@ class ClientController extends Controller
 
             return redirect()->route('client_side.profile')->with('success', 'Profile updated successfully!');
         } catch (Exception $e) {
-            return redirect()->back()->with('error', $e);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -156,7 +156,7 @@ class ClientController extends Controller
 
             return view('client_side.details_client', ['space' => $space, 'pricing' => $pricing, 'allReviews' => $allReviews, 'allReplies' => $allReplies, 'images' => $images]);
         } catch (Exception $e) {
-            return redirect()->back()->with('error', $e);
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
@@ -187,7 +187,7 @@ class ClientController extends Controller
                     })
                     ->make(true);
             } catch (Exception $e) {
-                return redirect()->back()->with('error', $e);
+                return redirect()->back()->with('error', $e->getMessage());
             }
 
         } else {
@@ -212,7 +212,7 @@ class ClientController extends Controller
 
             return redirect()->back()->with('success', 'Message sent! Please wait for the response of the cozone.');
         } catch (Exception $e) {
-            return redirect()->back()->with('error', $e);
+            return redirect()->back()->with('error', $e->getMessage());
         }
 
     }

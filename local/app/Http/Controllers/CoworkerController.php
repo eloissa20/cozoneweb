@@ -51,55 +51,11 @@ class CoworkerController extends Controller
 
     public function viewDashboard()
     {
-        // Current Date
+
         $today = Carbon::today();
         $yesterday = Carbon::yesterday();
         $lastWeekStart = $today->copy()->subWeek()->startOfDay();
         $lastWeekEnd = $today->copy()->subWeek()->endOfDay();
-
-        // Calculate today's totals
-        $todaysMoney = DB::table('transactions')
-            ->whereDate('created_at', $today)
-            ->sum('amount');
-
-        $todaysClients = DB::table('users')
-            ->whereDate('created_at', $today)
-            ->count();
-
-        $todaysNewClients = DB::table('users')
-            ->whereDate('created_at', $today)
-            ->count();
-
-        // Total sales (sum of all amounts)
-        $totalSales = DB::table('transactions')
-            ->sum('amount');
-
-        // Calculate last week's totals
-        $lastWeekSales = DB::table('transactions')
-            ->whereBetween('created_at', [$lastWeekStart, $lastWeekEnd])
-            ->sum('amount');
-
-        // Calculate yesterday's totals
-        $yesterdaysMoney = DB::table('transactions')
-            ->whereDate('created_at', $yesterday)
-            ->sum('amount');
-
-        $yesterdaysSales = DB::table('transactions')
-            ->whereDate('created_at', $yesterday)
-            ->sum('amount');
-
-        $yesterdaysClients = DB::table('users')
-            ->whereDate('created_at', $yesterday)
-            ->count();
-
-        $yesterdaysNewClients = DB::table('users')
-            ->whereDate('created_at', $yesterday)
-            ->count();
-
-        // Calculate last week's new clients
-        $lastWeekNewClients = DB::table('users')
-            ->whereBetween('created_at', [$lastWeekStart, $lastWeekEnd])
-            ->count();
 
         // Calculate percentages
         $moneyChangeYesterday = $yesterdaysMoney > 0
@@ -129,29 +85,6 @@ class CoworkerController extends Controller
             'clientsChangeYesterday' => $clientsChangeYesterday,
             'newClientsChangeLastWeek' => $newClientsChangeLastWeek,
         ]);
-    }
-
-    public function dailySalesChartData()
-    {
-        $days = [];
-        for ($i = 0; $i < 7; $i++) {
-            $days[] = Carbon::today()->subDays($i)->format('Y-m-d');
-        }
-
-        $dailySales = array_map(function ($day) {
-            return DB::table('transactions')
-                ->whereDate('created_at', $day)
-                ->sum('amount') ?: 0;
-        }, $days);
-
-        $labels = array_map(fn($day) => Carbon::parse($day)->format('M d'), $days);
-
-        return response()->json([
-            'dailySales' => array_reverse($dailySales),
-            'labels' => array_reverse($labels),
-        ]);
-    }
-
 
     public function viewListSpace()
     {
@@ -161,12 +94,15 @@ class CoworkerController extends Controller
     public function viewmyCoworkingSpace(Request $request)
     {
         if ($request->ajax()) {
+            $userId = auth()->id();
+            
             $requests = DB::table('list_space_tbl')
-                ->select('*')
+                ->join('users', 'list_space_tbl.user_id', '=', 'users.id')
+                ->select('list_space_tbl.*')
+                ->where('list_space_tbl.user_id', $userId)
                 ->get();
 
             return DataTables::of($requests)
-                // ->addIndexColumn()
                 ->addColumn('actions', function ($row) {
                     $editUrl = route('editSpace', $row->id);
                     $addDeskUrl = route('addDesks', $row->id);
@@ -184,6 +120,7 @@ class CoworkerController extends Controller
 
         return view('coworker_side.myCoworkingSpace');
     }
+
 
     public function viewSpaceDetails($id)
     {
@@ -347,33 +284,6 @@ class CoworkerController extends Controller
             'additionalImages.*.max' => 'Each additional image may not be larger than 2MB.',
         ]);
 
-        $space = DB::table('list_space_tbl')->where('id', $id)->first();
-        if (!$space) {
-            return response()->json(['error' => 'Space not found.'], 404);
-        }
-
-        if ($request->hasFile('headerImage')) {
-            $file = $request->file('headerImage');
-            $extension = $file->getClientOriginalExtension();
-            $filename = time() . '.' . $extension;
-            $path = 'uploads/header/';
-            $file->move($path, $filename);
-            $headerImagePath = $path . $filename;
-        } else {
-            $headerImagePath = $space->header_image;
-        }
-
-        $additionalImages = [];
-        if ($request->hasFile('additionalImages')) {
-            foreach ($request->file('additionalImages') as $image) {
-                $imageName = time() . '_' . $image->getClientOriginalName();
-                $image->move('uploads/additional_images/', $imageName);
-                $additionalImages[] = 'uploads/additional_images/' . $imageName;
-            }
-        } else {
-            $additionalImages = json_decode($space->additional_images, true);
-        }
-
         $data = [
             'role' => $request->input('role'),
             'coworking_space_name' => $request->input('coworkingSpaceName'),
@@ -431,7 +341,7 @@ class CoworkerController extends Controller
             'short_term_details' => $request->input('shortTermDetails'),
             'free_pass' => $request->input('freePass'),
             'free_pass_details' => $request->input('freePassDetails'),
-            'price' => $request->input('price'),
+
             'user_id' => Auth::id(),
         ];
 
@@ -528,7 +438,7 @@ class CoworkerController extends Controller
             'short_term_details' => $request->input('shortTermDetails'),
             'free_pass' => $request->input('freePass'),
             'free_pass_details' => $request->input('freePassDetails'),
-            'price' => $request->input('price'),
+            // 'price' => $request->input('price'),
             'user_id' => Auth::id(),
         ];
 
@@ -577,137 +487,14 @@ class CoworkerController extends Controller
 
     
     public function viewReviews(Request $request)
-    {
-        // Get filter and sort values from request
-        $filter = $request->input('filter', 'all');
-        $sort = $request->input('sort', 'newest_to_oldest');
 
-        // Start with the base query
-        $query = DB::table('reviews')
-            ->join('users', 'reviews.user_id', '=', 'users.id')
-            ->join('list_space_tbl', 'reviews.cowork_id', '=', 'list_space_tbl.id')
-            ->select('reviews.*', 'users.name as reviewer_name', 'list_space_tbl.space_name', 'list_space_tbl.header_image');
 
-        if ($filter === 'positive') {
-            $query->where('rating', '>=', 3); 
-        } elseif ($filter === 'critical') {
-            $query->where('rating', '<=', 2); 
-        }
-
-        if ($sort === 'newest_to_oldest') {
-            $query->orderBy('reviews.created_at', 'desc'); 
-        } elseif ($sort === 'oldest_to_newest') {
-            $query->orderBy('reviews.created_at', 'asc'); 
-        }
-
-        $reviews = $query->get();
-
-        if ($reviews->isEmpty()) {
-            return view('coworker_side.reviews', [
-                'reviews' => [],
-                'totalReviews' => 0,
-                'fiveStar' => 0,
-                'fourStar' => 0,
-                'threeStar' => 0,
-                'twoStar' => 0,
-                'oneStar' => 0,
-                'averageRating' => 0,
-            ]);
-        }
-
-        $reviews->transform(function ($review) {
-            $review->created_at = Carbon::parse($review->created_at);
-            return $review;
-        });
-
-        $totalReviews = $reviews->count();
-        $fiveStar = $reviews->where('rating', 5)->count();
-        $fourStar = $reviews->where('rating', 4)->count();
-        $threeStar = $reviews->where('rating', 3)->count();
-        $twoStar = $reviews->where('rating', 2)->count();
-        $oneStar = $reviews->where('rating', 1)->count();
-        $averageRating = $totalReviews > 0 ? $reviews->sum('rating') / $totalReviews : 0;
-
-        return view('coworker_side.reviews', compact(
-            'reviews', 'totalReviews', 'fiveStar', 'fourStar', 'threeStar', 'twoStar', 'oneStar', 'averageRating'
-        ));
-    }
-
-    // public function filterReviews(Request $request)
-    // {
-    //     $query = DB::table('reviews');
-
-    //     if ($request->has('filter_type') && $request->filter_type != 'All Reviews') {
-    //         if ($request->filter_type == 'Positive') {
-    //             $query->where('rating', '>=', 3);
-    //         } elseif ($request->filter_type == 'Critical') {
-    //             $query->where('rating', '<', 3);
-    //         }
-    //     }
-
-    //     if ($request->has('sort_type')) {
-    //         if ($request->sort_type == 'Newest to Oldest') {
-    //             $query->orderBy('created_at', 'desc');
-    //         } else {
-    //             $query->orderBy('created_at', 'asc');
-    //         }
-    //     }
-
-    //     $reviews = $query->get();
-
-    //     return response()->json([
-    //         'reviews' => $reviews
-    //     ]);
-    // }
-
-    // public function viewReservations(Request $request)
-    // {
-    //     if ($request->ajax()) {
-    //         $requests = DB::table('transactions')
-    //             ->select('*')
-    //             ->get();
-
-    //         return DataTables::of($requests)
-    //             // ->addIndexColumn()
-    //             ->addColumn('actions', function ($row) {
-    //                 $statuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED', 'REFUNDED'];
-                
-    //                 $dropdown = "<div class='dropdown'>
-    //                     <button class='btn btn-outline-dark btn-sm dropdown-toggle' type='button' data-bs-toggle='dropdown' aria-expanded='false'>
-    //                         Change Status
-    //                     </button>
-    //                     <ul class='dropdown-menu'>";
-                
-    //                 foreach ($statuses as $status) {
-    //                     $dropdown .= "<li>
-    //                         <a class='dropdown-item status-btn' href='#' data-id='{$row->id}' data-status='{$status}'>
-    //                             {$status}
-    //                         </a>
-    //                     </li>";
-    //                 }
-                
-    //                 $dropdown .= "</ul></div>";
-                
-    //                 return $dropdown;
-    //             })
-    //             ->rawColumns(['actions'])
-    //             ->make(true);
-    //     }
-    //     return view('coworker_side.reservations');
-    // }
-
-    public function viewReservations(Request $request)
-    {
-        if ($request->ajax()) {
-            $status = $request->input('status', 'ALL');
-            $query = DB::table('transactions')->select('*');
-    
             if ($status !== 'ALL') {
-                $query->where('status', $status);
+                $query->where('transactions.status', $status);
             }
-    
+
             $requests = $query->get();
-    
+
             return DataTables::of($requests)
                 ->addColumn('actions', function ($row) {
                     $statuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED', 'REFUNDED'];
@@ -721,10 +508,52 @@ class CoworkerController extends Controller
                 })
                 ->rawColumns(['actions'])
                 ->make(true);
-                
+        }
+
+        return view('coworker_side.reservations');
+    }
+
+    
+
+
+    public function updateStatus(Request $request)
+    {
+        $transactionId = $request->input('transaction_id');
+        $newStatus = $request->input('status');
+    
+        $transaction = DB::table('transactions')->where('id', $transactionId)->first();
+    
+        if ($transaction) {
+            DB::table('transactions')->where('id', $transactionId)->update(['status' => $newStatus]);
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Status updated successfully!',
+            ]);
         }
     
-        return view('coworker_side.reservations');
+        return response()->json([
+            'success' => false,
+            'message' => 'Transaction not found!',
+        ]);
+    }
+    
+
+
+    public function countFreePass()
+    {
+        $currentUserId = auth()->id();
+
+        $freePassCount = DB::table('list_space_tbl')
+            ->where('list_space_tbl.user_id', $currentUserId)
+            ->where('free_pass', 'enable')
+            ->count();
+
+        return response()->json(['free_pass_count' => $freePassCount]);
+    }
+
+
+
     }
     
 
@@ -836,6 +665,70 @@ class CoworkerController extends Controller
 
 
 
+    public function deleteMeeting(Request $request, $id)
+    {
+        $meetingId = $request->input('meeting_id');
+        
+        if ($meetingId && DB::table('meeting_fields')->where('id', $meetingId)->exists()) {
+            DB::table('meeting_fields')->where('id', $meetingId)->delete();
+            return response()->json(['status' => 'success', 'message' => 'meeting removed successfully']);
+        }
+
+        return response()->json(['status' => 'error', 'message' => 'meeting not found']);
+    }
+    public function editMeeting(Request $request, $id)
+    {
+        $meetingId = $request->input('meeting_id');
+        $num_people = $request->input('num_people');
+        $price = $request->input('price');
+        $hours = $request->input('hours');
+    
+        DB::table('meeting_fields')
+            ->where('id', $meetingId)
+            ->update([
+                'num_people' => $num_people,
+                'price' => $price,
+                'hours' => $hours,
+                'updated_at' => now(),
+            ]);
+    
+        return response()->json(['status' => 'success']);
+    }
+
+    public function getTotalSpaceCounts()
+    {
+        // Get the total counts for each type of space
+        $deskCount = DB::table('desk_fields')->count();
+        $meetingRoomCount = DB::table('meeting_fields')->count();
+        $virtualOfficeCount = DB::table('list_space_tbl')->whereNotNull('virtual_offices')->count();
+
+        // Return the counts as a JSON response
+        return response()->json([
+            'deskCount' => $deskCount,
+            'meetingRoomCount' => $meetingRoomCount,
+            'virtualOfficeCount' => $virtualOfficeCount,
+            'totalCount' => $deskCount + $meetingRoomCount + $virtualOfficeCount,
+        ]);
+    }
+
+    public function getOccupancy()
+    {
+        $occupancy = DB::table('list_space_tbl as l')
+            ->join('transaction as t', 'l.space_id', '=', 't.space_id')
+            ->where('t.status', 'CONFIRMED')
+            ->leftJoin('desk_fields as d', 'l.space_id', '=', 'd.space_id')
+            ->leftJoin('meeting_fields as m', 'l.space_id', '=', 'm.space_id')
+            ->select(
+                'l.space_id',
+                'l.virtual_offices',
+                DB::raw('COUNT(d.desk_id) as total_desks'),
+                DB::raw('COUNT(m.meeting_id) as total_meeting_rooms')
+            )
+            ->groupBy('l.space_id', 'l.virtual_offices')
+            ->get();
+
+        return response()->json($occupancy);
+    }
 
     public function replyToReview(Request $request, $reviewId)
     {
