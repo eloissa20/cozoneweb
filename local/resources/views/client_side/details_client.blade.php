@@ -98,7 +98,8 @@
                             Our facility features various workspace types, including private offices and meeting rooms,
                             with a seating capacity of {{ $space->capacity }}. We are open from
                             {{ $space->available_days_from }}
-                            to {{ $space->available_days_to }} <b>(except on {{ $space->exceptions }})</b>, operating between
+                            to {{ $space->available_days_to }} <b>(except on {{ $space->exceptions }})</b>, operating
+                            between
                             {{ $space->operating_hours_from }} and {{ $space->operating_hours_to }}.
 
                             Membership options include short-term and long-term plans at competitive prices, with various
@@ -193,10 +194,17 @@
                     <div class="w-100 card-header">
                         <div class="w-100 d-flex justify-content-between items-center">
                             <p class="m-0">Space Reviews</p>
-                            <button class="btn btn-primary edit-review" data-id="{{ $space->id }}"
-                                data-bs-toggle="modal" data-bs-target="#reviewModal">
-                                Post a Review
-                            </button>
+                            @if (Auth::check())
+                                <button class="btn btn-primary edit-review" data-id="{{ $space->id }}"
+                                    data-bs-toggle="modal" data-bs-target="#reviewModal">
+                                    Post a Review
+                                </button>
+                            @else
+                                <a href="{{ route('login') }}" class="me-3 btn btn-primary bg-primary border border-0">
+                                    Login to post a review
+                                </a>
+                            @endif
+
                         </div>
                     </div>
                     <div class="card-body">
@@ -214,26 +222,29 @@
                                                     ☆
                                                 @endfor
                                             </span>
-                                            @if (auth()->user()->id === $item->user_id)
-                                                <div>
-                                                    <button class="btn text-danger remove-review fs-5 p-0"
-                                                        data-id="{{ $item->id }}">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                    <!-- Add Reply Button -->
-                                                    <button class="btn text-secondary fs-5 p-0" data-bs-toggle="modal"
-                                                        data-bs-target="#addReplyModal-{{ $item->id }}">
-                                                        <i class="bi bi-reply"></i>
-                                                    </button>
-                                                </div>
+                                            @if (Auth::check())
+                                                @if (auth()->user()->id === $item->user_id)
+                                                    <div>
+                                                        <button class="btn text-danger remove-review fs-5 p-0"
+                                                            data-id="{{ $item->id }}">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                        <!-- Add Reply Button -->
+                                                        <button class="btn text-secondary fs-5 p-0" data-bs-toggle="modal"
+                                                            data-bs-target="#addReplyModal-{{ $item->id }}">
+                                                            <i class="bi bi-reply"></i>
+                                                        </button>
+                                                    </div>
+                                                @else
+                                                    <div>
+                                                        <!-- Add Reply Button -->
+                                                        <button class="btn text-secondary fs-5 p-0" data-bs-toggle="modal"
+                                                            data-bs-target="#addReplyModal-{{ $item->id }}">
+                                                            <i class="bi bi-reply"></i>
+                                                        </button>
+                                                    </div>
+                                                @endif
                                             @else
-                                                <div>
-                                                    <!-- Add Reply Button -->
-                                                    <button class="btn text-secondary fs-5 p-0" data-bs-toggle="modal"
-                                                        data-bs-target="#addReplyModal-{{ $item->id }}">
-                                                        <i class="bi bi-reply"></i>
-                                                    </button>
-                                                </div>
                                             @endif
                                         </div>
                                     </div>
@@ -315,63 +326,71 @@
                 <div class="card mb-4">
                     <div class="card-header">Your Reservation Details</div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('client_side.details.reserve', ['id' => $space->id]) }}"
-                            onsubmit="return validateForm()">
-                            @csrf
-                            <div class="mb-3">
-                                <label for="date" class="form-label">Select Date</label>
-                                <input type="date" class="form-control" id="reservation_date" name="reservation_date"
-                                    required>
-                                <div id="date_error" class="text-danger" style="display: none;"></div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="hours1" class="form-label">Full Hours</label>
-                                <select class="form-control sync-select" id="hours1" name="hours" required>
-                                    <option selected disabled>Select</option>
-                                    @foreach ($pricing as $price)
-                                        <option value="{{ $price->hours }}">{{ $price->hours }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="hours2" class="form-label">Full Hours</label>
-                                <select class="form-control sync-select" id="hours2" name="price" required>
-                                    <option selected disabled>Select</option>
-                                    @foreach ($pricing as $price)
-                                        <option value="{{ $price->price }}">{{ $price->price }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="guests" class="form-label">Number of Guests</label>
-                                <input type="number" class="form-control" id="guests" name="guests" value="1"
-                                    min="1" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Full Name</label>
-                                <input type="text" class="form-control" id="name" name="name"
-                                    value="{{ auth()->user()->name }}" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email Address</label>
-                                <input type="email" class="form-control" id="email" name="email"
-                                    value="{{ auth()->user()->email }}" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="company" class="form-label">Company Name</label>
-                                <input type="text" class="form-control" id="company" name="company" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="contact" class="form-label">Contact Number</label>
-                                <input type="text" class="form-control" id="contact" name="contact"
-                                    value="{{ auth()->user()->contact }}" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="arrival" class="form-label">Estimated Arrival Time</label>
-                                <input type="time" class="form-control" id="arrival" name="arrival" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Pay Now</button>
-                        </form>
+                        @if (Auth::check())
+                            <form method="POST"
+                                action="{{ route('client_side.details.reserve', ['id' => $space->id]) }}"
+                                onsubmit="return validateForm()">
+                                @csrf
+                                <div class="mb-3">
+                                    <label for="date" class="form-label">Select Date</label>
+                                    <input type="date" class="form-control" id="reservation_date"
+                                        name="reservation_date" required>
+                                    <div id="date_error" class="text-danger" style="display: none;"></div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="hours1" class="form-label">Full Hours</label>
+                                    <select class="form-control sync-select" id="hours1" name="hours" required>
+                                        <option disabled>Select</option>
+                                        @foreach ($pricing as $price)
+                                            <option value="{{ $price->hours }}">{{ $price->hours }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="mb-3" hidden>
+                                    <label for="hours2" class="form-label">Full Hours</label>
+                                    <select class="form-control sync-select" id="hours2" name="price" required>
+                                        <option disabled>Select</option>
+                                        @foreach ($pricing as $price)
+                                            <option value="{{ $price->price }}">{{ $price->price }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="guests" class="form-label">Number of Guests</label>
+                                    <input type="number" class="form-control" id="guests" name="guests"
+                                        value="1" min="1" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Full Name</label>
+                                    <input type="text" class="form-control" id="name" name="name"
+                                        value="{{ auth()->user()->name }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email Address</label>
+                                    <input type="email" class="form-control" id="email" name="email"
+                                        value="{{ auth()->user()->email }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="company" class="form-label">Company Name</label>
+                                    <input type="text" class="form-control" id="company" name="company" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="contact" class="form-label">Contact Number</label>
+                                    <input type="text" class="form-control" id="contact" name="contact"
+                                        value="{{ auth()->user()->contact }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="arrival" class="form-label">Estimated Arrival Time</label>
+                                    <input type="time" class="form-control" id="arrival" name="arrival" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Pay Now</button>
+                            </form>
+                        @else
+                            <a href="{{ route('login') }}" class="me-3 btn btn-primary bg-primary border border-0">
+                                Login to reserve a space
+                            </a>
+                        @endif
+
                     </div>
                 </div>
                 <div class="card mb-4">
