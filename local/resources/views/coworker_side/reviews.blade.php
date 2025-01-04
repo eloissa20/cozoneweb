@@ -127,7 +127,10 @@
                             </div>
                         </div>
     
+                        {{-- <p class="text-muted">{{ $review->created_at->format('D M d, Y') }}</p> --}}
+                        <p class="text-muted">{{ \Carbon\Carbon::parse($review->created_at)->format('D M d, Y') }}</p>
 
+                        
     
                         <div class="bg-light p-3 rounded border border-1">
                             <p class="mb-1"><strong>{{ $review->review_body  }}</strong></p>
@@ -253,7 +256,7 @@
                                         </div>
                                         <p class="text-muted">${new Date(review.created_at).toLocaleDateString()}</p>
                                         <div class="bg-light p-3 rounded border border-1">
-
+                                            <p class="mb-1"><strong>${review.review_body }</strong></p>
                                             <div class="text-warning text-end mt-2">
                                                 ${stars}
                                             </div>

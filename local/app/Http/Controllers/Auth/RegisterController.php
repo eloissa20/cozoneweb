@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Http\Request;
 class RegisterController extends Controller
 {
     /*
@@ -66,7 +66,37 @@ class RegisterController extends Controller
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'user_type' => 1,
             'password' => Hash::make($data['password']),
         ]);
     }
+
+    public function showCoworkerRegisterForm()
+    {
+        return view('auth.register_as_cowork');
+    }
+
+    public function createCoworkUser(Request $request)
+    {
+        // Validate the incoming request
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        // Create a new user with user_type = 2 (coworker)
+        $user = User::create([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'user_type' => 2,
+            'password' => Hash::make($request->input('password')),
+        ]);
+
+        // Log the user in and redirect them
+        auth()->login($user);
+
+        return redirect()->route('login');
+    }
+
 }

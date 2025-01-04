@@ -13,13 +13,13 @@
                 <tr>
                     <th>Duration</th>
                     <th>Price</th>
-                    <th>Hours</th>
+                    {{-- <th>Hours</th> --}}
                     <th>Actions</th>
                 </tr>
                 <tr>
                     <td><input type="text" class="form-control" name="inputs[{{ $index ?? 0 }}][duration]" placeholder="1 hour - 2 hours" /></td>
                     <td><input type="text" class="form-control" name="inputs[{{ $index ?? 0 }}][price]" placeholder="PHP" /></td>
-                    <td><input type="text" class="form-control" name="inputs[{{ $index ?? 0 }}][hours]" placeholder="1 - 2" /></td>
+                    {{-- <td><input type="text" class="form-control" name="inputs[{{ $index ?? 0 }}][hours]" placeholder="1 - 2" /></td> --}}
                     <td>
                         <button type="button" class="btn btn-outline-secondary" id="add-desk"><i class="bi bi-plus-lg"></i></button>
                     </td>
@@ -38,14 +38,14 @@
             <tr>
                 <th>Duration</th>
                 <th>Price</th>
-                <th>Hours</th>
+                {{-- <th>Hours</th> --}}
                 <th>Actions</th>
             </tr>
             @foreach($deskFields as $index => $deskField)
                 <tr data-id="{{ $deskField->id }}" class="desk-row">
                     <td><input type="text" class="form-control" name="inputs[{{ $index }}][duration]" value="{{ old('inputs.' . $index . '.duration', $deskField->duration) }}" placeholder="1 hour - 2 hours" disabled /></td>
                     <td><input type="text" class="form-control" name="inputs[{{ $index }}][price]" value="{{ old('inputs.' . $index . '.price', $deskField->price) }}" placeholder="PHP" disabled/></td>
-                    <td><input type="text" class="form-control" name="inputs[{{ $index }}][hours]" value="{{ old('inputs.' . $index . '.hours', $deskField->hours) }}" placeholder="1 - 2" disabled/></td>
+                    {{-- <td><input type="text" class="form-control" name="inputs[{{ $index }}][hours]" value="{{ old('inputs.' . $index . '.hours', $deskField->hours) }}" placeholder="1 - 2" disabled/></td> --}}
                     <td>
                         <button type="button" class="btn btn-outline-secondary edit-desk" data-id="{{ $deskField->id }}"><i class="bi bi-pencil"></i> Edit</button>
                         <button type="button" class="btn btn-outline-secondary delete-desk" data-id="{{ $deskField->id }}"><i class="bi bi-trash"></i> Delete</button>
@@ -69,9 +69,6 @@
                 </td>
                 <td>
                     <input type="text" class="form-control form-control" name="inputs[new-${i}][price]" placeholder="PHP"/>
-                </td>
-                <td>
-                    <input type="text" class="form-control form-control" name="inputs[new-${i}][hours]" placeholder="1 - 2"/>
                 </td>
                 <td>
                     <button type="button" class="btn btn-outline-danger remove"><i class="bi bi-dash-lg"></i></button>

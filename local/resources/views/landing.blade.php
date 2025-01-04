@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,7 +19,6 @@
         text-align: center;
         padding: 100px 0;
     }
-
     .button {
         background: #fff;
         backface-visibility: hidden;
@@ -31,7 +29,7 @@
         color: #212121;
         cursor: pointer;
         display: inline-block;
-        font-family: Circular, Helvetica, sans-serif;
+        font-family: Circular,Helvetica,sans-serif;
         font-size: 1.125rem;
         font-weight: 700;
         letter-spacing: -.01em;
@@ -81,7 +79,6 @@
         transform: translateY(.125rem);
     }
 </style>
-
 <body>
     <!-- Hero Section -->
     <section class="hero-section">
@@ -128,5 +125,5 @@
     </section>
 
 </body>
-
 </html>
+

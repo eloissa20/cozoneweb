@@ -29,7 +29,7 @@ Route::get('/', function () {
     return view('landing');
 })->name('landing');
 
-//the ff is open to all
+//the following routes is open to all
 //home
 Route::get('/client_side/home', [FilterController::class, 'client_home'])->name('client_side.home');
 
@@ -176,6 +176,7 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('/export-transactions', function () {
             return Excel::download(new TransactionsExport, 'transactions.xlsx');
         });
+
     });
 
     Route::middleware(['auth', 'userAuth:3'])->group(function () {
@@ -202,9 +203,12 @@ Route::middleware(['preventBackHistory'])->group(function () {
         Route::get('/admin_side/transactions', [AdminController::class, 'viewTransactions'])->name('admin.transactions');
         Route::get('/admin_side/viewTransactionDetails/{id}', [AdminController::class, 'viewTransactionDetails'])->name('viewTransactionDetails');
     });
+
 });
 
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//coworker registration
+Route::get('/register_as_cowork', [App\Http\Controllers\Auth\RegisterController::class, 'showCoworkerRegisterForm'])->name('register_as_cowork_form');
+Route::post('/register_as_cowork', [App\Http\Controllers\Auth\RegisterController::class, 'createCoworkUser'])->name('register_as_cowork');
 
 Route::middleware(['redirectIfAuthenticated'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');

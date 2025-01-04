@@ -1,31 +1,72 @@
-$(document).ready(() => {
-    loadLocalStorageStep5();
+let map;
+let marker;
+
+function initMap() {
+    const initialPosition = { lat: 14.587186, lng: -239.015398 };
+    
+    map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 8,
+        center: initialPosition,
+    });
+    
+    marker = new google.maps.Marker({
+        position: initialPosition,
+        map: map,
+        draggable: true, 
+    });
+
+    google.maps.event.addListener(marker, 'dragend', function() {
+        let position = marker.getPosition();
+        document.getElementById('latitude').value = position.lat();
+        document.getElementById('longitude').value = position.lng();
+    });
+
+    map.addListener("click", (e) => {
+        placeMarkerAndPanTo(e.latLng, map);
+    });
+}
+
+function placeMarkerAndPanTo(latLng, map) {
+    marker.setPosition(latLng);
+    map.panTo(latLng);
+    document.getElementById('latitude').value = latLng.lat();
+    document.getElementById('longitude').value = latLng.lng();
+}
+
+$(() => {
+    loadLocalStorageStep4();
 });
 
-function loadLocalStorageStep5() {
-    if (localStorage.getItem("listSpace5") !== null) {
-        let data = JSON.parse(localStorage.getItem("listSpace5"));
-        $('#tables').val(data.tables);
-        $('#capacity').val(data.capacity);
-        $('#meetingRooms').val(data.meetingRooms);
-        $('#virtualOffices').val(data.virtualOffices);
-        $('#size').val(data.size);
+function loadLocalStorageStep4() {
+    if (localStorage.getItem("listSpace4") !== null) {
+        let data = JSON.parse(localStorage.getItem("listSpace4"));
+        $('#location').val(data.location);
+        $('#telephone').val(data.telephone);
+        $('#country').val(data.country);
+        $('#unit').val(data.unit);
+        $('#postal').val(data.postal);
+        $('#city').val(data.city);
+        $('#latitude').val(data.latitude);
+        $('#longitude').val(data.longitude);
+
+        const savedPosition = { lat: parseFloat(data.latitude), lng: parseFloat(data.longitude) };
         
-        if (data.measurementUnit) {
-            $(`input[name="measurementUnit"][value="${data.measurementUnit}"]`).prop('checked', true);
-        }
+        marker.setLatLng(savedPosition);
+        map.setView(savedPosition, map.getZoom());
     }
 }
 
-function moveToNextStepFromStep5() {
-    const tables = $('#tables').val();
-    const capacity = $('#capacity').val();
-    const meetingRooms = $('#meetingRooms').val();
-    const virtualOffices = $('#virtualOffices').val();
-    const size = $('#size').val();
-    const measurementUnit = $('input[name="measurementUnit"]:checked').val();
+function moveToNextStepFromStep4() {
+    const location = $('#location').val();
+    const telephone = $('#telephone').val();
+    const country = $('#country').val();
+    const unit = $('#unit').val();
+    const postal = $('#postal').val();
+    const city = $('#city').val();
+    const latitude = $('#latitude').val();
+    const longitude = $('#longitude').val();
 
-    if (!tables || !capacity || !meetingRooms || !virtualOffices || !size || !measurementUnit) {
+    if (!location || !telephone || !country || !unit || !postal || !city || !latitude || !longitude) {
         Swal.fire({
             icon: "error",
             title: "Incomplete Form",
@@ -34,20 +75,22 @@ function moveToNextStepFromStep5() {
         return;
     }
 
-    localStorage.setItem('listSpace5', JSON.stringify({
-        tables,
-        capacity,
-        meetingRooms,
-        virtualOffices,
-        size,
-        measurementUnit,
+    localStorage.setItem('listSpace4', JSON.stringify({
+        location,
+        telephone,
+        country,
+        unit,
+        postal,
+        city,
+        latitude,
+        longitude
     }));
 
-    $('#s5').hide();
-    $('#s6').show();
+    $('#s4').hide();
+    $('#s5').show();
 }
 
-function moveToPreviousStepFromStep5() {
-    $('#s5').hide();
-    $('#s4').show();
+function moveToPreviousStepFromStep4() {
+    $('#s4').hide();
+    $('#s3').show();
 }

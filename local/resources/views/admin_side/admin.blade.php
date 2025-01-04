@@ -1,14 +1,16 @@
+
 @extends('admin_side.side')
 
 @section('content')
 
 <style>
-    .separator-line {
-        border: none;
-        height: 2px;
-        background-color: #1f1f1f;
-        margin: 10px 0;
-    }
+    
+.separator-line {
+    border: none;
+    height: 2px;
+    background-color: #1f1f1f;
+    margin: 10px 0;
+}
 </style>
 <div class="mb-3">
     {{-- <h4>Admin : {{ Auth::user()->name }}</h4> --}}
@@ -23,41 +25,41 @@
                     <div class="col">
                         <div class="p-3 m-1">
                             <h4>Welcome Back, {{ Auth::user()->name }}</h4>
-<p class="mb-0">Admin Dashboard</p>
-</div>
-</div>
-<div class="col-6 align-self-end text-end">
-    <img src="{{ asset('img/poster.jpg') }}" class="img-fluid illustration-img"
-        alt="">
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="col-12 col-md-6 d-flex">
-    <div class="card flex-fill border-0">
-        <div class="card-body py-4">
-            <div class="d-flex align-items-start">
-                <div class="flex-grow-1">
-                    <h4 class="mb-2">
-                        {{ $data['total_users'] }}
-                    </h4>
-                    <p class="mb-2">
-                        Total Users
-                    </p>
-                    <div class="mb-0">
-                        <span class="badge text-success me-2">
-                            {{ $data['percentage_change'] > 0 ? '+' : '' }}{{ $data['percentage_change'] }}%
-                        </span>
-                        <span class="text-muted">
-                            Since Last Month
-                        </span>
+                            <p class="mb-0">Admin Dashboard</p>
+                        </div>
+                    </div>
+                    <div class="col-6 align-self-end text-end">
+                        <img src="{{ asset('img/poster.jpg') }}" class="img-fluid illustration-img"
+                            alt="">
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+    <div class="col-12 col-md-6 d-flex">
+        <div class="card flex-fill border-0">
+            <div class="card-body py-4">
+                <div class="d-flex align-items-start">
+                    <div class="flex-grow-1">
+                        <h4 class="mb-2">
+                            {{ $data['total_users'] }}
+                        </h4>
+                        <p class="mb-2">
+                            Total Users
+                        </p>
+                        <div class="mb-0">
+                            <span class="badge text-success me-2">
+                                {{ $data['percentage_change'] > 0 ? '+' : '' }}{{ $data['percentage_change'] }}%
+                            </span>
+                            <span class="text-muted">
+                                Since Last Month
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div> --}}
 
 {{-- <div class="card border-0">
@@ -79,14 +81,14 @@
                 @foreach($data['users'] as $user)
                 <tr>
                     <td>{{ $user->id }}</td>
-<td>{{ $user->name }}</td>
-<td>{{ $user->email }}</td>
-<td>{{ $user->created_at }}</td>
-</tr>
-@endforeach
-</tbody>
-</table>
-</div>
+                    <td>{{ $user->name }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td>{{ $user->created_at }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 </div> --}}
 
 
@@ -115,7 +117,7 @@
             </div>
         </div>
     </div>
-
+    
     <div class="col-12 col-md-6">
         <div class="d-flex justify-content-between rounded-4 border mb-3 p-4 shadow" style="background-color: #f5f5f5; min-height: 300px;">
             <div>

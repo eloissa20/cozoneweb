@@ -1,33 +1,23 @@
 body {
-    min-height: 100vh;
     width: 100%;
-    background-color: #fbfbf9;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     font-family: sans-serif;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    height: 100vh;
 }
 .login-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    max-width: 430px;
     width: 100%;
-    /* background: #fff;
-    border-radius: 7px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3); */
-
+    max-width: 430px;
     background: rgba( 255, 255, 255, 0.25 );
     box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
     backdrop-filter: blur( 6px );
     -webkit-backdrop-filter: blur( 6px );
     border-radius: 10px;
     border: 1px solid rgba( 255, 255, 255, 0.18 );
+    box-sizing: border-box;
 }
 
 .login-container .registration {
@@ -46,52 +36,41 @@ body {
     display: none;
 }
 
-.login-container .form {
-    padding: 2rem;
+.login-container {
+    width: 100%;
 }
 
-.form header {
+header {
     font-size: 2rem;
     font-weight: 500;
     text-align: center;
-    margin-bottom: 1.5rem;
+    padding: 2rem;
 }
 
-.form input {
+form {
+    width: 100%;
+    padding: 1rem 2rem;
+    padding-bottom: 0;
+    box-sizing: border-box;
+}
+
+form input {
     height: 60px;
     width: 100%;
-    padding: 0 15px;
-    font-size: 17px;
-    margin-bottom: 1.3rem;
+    font-size: 1rem;
+    margin-bottom: 1rem;
     border: 1px solid #ddd;
     border-radius: 6px;
     outline: none;
+    padding: 10px 15px; 
+    box-sizing: border-box; 
 }
 
-.form input:focus {
+form input:focus {
     box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
 }
 
-.form-options {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    /* margin-bottom: 1.3rem; */
-}
-
-.form-options a {
-    font-size: 16px;
-    color: #1b1b1b;
-    text-decoration: none;
-}
-
-.form-options a:hover {
-    text-decoration: underline;
-}
-
-
-
-.form button.btn-primary {
+form button.btn-primary {
     width: 100%;
     height: 60px;
     color: #fff;
@@ -108,13 +87,14 @@ body {
     margin-bottom: .5rem;
 }
 
-.form button.btn-primary:hover {
+form button.btn-primary:hover {
     background: #707070;
 }
 
 .signup {
     font-size: 17px;
     text-align: center;
+    margin-bottom: 1rem;
 }
 
 .signup label {
@@ -124,6 +104,11 @@ body {
 
 .signup label:hover {
     text-decoration: underline;
+}
+
+a {
+    text-decoration: underline;
+    color: #1b1b1b;
 }
 
 /* .loading-screen {

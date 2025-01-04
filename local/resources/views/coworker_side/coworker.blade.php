@@ -230,7 +230,6 @@ input[type="checkbox"] {
     
     <div class="row">
         <div class="rounded-4 border mb-3 p-4 shadow" style="background-color: #ffffff; min-height: 300px;">
- 
             <div class="row mb-3">
                 <div class="col-md-6">
                     <div class="border rounded-4 p-2">
@@ -585,3 +584,4 @@ input[type="checkbox"] {
 
 </script>
 @endsection
+

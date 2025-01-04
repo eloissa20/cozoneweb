@@ -413,14 +413,12 @@ let marker = null;
                     deskFields.forEach(function(field, index) {
                         const duration = field.duration || "N/A";
                         const price = field.price || "N/A";
-                        const hours = field.hours || "N/A";
 
                         $('#desk_fields').append(`
                             <div class="desk-field">
                                 <p><strong>Desk ${index + 1}:</strong></p>
                                 <p>Duration: ${duration}</p>
                                 <p>Price: ${price}</p>
-                                <p>Hours: ${hours}</p>
                             </div>
                         `);
                     });

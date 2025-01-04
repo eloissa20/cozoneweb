@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Cozone | Register</title>
+    <title>Cozone | Register as Cowork</title>
     <link href="{{ asset('assets/register.css') }}" rel="stylesheet">
     <link rel="icon" href="{{ asset('assets/logo.png') }}" type="image/x-icon">
 </head>
@@ -14,8 +14,8 @@
     <div class="register-container">
         <input type="checkbox" id="check">
         <div class="register">
-            <header>Register</header>
-            <form method="POST" action="{{ route('register') }}">
+            <header>Register as Cowork</header>
+            <form method="POST" action="{{ route('register_as_cowork') }}">
                 @csrf
                 @error('name')
                     <span class="invalid-feedback" role="alert">
@@ -53,7 +53,7 @@
                 </button>
             </form>
         </div>
-        <a class="other_button" href="{{ route('register_as_cowork_form') }}">{{ __('Register as Cowork') }}
+        <a class="other_button" href="{{ route('register') }}">{{ __('Register as User') }}
         </a>
         <div class="signup">
             <span class="signup">Already have an account?

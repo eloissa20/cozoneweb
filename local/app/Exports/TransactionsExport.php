@@ -68,3 +68,4 @@ class TransactionsExport implements FromCollection, WithHeadings
         ];
     }
 }
+    

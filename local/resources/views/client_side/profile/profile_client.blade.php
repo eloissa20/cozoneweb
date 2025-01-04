@@ -43,35 +43,40 @@
                                 <label for="contactNo">Contact No.</label>
                                 <input hidden type="text" class="form-control" id="contactNo" name="contact"
                                     placeholder="Contact No." required value="{{ $user->contact }}">
-                                <p class="p-2 fw-bold">{{ $user->contact !== ' ' ? $user->contact : 'Not Set' }}</p>
+                                <p class="p-2 fw-bold">
+                                    {{ !empty($user->contact) && trim($user->contact) !== '' ? $user->contact : 'Not Set' }}
+                                </p>
                             </div>
                             <div class="form-group mb-3">
                                 <label for="birthday">Birthday</label>
                                 <input hidden type="date" class="form-control" id="birthday" required name="birthday"
                                     value="{{ $user->birthday }}">
-                                <p class="p-2 fw-bold">{{ $user->birthday !== ' ' ? $user->birthday : 'Not Set' }}</p>
+                                <p class="p-2 fw-bold">
+                                    {{ !empty($user->birthday) && trim($user->birthday) !== '' ? $user->birthday : 'Not Set' }}
+                                </p>
                             </div>
                             <div class="form-group mb-3">
                                 <label for="gender">Gender</label>
                                 <select hidden class="form-control" id="gender" name="gender">
                                     <option selected disabled>Not Set</option>
-                                    <option hidden value="Male"
-                                        {{ $user->gender === 'Male' ? 'selected' : '' }}>Male
+                                    <option hidden value="Male" {{ $user->gender === 'Male' ? 'selected' : '' }}>Male
                                     </option>
-                                    <option hidden value="Female"
-                                        {{ $user->gender === 'Female' ? 'selected' : '' }}>Female
+                                    <option hidden value="Female" {{ $user->gender === 'Female' ? 'selected' : '' }}>Female
                                     </option>
-                                    <option hidden value="Other"
-                                        {{ $user->gender === 'Other' ? 'selected' : '' }}>Other
+                                    <option hidden value="Other" {{ $user->gender === 'Other' ? 'selected' : '' }}>Other
                                     </option>
                                 </select>
-                                <p class="p-2 fw-bold">{{ $user->gender !== ' ' ? $user->gender : 'Not Set' }}</p>
+                                <p class="p-2 fw-bold">
+                                    {{ !empty($user->gender) && trim($user->gender) !== '' ? $user->gender : 'Not Set' }}
+                                </p>
                             </div>
                             <div class="form-group mb-3">
                                 <label for="address">Address</label>
                                 <input hidden type="text" class="form-control" id="address" name="address"
                                     placeholder="Address" required value="{{ $user->address }}">
-                                <p class="p-2 fw-bold">{{ $user->address !== ' ' ? $user->address : 'Not Set' }}</p>
+                                <p class="p-2 fw-bold">
+                                    {{ !empty($user->address) && trim($user->address) !== '' ? $user->address : 'Not Set' }}
+                                </p>
                             </div>
                             <button hidden id="submit-btn" class="btn btn-dark w-100 mt-2" type="submit">
                                 Save Changes
@@ -108,8 +113,7 @@
                             }
                         });
                     },
-                    function() {
-                    });
+                    function() {});
             }
         });
 
