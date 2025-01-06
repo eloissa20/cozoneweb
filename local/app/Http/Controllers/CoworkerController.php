@@ -923,8 +923,7 @@ class CoworkerController extends Controller
         ]);
 
         DB::table('replies')->insert([
-            'cowork_id' => auth()->id(), // Assuming cowork_id represents the current user
-            'user_id' => auth()->id(),   // Add user_id field
+            'cowork_id' => auth()->id(),
             'review_id' => $reviewId,
             'reply' => $request->input('reply'),
             'created_at' => now(),
@@ -933,7 +932,6 @@ class CoworkerController extends Controller
 
         return back()->with('success', 'Your reply has been posted!');
     }
-
 
     public function aboutUs()
     {
