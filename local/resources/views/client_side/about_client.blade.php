@@ -37,9 +37,8 @@
 <main class="page container">
     <section class="text-center mt-5 d-flex justify-content-center align-items-center gap-5">
         <img src="{{ asset('assets/logo.png') }}" alt="Logo" style="height: 300px; width: 300px;">
-        <p class="ms-5 p-5 h-20 bg-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore
-            magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+        <p class="ms-5 p-5 h-20 bg-light">Smarter way to reserve coworking spaces. Effortlessly find and book the perfect workspace to fit your needs.
+            Experience productivity and flexibility like never before.</p>
     </section>
     <section class="management-team text-center mt-5">
         <h2 style="font-weight: bold;">Management Team</h2>
@@ -74,15 +73,13 @@
                 <div class="col-md-6">
                     <div class="contact-box">
                         <h3 style="font-weight: bold;">Our Mission</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                            labore et dolore magna aliqua.</p>
+                        <p>To transform the coworking landscape by offering innovative reservation systems that streamline workspace access. We aim to create a collaborative environment where flexibility, efficiency, and convenience enable professionals to thrive. By leveraging cutting-edge technology and exceptional service, we empower individuals and teams to connect and succeed in dynamic workspaces.</p>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="contact-box">
                         <h3 style="font-weight: bold;">Our Values</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                            labore et dolore magna aliqua.</p>
+                        <p>We are committed to flexibility, adapting our platform to the evolving needs of modern professionals. At the core of our approach is innovation, utilizing advanced technology to redefine the coworking experience. We prioritize simplicity, offering an intuitive system that streamlines bookings while fostering a collaborative, creative community. Sustainability drives us, promoting shared workspaces as an eco-friendly solution for the future of work.</p>
                     </div>
                 </div>
             </div>
