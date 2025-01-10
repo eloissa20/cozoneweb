@@ -177,7 +177,7 @@
                                     @foreach ($pricing as $price)
                                         <tr>
                                             <td>
-                                                {{ $price['hours'] }}
+                                                {{ $price['duration'] }}
                                             </td>
                                             <td>
                                                 &#8369;{{ $price['price'] }}
@@ -327,62 +327,69 @@
                     <div class="card-header">Your Reservation Details</div>
                     <div class="card-body">
                         @if (Auth::check())
-                            <form method="POST"
-                                action="{{ route('client_side.details.reserve', ['id' => $space->id]) }}"
-                                onsubmit="return validateForm()">
+                            <form method="POST" action="{{ route('client_side.details.reserve', ['id' => $space->id]) }}" onsubmit="return validateForm()">
                                 @csrf
+
+                                <!-- Date Selection -->
                                 <div class="mb-3">
-                                    <label for="date" class="form-label">Select Date</label>
-                                    <input type="date" class="form-control" id="reservation_date"
-                                        name="reservation_date" required>
+                                    <label for="reservation_date" class="form-label">Select Date</label>
+                                    <input type="date" class="form-control" id="reservation_date" name="reservation_date" required>
                                     <div id="date_error" class="text-danger" style="display: none;"></div>
                                 </div>
+
+                                <!-- Hours Selection -->
                                 <div class="mb-3">
                                     <label for="hours1" class="form-label">Full Hours</label>
-                                    <select class="form-control sync-select" id="hours1" name="hours" required>
-                                        <option disabled>Select</option>
+                                    <select class="form-control sync-select" id="hours1" name="hours" required onchange="updatePrice()">
+                                        <option disabled selected>Select</option>
                                         @foreach ($pricing as $price)
-                                            <option value="{{ $price->hours }}">{{ $price->hours }}</option>
+                                            <option value="{{ $price['duration'] }}" data-price="{{ $price['price'] }}">
+                                                {{ $price['duration'] }} hours
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="mb-3" hidden>
-                                    <label for="hours2" class="form-label">Full Hours</label>
-                                    <select class="form-control sync-select" id="hours2" name="price" required>
-                                        <option disabled>Select</option>
-                                        @foreach ($pricing as $price)
-                                            <option value="{{ $price->price }}">{{ $price->price }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+
+                                <!-- Hidden Price Field -->
+                                <input type="hidden" id="price" name="price" value="">
+
+                                <!-- Guests Selection -->
                                 <div class="mb-3">
                                     <label for="guests" class="form-label">Number of Guests</label>
-                                    <input type="number" class="form-control" id="guests" name="guests"
-                                        value="1" min="1" required>
+                                    <input type="number" class="form-control" id="guests" name="guests" value="1" min="1" required>
                                 </div>
+
+                                <!-- Full Name -->
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Full Name</label>
-                                    <input type="text" class="form-control" id="name" name="name"
-                                        value="{{ auth()->user()->name }}" required>
+                                    <input type="text" class="form-control" id="name" name="name" value="{{ auth()->user()->name }}" required>
                                 </div>
+
+                                <!-- Email Address -->
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email Address</label>
-                                    <input type="email" class="form-control" id="email" name="email"
-                                        value="{{ auth()->user()->email }}" required>
+                                    <input type="email" class="form-control" id="email" name="email" value="{{ auth()->user()->email }}" required>
                                 </div>
+
+                                <!-- Company Name -->
                                 <div class="mb-3">
                                     <label for="company" class="form-label">Company Name</label>
                                     <input type="text" class="form-control" id="company" name="company" required>
                                 </div>
+
+                                <!-- Contact Number -->
                                 <div class="mb-3">
                                     <label for="contact" class="form-label">Contact Number</label>
-                                    <input type="text" class="form-control" id="contact" name="contact"
-                                        value="{{ auth()->user()->contact }}" required>
+                                    <input type="text" class="form-control" id="contact" name="contact" value="{{ auth()->user()->contact }}" required>
                                 </div>
+
+                                <!-- Estimated Arrival Time -->
                                 <div class="mb-3">
                                     <label for="arrival" class="form-label">Estimated Arrival Time</label>
                                     <input type="time" class="form-control" id="arrival" name="arrival" required>
                                 </div>
+
+                                <!-- Submit Button -->
                                 <button type="submit" class="btn btn-primary">Pay Now</button>
                             </form>
                         @else
@@ -390,9 +397,9 @@
                                 Login to reserve a space
                             </a>
                         @endif
-
                     </div>
                 </div>
+            </div>
                 <div class="card mb-4">
                     <div class="card-header">Cowork Images</div>
                     <div class="card-body">
@@ -461,37 +468,47 @@
         // Create a mapping of hours to price from the PHP data
         const hoursToPrice = {
             @foreach ($pricing as $price)
-                "{{ $price->hours }}": "{{ $price->price }}",
+                "{{ $price['duration'] }}": "{{ $price['price'] }}",
             @endforeach
         };
 
         const priceToHours = {
             @foreach ($pricing as $price)
-                "{{ $price->price }}": "{{ $price->hours }}",
+                "{{ $price['price'] }}": "{{ $price['duration'] }}",
             @endforeach
         };
 
         const hoursSelect = document.getElementById('hours1');
-        const priceSelect = document.getElementById('hours2');
+        const priceField = document.getElementById('price'); // Hidden input for price
 
-        // Sync hours1 with hours2
+        // Sync hours selection with the corresponding price
         hoursSelect.addEventListener('change', (event) => {
             const selectedHours = event.target.value;
             const correspondingPrice = hoursToPrice[selectedHours];
             if (correspondingPrice) {
-                priceSelect.value = correspondingPrice;
+                priceField.value = correspondingPrice; // Update hidden price field
             }
         });
 
-        // Sync hours2 with hours1
-        priceSelect.addEventListener('change', (event) => {
-            const selectedPrice = event.target.value;
-            const correspondingHours = priceToHours[selectedPrice];
-            if (correspondingHours) {
-                hoursSelect.value = correspondingHours;
+        // Validate form submission
+        function validateForm() {
+            const dateField = document.getElementById('reservation_date');
+            const guestsField = document.getElementById('guests');
+
+            if (!dateField.value) {
+                alert('Please select a reservation date.');
+                return false;
             }
-        });
+
+            if (guestsField.value <= 0) {
+                alert('Please enter a valid number of guests.');
+                return false;
+            }
+
+            return true;
+        }
     </script>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

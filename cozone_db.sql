@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 10, 2024 at 02:01 PM
--- Server version: 10.4.28-MariaDB
+-- Generation Time: Jan 08, 2025 at 08:22 AM
+-- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -54,7 +54,7 @@ CREATE TABLE `desk_fields` (
   `space_id` int(11) NOT NULL,
   `duration` varchar(255) NOT NULL,
   `price` decimal(8,2) NOT NULL,
-  `hours` varchar(255) NOT NULL,
+  `hours` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -64,11 +64,13 @@ CREATE TABLE `desk_fields` (
 --
 
 INSERT INTO `desk_fields` (`id`, `space_id`, `duration`, `price`, `hours`, `created_at`, `updated_at`) VALUES
-(1, 1, '1 hour - 2 hours', 3000.00, '3', '2024-12-02 16:15:01', '2024-12-02 21:30:32'),
-(31, 2, '1 hour - 2 hours', 2000.00, '1', '2024-12-02 22:15:03', '2024-12-02 22:15:03'),
-(32, 2, '3 hours - 4 hours', 5000.00, '2', '2024-12-02 22:15:03', '2024-12-02 22:15:03'),
-(35, 24, '3 hours - 4 hours', 23.00, '3', '2024-12-03 18:43:14', '2024-12-03 18:43:14'),
-(36, 24, '1 hour - 2 hours', 23.00, '3', '2024-12-03 18:43:24', '2024-12-03 18:43:24');
+(38, 27, '1 hour - 2 hours', 80.00, NULL, '2025-01-07 22:43:54', '2025-01-07 22:43:54'),
+(39, 28, '1 hour - 2 hours', 80.00, NULL, '2025-01-07 23:01:02', '2025-01-07 23:01:02'),
+(40, 28, '3 hours - 5 hours', 130.00, NULL, '2025-01-07 23:01:21', '2025-01-07 23:01:21'),
+(41, 28, '6 hours - 8 hours', 180.00, NULL, '2025-01-07 23:01:37', '2025-01-07 23:01:37'),
+(42, 27, '3 hours - 5 hours', 130.00, NULL, '2025-01-07 23:02:10', '2025-01-07 23:02:10'),
+(43, 27, '6 hours - 8 hours', 180.00, NULL, '2025-01-07 23:02:15', '2025-01-07 23:02:15'),
+(44, 27, '1 hour', 80.00, NULL, '2025-01-07 23:26:04', '2025-01-07 23:26:04');
 
 -- --------------------------------------------------------
 
@@ -173,25 +175,8 @@ CREATE TABLE `list_space_tbl` (
 --
 
 INSERT INTO `list_space_tbl` (`id`, `role`, `coworking_space_name`, `coworking_space_address`, `space_name`, `type_of_space`, `description`, `opening_date`, `available_days_from`, `available_days_to`, `exceptions`, `operating_hours_from`, `operating_hours_to`, `email`, `phone`, `instagram`, `facebook`, `contact_no`, `basics`, `seats`, `equipment`, `facilities`, `accessibility`, `perks`, `location`, `telephone`, `country`, `unit`, `postal`, `city`, `latitude`, `longitude`, `tables`, `capacity`, `meeting_rooms`, `virtual_offices`, `measurement_unit`, `size`, `header_image`, `additional_images`, `pay_online`, `credit_cards`, `eWallet`, `desk_fields`, `meeting_fields`, `virtual_service`, `membership`, `membership_duration`, `membership_price`, `short_term`, `free_pass`, `short_term_details`, `free_pass_details`, `averageRating`, `price`, `user_id`, `created_at`, `updated_at`) VALUES
-(1, 'Owner', 'Cozone Branch 1', 'Manila', 'test', 'coworking', 'test', '2024-10-04', '2024-10-04', NULL, NULL, '00:00:00', NULL, 'example@example.com', 'test', 'test', 'test', 'test', '[\"Air Conditioned\"]', '[\"Couches\",\"Beanbag\"]', '[\"Printer\",\"Projector\"]', '[]', '[]', '[]', 'test', 'test', 'test', 'test', 'test', 'test', '14.796127603627053', '-239.01855660865183', 1, 1, 1, 1, 'feet', 1, 'uploads/header/1727936422.png', '[\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 8.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 7.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 6.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 5.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 4.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 3.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 2.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 1.png\"]', 'yes', NULL, 'yes', '[\"{\\\"duration\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\",\"{\\\"duration\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\"]', '[\"{\\\"numPeople\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\",\"{\\\"numPeople\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\"]', 'yes', 'no', 1, 1, 'enable', 'disable', 'test', NULL, 3.00, NULL, 2, '2024-12-04 14:46:43', '2024-12-08 13:34:19'),
-(2, 'Owner', 'Cozone branch 2', 'Quezon City', 'test', 'coworking', 'test', '2024-10-05', '2024-10-06', NULL, NULL, '00:00:00', NULL, 'coworker@example.com', '696969', 'test', 'test', '09611915869', '[]', '[\"Beanbag\"]', '[\"Printer\"]', '[\"Kitchen\"]', '[\"Parking\"]', '[\"Free Drinking Water\"]', 'Manila', '696969', 'Philippines', 'Unit69', '6969', 'Etivac', '14.638814970444251', '-238.9622497558594', 2, 3, 4, 5, 'meters', 10, 'uploads/header/1728009958.png', '[\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 8.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 7.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 6.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 5.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 4.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 3.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 2.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 1.png\"]', 'yes', NULL, 'yes', '[\"{\\\"duration\\\":\\\"1\\\",\\\"price\\\":\\\"100\\\",\\\"hours\\\":\\\"2\\\"}\"]', '[\"{\\\"numPeople\\\":\\\"10\\\",\\\"price\\\":\\\"1500\\\",\\\"hours\\\":\\\"1\\\"}\"]', 'yes', 'no', 2, 1500, 'enable', 'disable', 'testing lang', NULL, 0.00, NULL, 2, '2024-12-04 14:46:43', '2024-12-04 14:46:43'),
-(5, 'Owner', 'CoconutZone', 'Manila', 'CoconutZone', 'coworking', 'Space', '2024-10-20', 'Monday', 'Friday', NULL, '00:00:00', '00:00:00', 'coworker@example.com', '09465465465', 'coworker@example.com', 'coworker@example.com', '09465465465', '[\"Wifi\"]', '[\"Couches\",\"Modular Seating\",\"Lounge Chairs\"]', '[\"Printer\"]', '[\"Kitchen\"]', '[\"Parking\"]', '[\"Free Drinking Water\"]', 'Manila', '094654654654', 'Philippines', '69', '6969', 'Manila', '14.820969310079446', '121.127424265625', 1, 69, 1, 1, 'meters', 25, 'uploads/header/1731573248.jpg', '[\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 8.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 7.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 6.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 5.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 4.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 3.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 2.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 1.png\"]', 'yes', NULL, 'yes', '[\"{\\\"duration\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\"]', '[\"{\\\"duration\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\"][\"{\\\"numPeople\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\"]', 'yes', 'no', 1, 2500, 'enable', 'disable', 'enable', NULL, 0.00, NULL, 2, '2024-12-04 14:46:43', '2024-12-04 14:46:43'),
-(7, 'Owner', 'Cozone', 'Manila', 'Cozone', 'Coworking', 'this is a test', '2024-10-18', '1', '2', 'tuesday', '00:00:00', '00:00:00', 'coworker@example.com', '123123', 'coworker@example.com', 'coworker@example.com', '123123', '\"[\\\"Wifi\\\"]\"', '\"[]\"', '\"[]\"', '\"[]\"', '\"[\\\"Parking\\\",\\\"Restrooms\\\"]\"', '\"[\\\"Snacks\\/Drinks Available for Purchase\\\"]\"', 'Manila', '12345678', 'Philippines', '69floor', '6969', 'Manila', '14.595406584858075', '120.98955717160743', 1, 1, 0, 0, 'feet', 1, 'uploads/header/1729132421.jpg', NULL, 'yes', 'undefined', 'yes', '[\"{\\\"duration\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\"]', '[\"{\\\"numPeople\\\":\\\"11\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\"]', 'yes', 'no', 1, 1, 'enable', 'disable', 'enable', NULL, 0.00, NULL, 2, '2024-12-04 14:46:43', '2024-12-04 14:46:43'),
-(8, 'Owner', 'Image', 'Image', 'test', 'Coworking', 'test', '2024-10-22', 'Monday', 'Friday', 'tuesday', '00:00:00', '00:00:00', 'coworker@example.com', '123456', 'coworker@example.com', 'coworker@example.com', '123456', '\"[\\\"Wifi\\\"]\"', '\"[\\\"Beanbag\\\"]\"', '\"[\\\"Printer\\\"]\"', '\"[\\\"Shower Areas\\\"]\"', '\"[\\\"Restrooms\\\"]\"', '\"[]\"', 'Caloocan', '123123', 'Philippines', '69th', '6969', 'Caloocan', '14.91122735139868', '121.039533640625', 1, 1, 1, 1, 'feet', 1, 'uploads/header/1729478562.png', '[]', 'yes', 'undefined', 'yes', '[\"{\\\"duration\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\"]', '[\"{\\\"numPeople\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\"]', 'yes', 'no', 1, 1, 'enable', 'disable', 'enable', NULL, 0.00, NULL, 2, '2024-12-04 14:46:43', '2024-12-04 14:46:43'),
-(9, 'Owner', 'Cozone', 'Manila', 'Cozone', 'Coworking', 'asadasdasdasd', '2024-10-22', 'Monday', 'Friday', 'undefined', '00:00:00', '00:00:00', 'coworker@example.com', '123456', 'coworker@example.com', 'coworker@example.com', '132456', '\"[\\\"Air Conditioned\\\"]\"', '\"[\\\"Beanbag\\\"]\"', '\"[]\"', '\"[]\"', '\"[]\"', '\"[]\"', 'Manila', '1213456', 'Philippines', '69', '6969', 'Pasig', '14.601524837407839', '121.04873657226562', 1, 1, 1, 1, 'feet', 1, 'uploads/header/1729479203.png', '[\"uploads\\/additional_images\\/1729479203_MANAGE LIST SPACE - 8.png\",\"uploads\\/additional_images\\/1729479203_MANAGE LIST SPACE - 7.png\",\"uploads\\/additional_images\\/1729479203_MANAGE LIST SPACE - 6.png\",\"uploads\\/additional_images\\/1729479203_MANAGE LIST SPACE - 5.png\",\"uploads\\/additional_images\\/1729479203_MANAGE LIST SPACE - 4.png\",\"uploads\\/additional_images\\/1729479203_MANAGE LIST SPACE - 3.png\",\"uploads\\/additional_images\\/1729479203_MANAGE LIST SPACE - 2.png\",\"uploads\\/additional_images\\/1729479203_MANAGE LIST SPACE - 1.png\"]', 'yes', 'undefined', 'yes', '[\"{\\\"duration\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\"]', '[\"{\\\"numPeople\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\"]', 'yes', 'no', 1, 1, 'enable', 'enable', 'Enable', NULL, 0.00, NULL, 2, '2024-12-04 14:46:43', '2024-12-04 14:46:43'),
-(10, 'Owner', 'test', 'test', 'test', 'Coworking', 'test', '2024-10-23', 'monday', 'friday', 'tuesday', '00:00:00', '00:00:00', 'coworker@example.com', '123', 'coworker@example.com', 'coworker@example.com', '132', '\"[\\\"Wifi\\\"]\"', '\"[\\\"Couches\\\"]\"', '\"[\\\"Printer\\\",\\\"Computers\\\"]\"', '\"[]\"', '\"[]\"', '\"[]\"', 'Manila', '123132', 'Philippines', '69', '12345', 'etivac', '14.730673630905592', '121.00657465625', 1, 1, 1, 1, 'feet', 1, 'uploads/header/1729479678.png', '[\"uploads\\/additional_images\\/1729479678_MANAGE LIST SPACE - 8.png\",\"uploads\\/additional_images\\/1729479678_MANAGE LIST SPACE - 7.png\",\"uploads\\/additional_images\\/1729479678_MANAGE LIST SPACE - 6.png\",\"uploads\\/additional_images\\/1729479678_MANAGE LIST SPACE - 5.png\",\"uploads\\/additional_images\\/1729479678_MANAGE LIST SPACE - 4.png\",\"uploads\\/additional_images\\/1729479678_MANAGE LIST SPACE - 3.png\",\"uploads\\/additional_images\\/1729479678_MANAGE LIST SPACE - 2.png\",\"uploads\\/additional_images\\/1729479678_MANAGE LIST SPACE - 1.png\"]', 'yes', '', 'yes', '[\"{\\\"duration\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\"]', '[\"{\\\"numPeople\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\"]', 'yes', 'no', 1, 1, 'enable', 'enable', 'Enable', NULL, 0.00, NULL, 2, '2024-12-04 14:46:43', '2024-12-04 14:46:43'),
-(11, 'Owner', 'coworker', 'Manila', 'Testing Cozone Price', 'coworking', 'asdasdasdasd', '2024-11-12', 'Monday', 'Sunday', 'tuesday', '00:00:00', '00:00:00', 'coworker@example.com', '131313213', 'coworker@example.com', 'coworker@example.com', '46546546546546546', '[\"Wifi\"]', '[\"Couches\"]', '[]', '[]', '[]', '[]', 'Taguig', '32131313132', 'Philippines', '69', '6969', 'Manila', '14.523383632809347', '121.0560131328125', 1, 1, 1, 1, 'feet', 1, 'uploads/header/1731562606.png', '[\"uploads\\/additional_images\\/1731562697_MANAGE LIST SPACE - 8.png\",\"uploads\\/additional_images\\/1731562697_MANAGE LIST SPACE - 7.png\",\"uploads\\/additional_images\\/1731562697_MANAGE LIST SPACE - 6.png\",\"uploads\\/additional_images\\/1731562697_MANAGE LIST SPACE - 5.png\",\"uploads\\/additional_images\\/1731562697_MANAGE LIST SPACE - 4.png\",\"uploads\\/additional_images\\/1731562697_MANAGE LIST SPACE - 3.png\",\"uploads\\/additional_images\\/1731562697_MANAGE LIST SPACE - 2.png\",\"uploads\\/additional_images\\/1731562697_MANAGE LIST SPACE - 1.png\"]', 'yes', 'yes', 'yes', '[\"{\\\"duration\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\"]', '[\"{\\\"numPeople\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\"]', 'yes', 'no', 1, 1, 'enable', 'disable', 'edit', '1', 0.00, NULL, 2, '2024-12-04 14:46:43', '2024-12-04 14:46:43'),
-(12, 'Admin', 'EDIT', 'desk and meets', 'EDIT', 'sample1', 'edit', '2024-11-14', 'monday', 'friday', 'monday', '00:00:00', '00:00:00', 'coworker@example.com', '123123', 'coworker@example.com', 'coworker@example.com', '123123123', '[\"Wifi\"]', '[\"Beanbag\",\"Ergonomic Chairs\"]', '[\"Printer\",\"Projector\"]', '[\"Kitchen\",\"Personal Lockers\"]', '[]', '[\"Free Drinking Water\",\"Free Snacks\"]', 'Manila', '123123', 'Philippines', '1231', '123123', 'manila', '14.509144353358405', '-239.00756835937503', 1, 1, 1, 1, 'inches', 1, 'uploads/header/1730860862.png', '[\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 8.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 7.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 6.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 5.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 4.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 3.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 2.png\",\"uploads\\/additional_images\\/1730860862_MANAGE LIST SPACE - 1.png\"]', 'yes', 'no', 'yes', '[\"{\\\"duration\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\",\"{\\\"duration\\\":\\\"2\\\",\\\"price\\\":\\\"2\\\",\\\"hours\\\":\\\"2\\\"}\",\"{\\\"duration\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\",\"{\\\"duration\\\":\\\"2\\\",\\\"price\\\":\\\"2\\\",\\\"hours\\\":\\\"2\\\"}\"]', '[\"{\\\"numPeople\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\",\"{\\\"numPeople\\\":\\\"2\\\",\\\"price\\\":\\\"2\\\",\\\"hours\\\":\\\"2\\\"}\"]', 'yes', 'no', 1, 2, 'enable', NULL, 'Edit test', NULL, 0.00, NULL, 2, '2024-12-04 14:46:43', '2024-12-04 14:46:43'),
-(13, 'Owner', 'jsonencoding', 'kahit saan', 'jsonencode', 'coworking', 'jsonencode', '2024-11-16', 'monday', 'friday', 'tuesday', '00:00:00', '00:00:00', 'coworker@example.com', '13213213', 'coworker@example.com', 'coworker@example.com', '123132132', '[\"Wifi\",\"Air Conditioned\",\"Power Backup\"]', '[\"Couches\",\"Beanbag\",\"Ergonomic Chairs\"]', '[\"Printer\",\"Projector\",\"Whiteboards\"]', '[\"Kitchen\",\"Personal Lockers\"]', '[\"Parking\",\"Restrooms\"]', '[\"Free Drinking Water\",\"Free Snacks\",\"Vending Machine\"]', 'manila', '123123', 'manila', '123', '123', 'manila', '14.778481901484252', '121.0889721171875', 2, 2, 2, 2, 'feet', 1, 'uploads/header/1731641043.png', '[\"uploads\\/additional_images\\/1731641043_MANAGE LIST SPACE - 8.png\",\"uploads\\/additional_images\\/1731641043_MANAGE LIST SPACE - 7.png\",\"uploads\\/additional_images\\/1731641043_MANAGE LIST SPACE - 6.png\",\"uploads\\/additional_images\\/1731641043_MANAGE LIST SPACE - 5.png\",\"uploads\\/additional_images\\/1731641043_MANAGE LIST SPACE - 4.png\",\"uploads\\/additional_images\\/1731641043_MANAGE LIST SPACE - 3.png\",\"uploads\\/additional_images\\/1731641043_MANAGE LIST SPACE - 2.png\",\"uploads\\/additional_images\\/1731641043_MANAGE LIST SPACE - 1.png\"]', 'yes', 'no', 'no', '[\"{\\\"duration\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\"]', '[\"{\\\"numPeople\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\"]', 'yes', 'yes', 1, 1, 'enable', 'disable', 'asdasd', NULL, 0.00, NULL, 2, '2024-12-04 14:46:43', '2024-12-04 14:46:43'),
-(14, 'Owner', 'Cozone Cafe', 'Muñoz Nueva Ecija', 'Cozone Cafe', 'Coworking', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', '2024-12-04', 'Monday', 'Friday', 'tuesday', '00:00:00', '00:00:00', 'coworker@example.com', '8700', 'coworker@example.com', 'coworker@example.com', '09265481369', '\"[\\\"Wifi\\\",\\\"Air Conditioned\\\"]\"', '\"[\\\"Couches\\\",\\\"Beanbag\\\",\\\"Counter Height Bar Stools\\\"]\"', '\"[\\\"Projector\\\",\\\"Laptops\\\",\\\"Sockets\\\"]\"', '\"[\\\"Kitchen\\\",\\\"Shower Areas\\\",\\\"Nap Room\\\"]\"', '\"[\\\"Parking\\\",\\\"Restrooms\\\",\\\"Accessible Workstations\\\"]\"', '\"[\\\"Free Drinking Water\\\",\\\"Free Snacks\\\",\\\"Snacks\\/Drinks Available for Purchase\\\",\\\"Free Coffee\\\",\\\"Free Tea\\\"]\"', 'Hatdog Street', '8700', 'Philippines', 'ground floor', '3119', 'Science City of Muñoz', '15.707784051413723', '120.90441397220417', 2, 10, 2, 0, 'meters', 10, 'uploads/header/1733122790.jpg', '[\"uploads\\/additional_images\\/1733122790_MANAGE LIST SPACE - 6.png\",\"uploads\\/additional_images\\/1733122790_MANAGE LIST SPACE - 5.png\",\"uploads\\/additional_images\\/1733122790_MANAGE LIST SPACE - 4.png\",\"uploads\\/additional_images\\/1733122790_MANAGE LIST SPACE - 3.png\",\"uploads\\/additional_images\\/1733122790_MANAGE LIST SPACE - 2.png\",\"uploads\\/additional_images\\/1733122790_MANAGE LIST SPACE - 1.png\"]', 'yes', 'yes', 'yes', '[\"{\\\"duration\\\":\\\"1\\\",\\\"price\\\":\\\"1000\\\",\\\"hours\\\":\\\"1\\\"}\"]', '[\"{\\\"numPeople\\\":\\\"10\\\",\\\"price\\\":\\\"1500\\\",\\\"hours\\\":\\\"1\\\"}\"]', 'yes', 'yes', 5, 10000, 'enable', 'enable', 'yes oh no yes', 'basta libre', 0.00, NULL, 2, '2024-12-04 14:46:43', '2024-12-04 14:46:43'),
-(15, 'Owner', 'fields', 'fields', 'fields', 'Coworking', 'fields', '2024-12-17', 'monday', 'friday', 'tuesday', '00:00:00', '00:00:00', 'coworker@example.com', '123213', 'fields', 'fields', '123123', '\"[\\\"Air Conditioned\\\"]\"', '\"[\\\"Lounge Chairs\\\"]\"', '\"[]\"', '\"[]\"', '\"[]\"', '\"[]\"', 'fields', '123123', 'fields', '12', '123123', 'fields', '14.868757680698113', '121.09446528125', 2, 20, 2, 2, 'feet', 25, 'uploads/header/1733125343.jpg', '[\"uploads\\/additional_images\\/1733125343_MANAGE LIST SPACE - 6.png\",\"uploads\\/additional_images\\/1733125343_MANAGE LIST SPACE - 5.png\",\"uploads\\/additional_images\\/1733125343_MANAGE LIST SPACE - 4.png\",\"uploads\\/additional_images\\/1733125343_MANAGE LIST SPACE - 3.png\",\"uploads\\/additional_images\\/1733125343_MANAGE LIST SPACE - 2.png\",\"uploads\\/additional_images\\/1733125343_MANAGE LIST SPACE - 1.png\"]', 'no', 'no', 'no', '[\"{\\\"duration\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\",\"{\\\"duration\\\":\\\"2\\\",\\\"price\\\":\\\"2\\\",\\\"hours\\\":\\\"2\\\"}\",\"{\\\"duration\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\",\"{\\\"duration\\\":\\\"2\\\",\\\"price\\\":\\\"2\\\",\\\"hours\\\":\\\"2\\\"}\"]', '[\"{\\\"numPeople\\\":\\\"1\\\",\\\"price\\\":\\\"1\\\",\\\"hours\\\":\\\"1\\\"}\"]', 'no', 'no', 1, 2, 'disable', 'disable', NULL, NULL, 0.00, NULL, 2, '2024-12-04 14:46:43', '2024-12-04 14:46:43'),
-(16, 'Owner', 'test', 'test', 'test', 'Coworking', 'asdasdasd', '2024-12-11', 'Monday', 'Friday', 'undefined', '00:00:00', '00:00:00', 'kennethbasinga12@yahoo.com', '123123', 'tests', 'test', '123123', '\"[\\\"Air Conditioned\\\"]\"', '\"[]\"', '\"[]\"', '\"[]\"', '\"[]\"', '\"[]\"', '123123', '123123', '123123', '123123', '123123', 'adasd', '14.84220989009698', '121.0120678203125', 1, 2, 3, 4, 'feet', 23, 'uploads/header/1733125637.jpg', '[\"uploads\\/additional_images\\/1733125637_MANAGE LIST SPACE - 6.png\",\"uploads\\/additional_images\\/1733125637_MANAGE LIST SPACE - 5.png\",\"uploads\\/additional_images\\/1733125637_MANAGE LIST SPACE - 4.png\",\"uploads\\/additional_images\\/1733125637_MANAGE LIST SPACE - 3.png\",\"uploads\\/additional_images\\/1733125637_MANAGE LIST SPACE - 2.png\",\"uploads\\/additional_images\\/1733125637_MANAGE LIST SPACE - 1.png\"]', 'no', 'no', 'no', 'null', 'null', 'yes', 'yes', 123, 123, 'disable', 'disable', NULL, NULL, 0.00, NULL, 2, '2024-12-04 14:46:43', '2024-12-04 14:46:43'),
-(17, 'Owner', 'test', 'test', 'test', 'Coworking', 'test', '2024-12-17', 'monday', 'friday', 'tuesday', '00:00:00', '00:00:00', 'coworker@example.com', '123123', 'test', 'test', '123123', '\"[\\\"Wifi\\\"]\"', '\"[\\\"Couches\\\"]\"', '\"[]\"', '\"[]\"', '\"[]\"', '\"[]\"', 'test', '123', 'test', '123', '123', 'test', '14.815658839381713', '120.984602', 2, 2, 2, 1, 'meters', 10, 'uploads/header/1733126516.jpg', '[\"uploads\\/additional_images\\/1733126516_MANAGE LIST SPACE - 6.png\",\"uploads\\/additional_images\\/1733126516_MANAGE LIST SPACE - 5.png\",\"uploads\\/additional_images\\/1733126516_MANAGE LIST SPACE - 4.png\",\"uploads\\/additional_images\\/1733126516_MANAGE LIST SPACE - 3.png\",\"uploads\\/additional_images\\/1733126516_MANAGE LIST SPACE - 2.png\",\"uploads\\/additional_images\\/1733126516_MANAGE LIST SPACE - 1.png\"]', 'no', 'no', 'no', '[]', '[]', 'no', 'no', 123, 123, 'disable', 'disable', 'asd', 'asd', 0.00, NULL, 2, '2024-12-04 14:46:43', '2024-12-04 14:46:43'),
-(18, 'Owner', 'test', 'test', 'test', 'Coworking', 'test', '2024-12-11', 'monday', 'friday', 'tuesday', '00:00:00', '00:00:00', 'coworker@example.com', '123', 'test', 'test', '123', '\"[\\\"Air Conditioned\\\"]\"', '\"[]\"', '\"[]\"', '\"[]\"', '\"[]\"', '\"[]\"', 'test', 'test', 'test', 'test', 'test', 'test', '14.805037507451178', '120.9681225078125', 2, 2, 2, 1, 'meters', 123, 'uploads/header/1733127296.jpg', '[\"uploads\\/additional_images\\/1733127296_MANAGE LIST SPACE - 6.png\",\"uploads\\/additional_images\\/1733127296_MANAGE LIST SPACE - 5.png\",\"uploads\\/additional_images\\/1733127296_MANAGE LIST SPACE - 4.png\",\"uploads\\/additional_images\\/1733127296_MANAGE LIST SPACE - 3.png\",\"uploads\\/additional_images\\/1733127296_MANAGE LIST SPACE - 2.png\",\"uploads\\/additional_images\\/1733127296_MANAGE LIST SPACE - 1.png\"]', 'no', 'no', 'no', '[]', '[]', 'no', 'no', 123, 123, 'enable', 'enable', '123', '123', 0.00, NULL, 2, '2024-12-04 14:46:43', '2024-12-04 14:46:43'),
-(19, 'Owner', 'test', 'test', 'test', 'Coworking', 'test', '2024-12-12', 'monday', 'friday', 'tuesday', '00:00:00', '00:00:00', 'coworker@example.com', '123123', 'coworker@example.com', 'coworker@example.com', '123123', '\"[\\\"Air Conditioned\\\"]\"', '\"[\\\"Couches\\\"]\"', '\"[]\"', '\"[]\"', '\"[]\"', '\"[]\"', 'asdasd', '1', 'test', '1', '1', 'asdasd', '14.773170390434956', '121.0010814921875', 2, 2, 2, 1, 'meters', 123, 'uploads/header/1733127831.jpg', '[\"uploads\\/additional_images\\/1733127831_MANAGE LIST SPACE - 6.png\",\"uploads\\/additional_images\\/1733127831_MANAGE LIST SPACE - 5.png\",\"uploads\\/additional_images\\/1733127831_MANAGE LIST SPACE - 4.png\",\"uploads\\/additional_images\\/1733127831_MANAGE LIST SPACE - 3.png\",\"uploads\\/additional_images\\/1733127831_MANAGE LIST SPACE - 2.png\",\"uploads\\/additional_images\\/1733127831_MANAGE LIST SPACE - 1.png\"]', 'no', 'no', 'no', '[]', '[]', 'no', 'no', 1, 1, 'disable', 'disable', '1', '1', 0.00, NULL, 2, '2024-12-04 14:46:43', '2024-12-04 14:46:43'),
-(20, 'Owner', 'asdasd', 'Purok Maligaya 2', 'asdasd', 'Coworking', 'asdasd', '2024-12-18', 'asdad', 'asdasd', 'tuesday', '00:00:00', '00:00:00', 'coworker@example.com', '123', 'asd', 'asd', '123', '\"[\\\"Air Conditioned\\\"]\"', '\"[\\\"Couches\\\"]\"', '\"[]\"', '\"[]\"', '\"[]\"', '\"[]\"', 'asdasd', '123', 'asdasd', '123123', '123', 'asdasdasd', '14.91122735139868', '121.00657465625', 2, 2, 2, 1, 'meters', 1, 'uploads/header/1733128017.jpg', '[\"uploads\\/additional_images\\/1733128017_MANAGE LIST SPACE - 6.png\",\"uploads\\/additional_images\\/1733128017_MANAGE LIST SPACE - 5.png\",\"uploads\\/additional_images\\/1733128017_MANAGE LIST SPACE - 4.png\",\"uploads\\/additional_images\\/1733128017_MANAGE LIST SPACE - 3.png\",\"uploads\\/additional_images\\/1733128017_MANAGE LIST SPACE - 2.png\",\"uploads\\/additional_images\\/1733128017_MANAGE LIST SPACE - 1.png\"]', 'no', 'no', 'no', 'null', 'null', 'no', 'no', 123, 123, 'disable', 'disable', '23', '123123', 0.00, NULL, 2, '2024-12-04 14:46:43', '2024-12-04 14:46:43'),
-(21, 'Owner', 'test', 'test', 'test', 'Coworking', 'test', '2024-12-12', 'monday', 'friday', 'tuesday', '00:00:00', '00:00:00', 'coworker@example.com', '123', 'test', 'test', '123', '\"[\\\"Air Conditioned\\\"]\"', '\"[]\"', '\"[]\"', '\"[]\"', '\"[]\"', '\"[]\"', 'test', '123', 'test', '123', '123', 'test', '14.762546978820195', '121.05051996875', 2, 2, 2, 1, 'meters', 2, 'uploads/header/1733129058.jpg', '[]', 'no', 'no', 'no', 'null', 'null', 'yes', 'yes', 123, 123, 'disable', 'disable', '123', '123', 0.00, NULL, 2, '2024-12-04 14:46:43', '2024-12-04 14:46:43'),
-(24, 'Owner', 'maptest', 'ggs', 'testtsts', 'Coworking', 'asdasd', '2024-12-13', 'monday', 'friday', 'tuesday', '00:00:00', '00:00:00', 'coworker@example.com', '123123', 'coworker@example.com', 'coworker@example.com', '123123', '\"[\\\"Air Conditioned\\\"]\"', '\"[\\\"Couches\\\"]\"', '\"[\\\"Printer\\\"]\"', '\"[\\\"Kitchen\\\"]\"', '\"[\\\"Parking\\\"]\"', '\"[\\\"Free Drinking Water\\\"]\"', 'asdasd', '12313', 'Philippines', '12', '123', 'asasd', '14.877769053371143', '-238.90869140625003', 1, 1, 1, 1, 'feet', 2, 'uploads/header/1733216624.jpg', '[\"uploads\\/additional_images\\/1733216624_MANAGE LIST SPACE - 6.png\",\"uploads\\/additional_images\\/1733216624_MANAGE LIST SPACE - 5.png\",\"uploads\\/additional_images\\/1733216624_MANAGE LIST SPACE - 4.png\",\"uploads\\/additional_images\\/1733216624_MANAGE LIST SPACE - 3.png\",\"uploads\\/additional_images\\/1733216624_MANAGE LIST SPACE - 2.png\",\"uploads\\/additional_images\\/1733216624_MANAGE LIST SPACE - 1.png\"]', 'yes', 'yes', 'yes', 'null', 'null', 'yes', 'yes', 23, 123, 'enable', 'enable', 'asdads', 'asdasd', 0.00, NULL, 2, '2024-12-04 14:46:43', '2024-12-04 14:46:43');
+(27, 'Owner', 'GoztSpace', 'Manila', 'GoztSpace', 'Coworking', 'GoztSpace is a dynamic and inspiring coworking space designed to fuel creativity, collaboration, and productivity.', '2025-01-08', 'Monday', 'Saturday', 'sunday', '08:00:00', '23:00:00', 'GoztSpace@gmail.com', '02456789', 'GoztSpace', 'GoztSpace', '0951891181', '\"[\\\"Wifi\\\",\\\"Air Conditioned\\\"]\"', '\"[\\\"Couches\\\",\\\"Lounge Chairs\\\"]\"', '\"[\\\"Printer\\\",\\\"Projector\\\",\\\"Whiteboards\\\",\\\"Scanner\\\",\\\"Sockets\\\"]\"', '\"[\\\"Lounge Area\\\"]\"', '\"[\\\"Restrooms\\\"]\"', '\"[\\\"Free Drinking Water\\\",\\\"Snacks\\/Drinks Available for Purchase\\\",\\\"Free Coffee\\\",\\\"Free Tea\\\"]\"', 'Ermita GoztSpace', '02456789', 'Philippines', '2', '1045', 'Manila', '14.585440020726827', '120.98411239119609', 50, 100, 2, 1, 'feet', 200, 'uploads/header/1736318552.jpg', '[\"uploads\\/additional_images\\/1736318552_Interiors of a modern coworking space.jpg\",\"uploads\\/additional_images\\/1736318552_1727936422.png\"]', 'yes', 'yes', 'yes', NULL, NULL, 'yes', 'no', 3, 350, 'disable', 'disable', 'none', 'none', 0.00, NULL, 7, '2025-01-08 06:42:32', '2025-01-08 06:42:32'),
+(28, 'Owner', 'ThinkTank Collective', 'Manila', 'ThinkTank Collective', 'Coworking', 'ThinkTank Collective is more than just a coworking space—it\'s a dynamic hub for visionaries, innovators, and collaborators.', '2025-01-08', 'Monday', 'Saturday', 'sunday', '08:00:00', '23:00:00', 'ThinkTankCollective@gmail.co', '02456742', 'ThinkTank Collective', 'ThinkTank Collective', '0951894476', '\"[\\\"Wifi\\\",\\\"Air Conditioned\\\"]\"', '\"[\\\"Couches\\\",\\\"Lounge Chairs\\\"]\"', '\"[\\\"Printer\\\",\\\"Projector\\\",\\\"Whiteboards\\\",\\\"Scanner\\\",\\\"Photocopier\\\",\\\"Sockets\\\"]\"', '\"[\\\"Lounge Area\\\"]\"', '\"[\\\"Restrooms\\\"]\"', '\"[\\\"Free Drinking Water\\\",\\\"Snacks\\/Drinks Available for Purchase\\\",\\\"Free Coffee\\\",\\\"Free Tea\\\"]\"', 'ThinkTank Collective', '02456742', 'Philippines', '1', '1007', 'Manila', '14.588177781553783', '120.9845247942576', 55, 120, 3, 3, 'meters', 300, 'uploads/header/1736319639.jpg', '[\"uploads\\/additional_images\\/1736319639_Workspace Of The Week - The Hive Collingwood Coworking Offices, Melbourne_.jpg\",\"uploads\\/additional_images\\/1736319639_intimate space.jpg\"]', 'no', 'yes', 'yes', NULL, NULL, 'no', 'no', 3, 350, 'disable', 'disable', 'none', 'none', 0.00, NULL, 7, '2025-01-08 07:00:39', '2025-01-08 07:00:39');
 
 -- --------------------------------------------------------
 
@@ -208,15 +193,6 @@ CREATE TABLE `meeting_fields` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `meeting_fields`
---
-
-INSERT INTO `meeting_fields` (`id`, `space_id`, `num_people`, `price`, `hours`, `created_at`, `updated_at`) VALUES
-(2, 1, 2, 231.00, '1', '2024-12-02 21:24:14', '2024-12-02 21:27:20'),
-(3, 1, 1, 32.00, '2', '2024-12-02 21:24:14', '2024-12-02 21:24:23'),
-(4, 24, 13, 23.00, '3', '2024-12-03 18:44:18', '2024-12-03 18:44:18');
 
 -- --------------------------------------------------------
 
@@ -270,13 +246,6 @@ CREATE TABLE `notifications` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `notifications`
---
-
-INSERT INTO `notifications` (`id`, `user_id`, `space_id`, `transaction_id`, `subject`, `content`, `url`, `type`, `isRead`, `created_at`, `updated_at`) VALUES
-(58, 1, 1, 50, 'Reservation Pending', 'Your reservation is pending.', '', 'USER', 0, '2024-12-10 05:01:00', '2024-12-10 05:01:00');
 
 -- --------------------------------------------------------
 
@@ -337,16 +306,6 @@ CREATE TABLE `replies` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `replies`
---
-
-INSERT INTO `replies` (`id`, `user_id`, `cowork_id`, `review_id`, `reply`, `created_at`, `updated_at`) VALUES
-(5, 1, 1, 7, 'dada', '2024-12-07 22:59:22', '2024-12-07 22:59:22'),
-(6, 1, 1, 8, 'test reply to test test 2', '2024-12-07 23:09:43', '2024-12-07 23:09:43'),
-(7, 1, 1, 8, 'test reply to test test 2', '2024-12-07 23:13:18', '2024-12-07 23:13:18'),
-(8, 1, 1, 8, 'dada', '2024-12-07 23:13:35', '2024-12-07 23:13:35');
-
 -- --------------------------------------------------------
 
 --
@@ -362,16 +321,6 @@ CREATE TABLE `reviews` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `reviews`
---
-
-INSERT INTO `reviews` (`id`, `user_id`, `cowork_id`, `rating`, `review_body`, `created_at`, `updated_at`) VALUES
-(2, 1, 2, 4, 'not bad', '2024-10-21 16:41:14', '2024-10-21 16:41:14'),
-(5, 1, 5, 1, 'ewwww', '2024-10-21 16:42:22', '2024-10-21 16:42:22'),
-(7, 1, 1, 4, 'test tes', '2024-12-07 22:08:27', '2024-12-07 22:08:27'),
-(8, 4, 1, 2, 'test test 2', '2024-12-07 23:04:41', '2024-12-07 23:04:41');
 
 -- --------------------------------------------------------
 
@@ -397,13 +346,6 @@ CREATE TABLE `transactions` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `transactions`
---
-
-INSERT INTO `transactions` (`id`, `user_id`, `space_id`, `reservation_date`, `hours`, `guests`, `name`, `email`, `company`, `contact`, `arrival_time`, `amount`, `payment_method`, `status`, `created_at`, `updated_at`) VALUES
-(50, 1, 1, '2024-12-10', '3', 1, 'Client User', 'client@example.com', 'test', '09274137512', '09:00:00', 3000.00, 'gcash', 'PENDING', '2024-12-10 05:00:48', '2024-12-10 05:01:00');
 
 -- --------------------------------------------------------
 
@@ -432,10 +374,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `user_type`, `remember_token`, `created_at`, `updated_at`, `contact`, `birthday`, `gender`, `address`) VALUES
-(1, 'Client User', 'client@example.com', NULL, '$2y$12$RFt//iAx.dzG35GlCCm7V.Vxs7TCARhva39nUz20sIk00AHP0DelG', 1, NULL, '2024-09-23 23:06:36', '2024-12-08 06:20:13', '09274137512', '2002-06-12', 'Male', 'P. Silvino Street, Santo Cristo Sur, CITY OF GAPAN, NUEVA ECIJA'),
-(2, 'Coworker User', 'coworker@example.com', NULL, '$2y$12$bD0pxWBLxrvw.4nDo3Yhw.7H.9Xn3.GJJIOHX8S/ZJQzJozE68lp2', 2, NULL, '2024-09-23 23:06:36', '2024-09-23 23:06:36', NULL, NULL, NULL, NULL),
 (3, 'Admin User', 'admin@example.com', NULL, '$2y$12$oagFg4vt6NEMPwuIMA81I.lQYy8GRokVvb981br//LDV27dt/sUVm', 3, NULL, '2024-09-23 23:06:36', '2024-09-23 23:06:36', NULL, NULL, NULL, NULL),
-(4, 'Kenneth Basinga', 'basingakenneth@gmail.com', NULL, '$2y$12$B0Khp7joZQI.hn9l1.LkWuBVVbRy6N3bqCMaHAKgHiaDOmWJ5hgnm', 2, NULL, '2024-12-03 18:12:04', '2024-12-03 18:12:04', NULL, NULL, NULL, NULL);
+(7, 'GoztSpace', 'GoztSpace@gmail.com', NULL, '$2y$12$PF.vsrXgD5dGZaTvb8YGOOzhQims1/grrLWOBQSa26PYyNyXwiTp6', 2, NULL, '2025-01-07 22:32:52', '2025-01-07 22:32:52', NULL, NULL, NULL, NULL),
+(8, 'Maria Eloissa Andal', 'andalmariaeloissa@gmail.com', NULL, '$2y$12$TJ6Ka2ixdZ0GMfHtcsVPcOiXFBA8kIhkQGmDGQXkRP7hFPCXAl5Y6', 1, NULL, '2025-01-07 22:46:53', '2025-01-07 22:46:53', NULL, NULL, NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -565,7 +506,7 @@ ALTER TABLE `deactivated_users`
 -- AUTO_INCREMENT for table `desk_fields`
 --
 ALTER TABLE `desk_fields`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -583,7 +524,7 @@ ALTER TABLE `favorites`
 -- AUTO_INCREMENT for table `list_space_tbl`
 --
 ALTER TABLE `list_space_tbl`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `meeting_fields`
@@ -631,7 +572,7 @@ ALTER TABLE `transactions`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Constraints for dumped tables
