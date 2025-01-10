@@ -923,7 +923,8 @@ class CoworkerController extends Controller
         ]);
 
         DB::table('replies')->insert([
-            'cowork_id' => auth()->id(),
+            'cowork_id' => auth()->id(), // Assuming cowork_id represents the current user
+            'user_id' => auth()->id(),   // Add user_id field
             'review_id' => $reviewId,
             'reply' => $request->input('reply'),
             'created_at' => now(),
