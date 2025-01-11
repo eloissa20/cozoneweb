@@ -17,6 +17,8 @@
 
     <link href="{{ asset('assets/listSpace.css') }}" rel="stylesheet">
 
+    <link rel="icon" href="{{ asset('assets/logo.png') }}" type="image/x-icon">
+
     <!-- Include SweetAlert2 CSS and JS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
@@ -83,19 +85,12 @@
                 </button>
                 <div class="navbar-collapse justify-content-end">
                     <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">How to</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">About Us</a>
-                        </li>
+
                         <li class="nav-item dropdown">
                             <a href="#" data-bs-toggle="dropdown" class="pe-md-0">
                                 <img src="{{ asset('assets/img/profile.png') }}" class="avatar img-fluid rounded" alt="">
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
-                                <a href="#" class="dropdown-item">Profile</a>
-                                <a href="#" class="dropdown-item">Setting</a>
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
                                             document.getElementById('logout-form').submit();">

@@ -100,7 +100,11 @@
                     [0, "asc"],
                 ],
                 'columns': [
-                    {data: 'id'},
+                    {data: null, // No direct data source for this column
+                    render: function (data, type, row, meta) {
+                        return meta.row + 1 + meta.settings._iDisplayStart; // Dynamic row number
+                        }
+                    },
                     {data: 'name'},
                     {data: 'cowork.coworking_space_name'},
                     {data: 'reservation_date'},
