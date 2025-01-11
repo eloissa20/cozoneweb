@@ -586,4 +586,3 @@ input[type="checkbox"] {
 
 </script>
 @endsection
-
