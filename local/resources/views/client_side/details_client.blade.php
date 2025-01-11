@@ -112,6 +112,9 @@
                             connect with us on Instagram ({{ $space->instagram }}) and Facebook ({{ $space->facebook }}).
                         </p>
 
+                        <div style="border-top: 1px solid #ccc; margin: 20px 0;"></div>
+                        <p>{{ $space->description }}</p>
+
                     </div>
                 </div>
 
@@ -121,7 +124,9 @@
                         <div class="row">
                             @if ($space->basics)
                                 <div class="col-6">
-                                    <h6>Basics</h6>
+                                    <h6 style="font-weight: bold;">Basics</h6>
+                                    <div style="border-top: 1px solid #ccc; margin: 10px 0;"></div>
+
                                     <ul class="list-unstyled">
                                         @foreach ($space->basics as $basic)
                                             <li>{{ $basic }}</li>
@@ -131,7 +136,9 @@
                             @endif
                             @if ($space->seats)
                                 <div class="col-6">
-                                    <h6>Seats</h6>
+                                    <h6 style="font-weight: bold;">Seats</h6>
+                                    <div style="border-top: 1px solid #ccc; margin: 10px 0;"></div>
+
                                     <ul class="list-unstyled">
                                         @foreach ($space->seats as $seat)
                                             <li>{{ $seat }}</li>
@@ -141,7 +148,9 @@
                             @endif
                             @if ($space->equipment)
                                 <div class="col-6">
-                                    <h6>Equipments</h6>
+                                    <h6 style="font-weight: bold;">Equipments</h6>
+                                    <div style="border-top: 1px solid #ccc; margin: 10px 0;"></div>
+
                                     <ul class="list-unstyled">
                                         @foreach ($space->equipment as $equipment)
                                             <li>{{ $equipment }}</li>
@@ -151,7 +160,9 @@
                             @endif
                             @if ($space->facilities)
                                 <div class="col-6">
-                                    <h6>Facilities</h6>
+                                    <h6 style="font-weight: bold;">Facilities</h6>
+                                    <div style="border-top: 1px solid #ccc; margin: 10px 0;"></div>
+
                                     <ul class="list-unstyled">
                                         @foreach ($space->facilities as $facility)
                                             <li>{{ $facility }}</li>
@@ -693,4 +704,5 @@
         'wrapAround': true
     });
 </script>
+
 @endsection
