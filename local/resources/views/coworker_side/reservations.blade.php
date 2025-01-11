@@ -74,7 +74,13 @@
                 },
                 order: [[0, 'asc']],
                 columns: [
-                    { data: 'id' },
+                    { 
+                    data: null, // Custom index column
+                    render: function (data, type, row, meta) {
+                        return meta.row + 1; // Display row index starting from 1
+                    },
+                    orderable: false // Disable sorting for the index column
+                    },
                     { data: 'user_id' },
                     { data: 'space_id' },
                     { data: 'reservation_date' },

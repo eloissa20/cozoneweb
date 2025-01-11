@@ -357,7 +357,7 @@
                                 <option disabled selected>Select</option>
                                 @foreach ($pricing as $price)
                                 <option value="{{ $price['duration'] }}" data-price="{{ $price['price'] }}">
-                                    {{ $price['duration'] }} hours
+                                    {{ $price['duration'] }} 
                                 </option>
                                 @endforeach
                             </select>
