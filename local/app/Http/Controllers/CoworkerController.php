@@ -410,7 +410,6 @@ class CoworkerController extends Controller
             'coworking_space_name' => $request->input('coworkingSpaceName'),
             'coworking_space_address' => $request->input('coworkingSpaceAddress'),
             'space_name' => $request->input('spaceName'),
-            'type_of_space' => $request->input('typeOfSpace'),
             'description' => $request->input('description'),
             'opening_date' => $request->input('openingDate'),
             'available_days_from' => $request->input('availableDaysFrom'),
@@ -419,7 +418,6 @@ class CoworkerController extends Controller
             'operating_hours_from' => $request->input('operatingHoursFrom'),
             'operating_hours_to' => $request->input('operatingHoursTo'),
             'email' => $request->input('email'),
-            'phone' => $request->input('phone'),
             'instagram' => $request->input('instagram'),
             'facebook' => $request->input('facebook'),
             'contact_no' => $request->input('contactNo'),
@@ -432,7 +430,6 @@ class CoworkerController extends Controller
             'perks' => json_encode($request->input('perks', [])),
 
             'location' => $request->input('location'),
-            'telephone' => $request->input('telephone'),
             'country' => $request->input('country'),
             'unit' => $request->input('unit'),
             'postal' => $request->input('postal'),
@@ -511,7 +508,6 @@ class CoworkerController extends Controller
             'coworking_space_name' => $request->input('coworkingSpaceName'),
             'coworking_space_address' => $request->input('coworkingSpaceAddress'),
             'space_name' => $request->input('spaceName'),
-            'type_of_space' => $request->input('typeOfSpace'),
             'description' => $request->input('description'),
             'opening_date' => $request->input('openingDate'),
             'available_days_from' => $request->input('availableDaysFrom'),
@@ -520,7 +516,6 @@ class CoworkerController extends Controller
             'operating_hours_from' => $request->input('operatingHoursFrom'),
             'operating_hours_to' => $request->input('operatingHoursTo'),
             'email' => $request->input('email'),
-            'phone' => $request->input('phone'),
             'instagram' => $request->input('instagram'),
             'facebook' => $request->input('facebook'),
             'contact_no' => $request->input('contactNo'),
@@ -531,7 +526,6 @@ class CoworkerController extends Controller
             'accessibility' => json_encode($request->input('accessibility')),
             'perks' => json_encode($request->input('perks')),
             'location' => $request->input('location'),
-            'telephone' => $request->input('telephone'),
             'country' => $request->input('country'),
             'unit' => $request->input('unit'),
             'postal' => $request->input('postal'),
@@ -874,6 +868,7 @@ class CoworkerController extends Controller
             ->whereNotNull('list_space_tbl.virtual_offices')
             ->count();
 
+     
         // Occupied desk fields (transaction status is CONFIRMED) for the current user's spaces
         $occupiedDeskCount = DB::table('transactions')
             ->join('desk_fields', 'transactions.space_id', '=', 'desk_fields.space_id')

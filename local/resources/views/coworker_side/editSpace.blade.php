@@ -48,14 +48,7 @@
                     <label for="spaceName" class="form-label">Space Name</label>
                     <input type="text" class="form-control" value="{{ $space->space_name ?? '' }}" id="spaceName" name="spaceName" />
                 </div>
-                <div class="form-check mb-3">
-                    <label for="typeOfSpace" class="form-label">Type of Space</label>
-                    <select class="form-select" id="typeOfSpace" name="typeOfSpace">
-                        <option value="Coworking" {{ (isset($space->type_of_space) && $space->type_of_space == 'Coworking') ? 'selected' : '' }}>Coworking</option>
-                        <option value="Desk Space" {{ (isset($space->type_of_space) && $space->type_of_space == 'Desk Space') ? 'selected' : '' }}>Desk Space</option>
-                        <option value="Meeting Room" {{ (isset($space->type_of_space) && $space->type_of_space == 'Meeting Room') ? 'selected' : '' }}>Meeting Room</option>
-                    </select>
-                </div>
+
                 <div class="form-check mb-3">
                     <label for="description" class="form-label">Description (minimum of 250 characters)</label>
                     <textarea class="form-control" id="description" rows="4" name="description">{{ $space->description ?? '' }}</textarea>
