@@ -15,7 +15,7 @@ $("#submitBtn").click((e) => {
     });
 
     // Collect Meeting Room Data
-    $('.meeting-fields').each(function() {
+    /*$('.meeting-fields').each(function() {
         const numPeople = $(this).find('#numPeople').val();
         const price = $(this).find('#meetingPrice').val();
         const hours = $(this).find('#meetingHours').val();
@@ -23,7 +23,7 @@ $("#submitBtn").click((e) => {
         if (numPeople && price && hours) {
             formData.append('meetingRooms[]', JSON.stringify({ numPeople, price, hours }));
         }
-    });
+    });*/
 
     // Section 8
     const virtualService = $('input[name="virtualService"]:checked').val();
@@ -135,14 +135,14 @@ $("#submitBtn").click((e) => {
     // Section 5
     const tables = $('#tables').val();
     const capacity = $('#capacity').val();
-    const meetingRoomsCount = $('#meetingRooms').val();
+    //const meetingRoomsCount = $('#meetingRooms').val();
     const virtualOffices = $('#virtualOffices').val();
     const size = $('#size').val();
     const measurementUnit = $('input[name="measurementUnit"]:checked').val();
 
     formData.append('tables', tables);
     formData.append('capacity', capacity);
-    formData.append('meetingRoomsCount', meetingRoomsCount);
+    //formData.append('meetingRoomsCount', meetingRoomsCount);
     formData.append('virtualOffices', virtualOffices);
     formData.append('size', size);
     formData.append('measurementUnit', measurementUnit);

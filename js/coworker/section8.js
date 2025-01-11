@@ -12,15 +12,14 @@ function loadLocalStorageStep8() {
             });
         }
 
-        if (data.meetingRooms) {
+        /*if (data.meetingRooms) {
             data.meetingRooms.forEach(meeting => {
                 addMeetingField(meeting.numPeople, meeting.price, meeting.hours, meeting.isChecked);
             });
         }
 
-        if (data.virtualService) {
+        /*if (data.virtualService) {
             $(`input[name="virtualService"][value="${data.virtualService}"]`).prop('checked', true);
-        }
 
         if (data.membership) {
             $(`input[name="membership"][value="${data.membership}"]`).prop('checked', true);
@@ -32,13 +31,13 @@ function loadLocalStorageStep8() {
 
         if (data.membershipPrice) {
             $('#membershipPrice').val(data.membershipPrice);
-        }
+        }*/
     }
 }
 
 function moveToNextStepFromStep8() {
     const desks = [];
-    const meetingRooms = [];
+    //const meetingRooms = [];
 
     $('.desk-fields').each(function() {
         const duration = $(this).find('#duration').val();
@@ -51,7 +50,7 @@ function moveToNextStepFromStep8() {
         }
     });
 
-    $('.meeting-fields').each(function() {
+    /*$('.meeting-fields').each(function() {
         const numPeople = $(this).find('#numPeople').val();
         const price = $(this).find('#meetingPrice').val();
         const hours = $(this).find('#meetingHours').val();
@@ -60,9 +59,9 @@ function moveToNextStepFromStep8() {
         if (numPeople && price && hours) {
             meetingRooms.push({ numPeople, price, hours, isChecked });
         }
-    });
+    });*/
 
-    const virtualService = $('input[name="virtualService"]:checked').val();
+    /*const virtualService = $('input[name="virtualService"]:checked').val();
     const membership = $('input[name="membership"]:checked').val();
     const membershipDuration = $('#membershipDuration').val();
     const membershipPrice = $('#membershipPrice').val();
@@ -78,7 +77,7 @@ function moveToNextStepFromStep8() {
 
     localStorage.setItem('listSpace8', JSON.stringify({
         desks,
-        meetingRooms,
+        //meetingRooms,
         virtualService,
         membership,
         membershipDuration,
@@ -125,7 +124,7 @@ function addDeskField(duration = '', price = '', hours = '', isChecked = false) 
     deskSection.append(newDeskFields);
 }
 
-function addMeetingField(numPeople = '', price = '', hours = '', isChecked = false) {
+/*function addMeetingField(numPeople = '', price = '', hours = '', isChecked = false) {
     const meetingSection = $('.meeting-section');
     const newMeetingFields = `
         <div class="row meeting-fields align-items-center mb-2">

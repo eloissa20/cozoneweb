@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cowork;
 use App\Models\DeskField;
 use App\Models\Favorite;
-use App\Models\MeetingField;
+//use App\Models\MeetingField;
 use App\Models\Reply;
 use App\Models\Review;
 use App\Models\User;
@@ -108,11 +108,11 @@ class ClientController extends Controller
             }
 
             $deskField = DeskField::where('space_id', $space->id)->get();
-            $meetingField = MeetingField::where('space_id', $space->id)->get();
+            //$meetingField = MeetingField::where('space_id', $space->id)->get();
 
             $pricing = [
                 ...$deskField,
-                ...$meetingField
+                //...$meetingField
             ];
 
 

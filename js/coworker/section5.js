@@ -7,8 +7,8 @@ function loadLocalStorageStep5() {
         let data = JSON.parse(localStorage.getItem("listSpace5"));
         $('#tables').val(data.tables);
         $('#capacity').val(data.capacity);
-        $('#meetingRooms').val(data.meetingRooms);
-        $('#virtualOffices').val(data.virtualOffices);
+        //$('#meetingRooms').val(data.meetingRooms);
+        //$('#virtualOffices').val(data.virtualOffices);
         $('#size').val(data.size);
         
         if (data.measurementUnit) {
@@ -20,12 +20,12 @@ function loadLocalStorageStep5() {
 function moveToNextStepFromStep5() {
     const tables = $('#tables').val();
     const capacity = $('#capacity').val();
-    const meetingRooms = $('#meetingRooms').val();
-    const virtualOffices = $('#virtualOffices').val();
+   //const meetingRooms = $('#meetingRooms').val();
+    //const virtualOffices = $('#virtualOffices').val();
     const size = $('#size').val();
     const measurementUnit = $('input[name="measurementUnit"]:checked').val();
 
-    if (!tables || !capacity || !meetingRooms || !virtualOffices || !size || !measurementUnit) {
+    if (!tables || !capacity || /*!meetingRooms || !virtualOffices ||*/ !size || !measurementUnit) {
         Swal.fire({
             icon: "error",
             title: "Incomplete Form",
@@ -37,8 +37,8 @@ function moveToNextStepFromStep5() {
     localStorage.setItem('listSpace5', JSON.stringify({
         tables,
         capacity,
-        meetingRooms,
-        virtualOffices,
+        //meetingRooms,
+        //virtualOffices,
         size,
         measurementUnit,
     }));

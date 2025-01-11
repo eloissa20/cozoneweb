@@ -193,12 +193,11 @@ class CoworkerController extends Controller
                 ->addColumn('actions', function ($row) {
                     $editUrl = route('editSpace', $row->id);
                     $addDeskUrl = route('addDesks', $row->id);
-                    $addMeetingUrl = route('addMeetings', $row->id);
+                    //$addMeetingUrl = route('addMeetings', $row->id);
                     $str = "<button class='btn btn-outline-dark btn-sm me-2' onclick='window.location.href=\"$editUrl\"'><i class='bi bi-pencil-square'></i> Update</button>
                             <button class='btn btn-outline-dark btn-sm me-2' onclick='deleteSpace(\"{$row->id}\")'><i class='bi bi-trash'></i> Delete</button>
                             <button class='btn btn-outline-dark btn-sm me-2' onclick='viewSpaceDetails(\"{$row->id}\")'><i class='bi bi-eye'></i> View</button>
-                            <button class='btn btn-outline-dark btn-sm me-2' onclick='window.location.href=\"$addDeskUrl\"'><i class='bi bi-plus-lg'></i> Add Desk</button>
-                            <button class='btn btn-outline-dark btn-sm me-2' onclick='window.location.href=\"$addMeetingUrl\"'><i class='bi bi-plus-lg'></i> Add Meetings</button>";
+                            <button class='btn btn-outline-dark btn-sm me-2' onclick='window.location.href=\"$addDeskUrl\"'><i class='bi bi-plus-lg'></i> Add Desk</button>";
                     return $str;
                 })
                 ->rawColumns(['actions'])
@@ -256,7 +255,7 @@ class CoworkerController extends Controller
             ->get();
 
         // Fetch meeting fields based on space_id
-        $meetingFields = DB::table('meeting_fields')
+        /*$meetingFields = DB::table('meeting_fields')
             ->where('space_id', $id)
             ->select('num_people', 'price', 'hours')
             ->get();
@@ -266,7 +265,7 @@ class CoworkerController extends Controller
         $spaceDetails->meeting_fields = $meetingFields;
 
         return response()->json($spaceDetails);
-    }
+    }*/
 
 
 
@@ -329,7 +328,7 @@ class CoworkerController extends Controller
         $additionalImages = $space->additional_images ? json_decode($space->additional_images, true) : [];
 
         // Decode desk and meeting fields with enhanced logic
-        $jsonWithObject = ['desk_fields', 'meeting_fields'];
+        /*$jsonWithObject = ['desk_fields', 'meeting_fields'];
         foreach ($jsonWithObject as $field) {
             if (is_string($space->$field) && !empty(trim($space->$field))) {
                 $decodedArray = json_decode($space->$field, true);
@@ -347,10 +346,10 @@ class CoworkerController extends Controller
             } else {
                 $space->$field = [];
             }
-        }
+        }*/
 
         $deskFields = $space->desk_fields;
-        $meetingFields = $space->meeting_fields;
+        //$meetingFields = $space->meeting_fields;
 
         return view('coworker_side.editSpace', compact(
             'space',
@@ -361,8 +360,8 @@ class CoworkerController extends Controller
             'accessibility',
             'perks',
             'additionalImages',
-            'deskFields',
-            'meetingFields'
+            'deskFields'
+            //'meetingFields'
         ));
     }
 
