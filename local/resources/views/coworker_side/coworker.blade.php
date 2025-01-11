@@ -366,7 +366,6 @@ input[type="checkbox"] {
                     CONFIRMED: '#4CAF50',
                     COMPLETED: '#2196F3',
                     FAILED: '#F44336',
-                    REFUNDED: '#9E9E9E',
                 };
 
                 const legendContainer = $('#statusLegend');
@@ -378,10 +377,13 @@ input[type="checkbox"] {
                     const legendItem = `
                         <div class="status-item">
                             <div class="status-color" style="background-color: ${color};"></div>
-                            <div class="status-label">${label}=</div>
-                            <div class="status-count">${count}</div>
+                            <div class="status-label">${label}     </span>
+                            <div class="status-count">${count}   </div>
                         </div>
                     `;
+
+
+                    
                     legendContainer.append(legendItem);
                 });
 

@@ -718,7 +718,7 @@ class CoworkerController extends Controller
     //         return DataTables::of($requests)
     //             // ->addIndexColumn()
     //             ->addColumn('actions', function ($row) {
-    //                 $statuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED', 'REFUNDED'];
+    //                 $statuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED',];
 
     //                 $dropdown = "<div class='dropdown'>
     //                     <button class='btn btn-outline-dark btn-sm dropdown-toggle' type='button' data-bs-toggle='dropdown' aria-expanded='false'>
@@ -765,7 +765,7 @@ class CoworkerController extends Controller
 
             return DataTables::of($requests)
                 ->addColumn('actions', function ($row) {
-                    $statuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED', 'REFUNDED'];
+                    $statuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED',];
                     $dropdown = "<select class='form-select form-select-sm change-status' data-id='{$row->id}'>
                                     <option value='' disabled selected>Change Status</option>";
                     foreach ($statuses as $status) {
@@ -782,7 +782,25 @@ class CoworkerController extends Controller
     }
 
 
+    public function getHours(Request $request)
+    {
+        $spaceType = $request->query('spaceType');
+        $spaceId = $request->query('spaceId'); 
 
+        if ($spaceType === 'desk') {
+            $hours = DB::table('desk_fields')
+                ->where('space_id', $spaceId)
+                ->pluck('hours'); 
+        } elseif ($spaceType === 'meeting_room') {
+            $hours = DB::table('meeting_fields')
+                ->where('space_id', $spaceId)
+                ->pluck('hours');
+        } else {
+            return response()->json(['error' => 'Invalid space type'], 400);
+        }
+
+        return response()->json($hours);
+    }
 
     public function updateStatus(Request $request)
     {
@@ -834,7 +852,7 @@ class CoworkerController extends Controller
     {
         $currentUserId = auth()->id();
 
-        $allStatuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED', 'CANCELLED', 'REFUNDED'];
+        $allStatuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED', 'CANCELLED',];
 
         $existingStatuses = DB::table('transactions')
             ->join('list_space_tbl', 'transactions.space_id', '=', 'list_space_tbl.id')
@@ -1030,6 +1048,8 @@ class CoworkerController extends Controller
         $meetingFields = DB::table('meeting_fields')->where('space_id', $id)->get();
         return view('coworker_side.addMeetings', compact('id', 'meetingFields'));
     }
+
+
 
     // public function saveMeetings(Request $request, $id)
     // {
