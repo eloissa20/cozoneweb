@@ -10,7 +10,7 @@
     </div>
     <div class="card-body">
         <ul class="nav nav-tabs" id="reservationTabs" role="tablist">
-            @foreach (['ALL', 'PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED', 'REFUNDED'] as $status)
+            @foreach (['ALL', 'PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED', ] as $status)
                 <li class="nav-item" role="presentation">
                     <button class="nav-link {{ $loop->first ? 'active' : '' }}" id="tab-{{ strtolower($status) }}" 
                             data-bs-toggle="tab" data-bs-target="#table-{{ strtolower($status) }}" 
@@ -23,7 +23,7 @@
         </ul>
 
         <div class="tab-content mt-3">
-            @foreach (['ALL', 'PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED', 'REFUNDED'] as $status)
+            @foreach (['ALL', 'PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED', ] as $status)
                 <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="table-{{ strtolower($status) }}" role="tabpanel">
                     <table id="data-table-{{ strtolower($status) }}" class="table table-hover" style="width: 100%;">
                         <thead>
@@ -56,7 +56,7 @@
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
 <script>
     $(document).ready(function () {
-        const statuses = ['ALL', 'PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED', 'REFUNDED'];
+        const statuses = ['ALL', 'PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED', ];
         const dataTables = {};
 
         const initializeTable = (status) => {

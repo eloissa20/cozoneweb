@@ -88,7 +88,7 @@ return new class extends Migration {
 
             // Payment method and status fields
             $table->string('payment_method', 50)->nullable();
-            $table->enum('status', ['pending', 'completed', 'failed', 'refunded'])->default('pending');
+            $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');
             $table->timestamps();
         });
     }
