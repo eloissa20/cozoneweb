@@ -613,7 +613,7 @@
 
 
         const dateInput = document.getElementById('reservation_date');
-        const exceptedDaysString = @json($space - > exceptions);
+        const exceptedDaysString = @json($space->exceptions);
         const exceptedDays = exceptedDaysString.split(',').map(day => day.trim());
 
         // Helper: Map day names to index (0 = Sunday, 1 = Monday, etc.)
@@ -664,8 +664,7 @@
         // Clear time portion of today's date for comparison
         today.setHours(0, 0, 0, 0);
 
-        const exceptedDays = @json($space - > exceptions);
-
+        const exceptedDays = @json($space->exceptions);
         // Check if the selected date is in the past
         if (selectedDate < today) {
             errorContainer.innerText = 'Please select a date that is today or in the future.';
@@ -689,16 +688,8 @@
 </script>
 
 <script>
-    const latitude = {
-        {
-            $space - > latitude
-        }
-    };
-    const longitude = {
-        {
-            $space - > longitude
-        }
-    };
+    const latitude = "{{ $space->latitude }}";
+    const longitude = "{{ $space->longitude }}";
 
     const map = L.map('map').setView([latitude, longitude], 13);
 
