@@ -260,12 +260,25 @@
                     [0, "asc"],
                 ],
                 'columns': [
-                    {data: 'id'},
+                    {data: null},
                     {data: 'coworking_space_name'},
                     {data: 'coworking_space_address'},
                     {data: 'actions'}
-                    
-                ]
+                ],
+                'columnDefs': [
+                {targets: 0,
+                render: (data, type, row, meta) => {
+                    return meta.row + 1; // Meta row is zero-based
+                        }
+                    }
+                ],
+                'drawCallback': function () {
+                // Reset row numbers after table refresh
+                const table = $('#data-table').DataTable();
+                table.rows().nodes().each((row, index) => {
+                    $(row).find('td:first').text(index + 1);
+                });
+            }
             });
         }
 

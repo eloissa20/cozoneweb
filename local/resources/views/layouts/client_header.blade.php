@@ -29,6 +29,7 @@
 
 <body>
     <div id="app">
+
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm w-100"
             style="z-index: 2; position: fixed; top: 0; left: 0; width: 100%; min-width: 500px;">
             <div class="container d-flex justify-content-between align-items-center">
@@ -36,24 +37,26 @@
                     <img src="{{ asset('assets/logo.png') }}" alt="Logo" style="height: 40px;">
                 </a>
 
-                <div class="d-flex">
-                    <a class="btn btn-outline-secondary me-2" href="{{ route('client_side.how.reserve') }}">How to</a>
-                    <a class="btn btn-outline-secondary me-2" href="{{ route('client_side.about') }}">About Us</a>
-                </div>
+                    <div class="d-flex align-items-center">
+                <!-- About Us Button -->
+                    <a class="btn btn-outline-secondary me-3" href="{{ route('client_side.about') }}">About Us</a>
 
-                <div class="d-flex align-items-center">
+                <!-- Notification Button -->
                     <button type="button" id="notification" class="me-3 btn btn-light bg-white border border-0"
                         data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom"
                         data-bs-html="true">
                         <i class="bi bi-bell" style="font-size: 1.5rem; position: relative;"></i>
                         <span id="notification-count" class="badge text-bg-secondary"></span>
                     </button>
+
+            <!-- Profile Icon -->
                     <a href="{{ route('client_side.profile') }}" class="me-3 btn btn-light bg-white border border-0">
                         <i class="bi bi-person" style="font-size: 1.5rem;"></i>
                     </a>
                 </div>
             </div>
         </nav>
+
 
         <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
             <!-- Success Toast -->
