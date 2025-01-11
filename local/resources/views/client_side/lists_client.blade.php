@@ -130,7 +130,6 @@
                         <select class="form-select" id="filter-spaces">
                             <option selected disabled>Select Type</option>
                             <option value="Coworking">Coworking Space</option>
-                            <option value="Meeting Room">Meeting Room</option>
                             <option value="Desk Space">Desk Space</option>
                         </select>
                         <button hidden type="button" id="remove-type-filter" class="btn btn-outline-dark"><i
