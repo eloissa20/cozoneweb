@@ -41,7 +41,6 @@ function loadLocalStorageStep4() {
     if (localStorage.getItem("listSpace4") !== null) {
         let data = JSON.parse(localStorage.getItem("listSpace4"));
         $('#location').val(data.location);
-        $('#telephone').val(data.telephone);
         $('#country').val(data.country);
         $('#unit').val(data.unit);
         $('#postal').val(data.postal);
@@ -58,7 +57,6 @@ function loadLocalStorageStep4() {
 
 function moveToNextStepFromStep4() {
     const location = $('#location').val();
-    const telephone = $('#telephone').val();
     const country = $('#country').val();
     const unit = $('#unit').val();
     const postal = $('#postal').val();
@@ -66,7 +64,7 @@ function moveToNextStepFromStep4() {
     const latitude = $('#latitude').val();
     const longitude = $('#longitude').val();
 
-    if (!location || !telephone || !country || !unit || !postal || !city || !latitude || !longitude) {
+    if (!location|| !country || !unit || !postal || !city || !latitude || !longitude) {
         Swal.fire({
             icon: "error",
             title: "Incomplete Form",
@@ -77,7 +75,6 @@ function moveToNextStepFromStep4() {
 
     localStorage.setItem('listSpace4', JSON.stringify({
         location,
-        telephone,
         country,
         unit,
         postal,

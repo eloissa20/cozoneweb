@@ -5,7 +5,7 @@
 
 <div class="form-section" id="step4">
 
-    <h2>LETS FIND YOUR SPACE</h2>
+    <h2>LET'S FIND YOUR SPACE</h2>
     <hr class="separator-line" />
     <form id="section4">
         <div class="container mb-5">
@@ -46,13 +46,10 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="form-check mb-3">
-                    <label for="location" class="form-label">Location Name</label>
+                    <label for="location" class="form-label">Barangay</label>
                     <input type="text" class="form-control" id="location" />
                 </div>
-                <div class="form-check mb-3">
-                    <label for="telephone" class="form-label">Telephone No.</label>
-                    <input type="text" class="form-control" id="telephone" />
-                </div>
+
                 <div class="form-check mb-3">
                     <label for="country" class="form-label">Country</label>
                     <input type="text" class="form-control" id="country" />
