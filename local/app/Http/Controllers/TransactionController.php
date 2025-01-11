@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cowork;
+use App\Models\DeskField;
+use App\Models\MeetingField;
 use GuzzleHttp\Client;
 use App\Models\Transaction;
 use Exception;
@@ -40,18 +42,42 @@ class TransactionController extends Controller
                 return redirect()->route('client_side.details', ['id' => $spaceId])->with('error', 'The space is already reserved by another user at the chosen date and time.');
             }
 
+
+            $parts = explode(",", $request->input('hours'));
+            
+            // Access the parts
+            $type = $parts[0];
+            $priceId = $parts[1];
+
+            // Get the price of the selected desk
+            if ($type === 'desk') {
+                $desk = DeskField::find($priceId);
+                if (!$desk) {
+                    return redirect()->back()->with('error', 'Desk not found!');
+                }
+                $duration = $desk->duration;
+                $price = $desk->price;
+            } else if ($type === 'meeting') {
+                $meeting = MeetingField::find($priceId);
+                if (!$meeting) {
+                    return redirect()->back()->with('error', 'Meeting room not found!');
+                }
+                $duration = $meeting->hours;
+                $price = $meeting->price;
+            }
+
             $reservation = new Transaction();
             $reservation->user_id = auth()->id();
             $reservation->space_id = $spaceId;
             $reservation->reservation_date = $request->input('reservation_date');
-            $reservation->hours = $request->input('hours');
+            $reservation->hours = $duration;
             $reservation->guests = $request->input('guests');
             $reservation->name = $request->input('name');
             $reservation->email = $request->input('email');
             $reservation->company = $request->input('company');
             $reservation->contact = $request->input('contact');
             $reservation->arrival_time = $request->input('arrival');
-            $reservation->amount = $request->input('price');
+            $reservation->amount = $price;
             $reservation->status = 'PENDING';
             $reservation->save();
 

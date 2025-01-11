@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cowork;
 use App\Models\DeskField;
 use App\Models\Favorite;
-//use App\Models\MeetingField;
+use App\Models\MeetingField;
 use App\Models\Reply;
 use App\Models\Review;
 use App\Models\User;
@@ -108,37 +108,12 @@ class ClientController extends Controller
             }
 
             $deskField = DeskField::where('space_id', $space->id)->get();
-            //$meetingField = MeetingField::where('space_id', $space->id)->get();
+            $meetingField = MeetingField::where('space_id', $space->id)->get();
 
-            $pricing = [
-                ...$deskField,
-                //...$meetingField
-            ];
+            $desk_pricing =
+                $deskField;
 
-
-            // $jsonWithObject = [
-            //     'desk_fields',
-            //     'meeting_fields',
-            // ];
-
-            // foreach ($jsonWithObject as $field) {
-            //     if (is_string($space->$field) && !empty(trim($space->$field))) {
-            //         $decodedArray = json_decode($space->$field, true);
-
-            //         if (is_array($decodedArray)) {
-            //             foreach ($decodedArray as $key => $value) {
-            //                 if (is_string($value)) {
-            //                     $decodedArray[$key] = json_decode(trim($value, '"'), true) ?: [];
-            //                 }
-            //             }
-            //             $space->$field = $decodedArray;
-            //         } else {
-            //             $space->$field = [];
-            //         }
-            //     } else {
-            //         $space->$field = [];
-            //     }
-            // }
+            $meeting_pricing = $meetingField;
 
             $images = [
                 $space->header_image
@@ -154,7 +129,10 @@ class ClientController extends Controller
             $allReviews = Review::where('cowork_id', $space->id)->get();
             $allReplies = Reply::where('cowork_id', $space->id)->get();
 
-            return view('client_side.details_client', ['space' => $space, 'pricing' => $pricing, 'allReviews' => $allReviews, 'allReplies' => $allReplies, 'images' => $images]);
+            return view(
+                'client_side.details_client',
+                ['space' => $space, 'meeting_pricing' => $meeting_pricing, 'desk_pricing' => $desk_pricing, 'allReviews' => $allReviews, 'allReplies' => $allReplies, 'images' => $images]
+            );
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
