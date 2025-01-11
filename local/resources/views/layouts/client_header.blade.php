@@ -39,14 +39,13 @@
                 <div class="d-flex">
                     <a class="btn btn-outline-secondary me-2" href="{{ route('client_side.how.reserve') }}">How to</a>
                     <a class="btn btn-outline-secondary me-2" href="{{ route('client_side.about') }}">About Us</a>
-                 
                 </div>
+
                 <div class="d-flex align-items-center">
                     <button type="button" id="notification" class="me-3 btn btn-light bg-white border border-0"
                         data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom"
                         data-bs-html="true">
-                        <i class="bi bi-bell" style="font-size: 1.5rem; position: relative;">
-                        </i>
+                        <i class="bi bi-bell" style="font-size: 1.5rem; position: relative;"></i>
                         <span id="notification-count" class="badge text-bg-secondary"></span>
                     </button>
                     <a href="{{ route('client_side.profile') }}" class="me-3 btn btn-light bg-white border border-0">
@@ -148,14 +147,13 @@
         }
     </style>
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             @if(session('success'))
             var successToast = new bootstrap.Toast(document.getElementById('successToast'));
             successToast.show();
             @endif
+
             @if(session('error'))
             var errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
             errorToast.show();
@@ -164,8 +162,7 @@
             async function fetchNotifications() {
                 try {
                     const response = await $.ajax({
-                        url: '{{ route('
-                        client_side.notifications.all ')}}',
+                        url: '{{ route('client_side.notifications.all') }}',
                         method: 'GET',
                         data: {
                             _token: '{{ csrf_token() }}'
@@ -186,24 +183,24 @@
 
                 const detailsRouteBase = "{{ url('client_side/reservation') }}";
 
-                const notificationContent = notifications.length > 0 ?
-                    `
-                <div style="max-height: 200px; overflow-y: auto; width: 300px;">
-                    ${notifications.map(notification => {
-                        const formattedDate = moment(notification.created_at).fromNow(); // Using Moment.js to format date
-                        return `
-                            <a href="${detailsRouteBase}/${notification.transaction_id}"
-                            class="text-decoration-none text-dark d-block py-2 border-bottom">
-                                <div>
-                                    <p class="mb-0 fw-bold">${notification.content}</p>
-                                    <small class="text-muted">${formattedDate}</small>
-                                </div>
-                            </a>
-                        `;
-                    }).join('')}
-                </div>
-                ` :
-                    `<div style="width: 300px; text-align: center; padding: 10px;">No new notifications</div>`;
+                const notificationContent = notifications.length > 0
+                    ? `
+                    <div style="max-height: 200px; overflow-y: auto; width: 300px;">
+                        ${notifications.map(notification => {
+                            const formattedDate = moment(notification.created_at).fromNow();
+                            return `
+                                <a href="${detailsRouteBase}/${notification.transaction_id}"
+                                class="text-decoration-none text-dark d-block py-2 border-bottom">
+                                    <div>
+                                        <p class="mb-0 fw-bold">${notification.content}</p>
+                                        <small class="text-muted">${formattedDate}</small>
+                                    </div>
+                                </a>
+                            `;
+                        }).join('')}
+                    </div>
+                `
+                    : `<div style="width: 300px; text-align: center; padding: 10px;">No new notifications</div>`;
 
                 const notificationButton = document.getElementById('notification');
                 const popover = new bootstrap.Popover(notificationButton, {
@@ -213,7 +210,10 @@
                 });
 
                 const notificationCount = document.getElementById('notification-count');
-                notificationCount.textContent = notifications.length;
+                notificationCount.textContent = notifications.length || '';
+                if (notifications.length === 0) {
+                    notificationCount.style.display = 'none';
+                }
             }
 
             initializeNotifications();

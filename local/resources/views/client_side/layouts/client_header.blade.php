@@ -50,13 +50,13 @@
                         <span id="notification-count" class="badge text-bg-secondary"></span>
                     </button>
                     @if(Auth::check())
-                    <a href="{{ route('client_side.profile') }}" class="me-3 btn btn-light bg-white border border-0">
-                        <i class="bi bi-person" style="font-size: 1.5rem;"></i>
-                    </a>
+                        <a href="{{ route('client_side.profile') }}" class="me-3 btn btn-light bg-white border border-0">
+                            <i class="bi bi-person" style="font-size: 1.5rem;"></i>
+                        </a>
                     @else
-                    <a href="{{ route('login') }}" class="me-3 btn btn-light bg-white border border-0">
-                        Login
-                    </a>
+                        <a href="{{ route('login') }}" class="me-3 btn btn-light bg-white border border-0">
+                            Login
+                        </a>
                     @endif
                 </div>
             </div>
@@ -65,30 +65,30 @@
         <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
             <!-- Success Toast -->
             @if (session('success'))
-            <div class="toast align-items-center bg-black border-0" role="alert" aria-live="assertive"
-                aria-atomic="true" id="successToast">
-                <div class="toast-header">
-                    <strong class="me-auto">Success</strong>
-                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                <div class="toast align-items-center bg-black border-0" role="alert" aria-live="assertive"
+                    aria-atomic="true" id="successToast">
+                    <div class="toast-header">
+                        <strong class="me-auto">Success</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body text-bg-light">
+                        {{ session('success') }}
+                    </div>
                 </div>
-                <div class="toast-body text-bg-light">
-                    {{ session('success') }}
-                </div>
-            </div>
             @endif
 
             <!-- Error Toast -->
             @if (session('error'))
-            <div class="toast align-items-center bg-black border-0" role="alert" aria-live="assertive"
-                aria-atomic="true" id="errorToast">
-                <div class="toast-header">
-                    <strong class="me-auto">Error</strong>
-                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                <div class="toast align-items-center bg-black border-0" role="alert" aria-live="assertive"
+                    aria-atomic="true" id="errorToast">
+                    <div class="toast-header">
+                        <strong class="me-auto">Error</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body text-bg-danger">
+                        {{ session('error') }}
+                    </div>
                 </div>
-                <div class="toast-body text-bg-danger">
-                    {{ session('error') }}
-                </div>
-            </div>
             @endif
         </div>
 
@@ -158,20 +158,19 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            @if(session('success'))
-            var successToast = new bootstrap.Toast(document.getElementById('successToast'));
-            successToast.show();
+            @if (session('success'))
+                var successToast = new bootstrap.Toast(document.getElementById('successToast'));
+                successToast.show();
             @endif
-            @if(session('error'))
-            var errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
-            errorToast.show();
+            @if (session('error'))
+                var errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
+                errorToast.show();
             @endif
 
             async function fetchNotifications() {
                 try {
                     const response = await $.ajax({
-                        url: '{{ route('
-                        client_side.notifications.all ') }}',
+                        url: '{{ route('client_side.notifications.all') }}',
                         method: 'GET',
                         data: {
                             _token: '{{ csrf_token() }}'
@@ -193,7 +192,7 @@
                 const detailsRouteBase = "{{ url('client_side/reservation') }}";
 
                 const notificationContent = notifications.length > 0 ?
-                    `
+                `
                 <div style="max-height: 200px; overflow-y: auto; width: 300px;">
                     ${notifications.map(notification => {
                         const formattedDate = moment(notification.created_at).fromNow(); // Using Moment.js to format date
@@ -209,7 +208,7 @@
                     }).join('')}
                 </div>
                 ` :
-                    `<div style="width: 300px; text-align: center; padding: 10px;">No new notifications</div>`;
+                `<div style="width: 300px; text-align: center; padding: 10px;">No new notifications</div>`;
 
                 const notificationButton = document.getElementById('notification');
                 const popover = new bootstrap.Popover(notificationButton, {
