@@ -1,5 +1,5 @@
 $(() => {
-  loadLocalStorageStep2();
+    loadLocalStorageStep2();
 });
 
 function loadLocalStorageStep2() {
@@ -67,11 +67,11 @@ function moveToNextStepFromStep2() {
         exceptions
     }));
 
-  $("#s2").hide();
-  $("#s3").show();
+    $('#s2').hide();
+    $('#s3').show();
 }
 
 function moveToPreviousStepFromStep2() {
-  $("#s2").hide();
-  $("#s1").show();
+    $('#s2').hide();
+    $('#s1').show();
 }
