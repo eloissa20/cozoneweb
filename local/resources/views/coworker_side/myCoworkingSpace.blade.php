@@ -94,7 +94,6 @@
                     <div class="row">
                         <div class="col-md-6">
                             <p><strong>Space Name:</strong> <span id="spaceName"></span></p>
-                            <p><strong>Type of Space:</strong> <span id="typeofSpace"></span></p>
                             <p><strong>Description:</strong> <span id="spaceDescription"></span></p>
                         </div>
                         <div class="col-md-6">
@@ -285,7 +284,6 @@ let marker = null;
                 $('#coworkingSpaceName').text(response.coworking_space_name);
                 $('#coworkingSpaceAddress').text(response.coworking_space_address);
                 $('#spaceName').text(response.space_name);
-                $('#typeofSpace').text(response.type_of_space);
                 $('#spaceDescription').text(response.description);
                 $('#openingDate').text(response.opening_date);
                 $('#availableDaysFrom').text(response.available_days_from);

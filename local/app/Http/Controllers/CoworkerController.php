@@ -193,11 +193,12 @@ class CoworkerController extends Controller
                 ->addColumn('actions', function ($row) {
                     $editUrl = route('editSpace', $row->id);
                     $addDeskUrl = route('addDesks', $row->id);
-                    //$addMeetingUrl = route('addMeetings', $row->id);
+                    $addMeetingUrl = route('addMeetings', $row->id);
                     $str = "<button class='btn btn-outline-dark btn-sm me-2' onclick='window.location.href=\"$editUrl\"'><i class='bi bi-pencil-square'></i> Update</button>
                             <button class='btn btn-outline-dark btn-sm me-2' onclick='deleteSpace(\"{$row->id}\")'><i class='bi bi-trash'></i> Delete</button>
                             <button class='btn btn-outline-dark btn-sm me-2' onclick='viewSpaceDetails(\"{$row->id}\")'><i class='bi bi-eye'></i> View</button>
-                            <button class='btn btn-outline-dark btn-sm me-2' onclick='window.location.href=\"$addDeskUrl\"'><i class='bi bi-plus-lg'></i> Add Desk</button>";
+                            <button class='btn btn-outline-dark btn-sm me-2' onclick='window.location.href=\"$addDeskUrl\"'><i class='bi bi-plus-lg'></i> Add Desk</button>
+                            <button class='btn btn-outline-dark btn-sm me-2' onclick='window.location.href=\"$addMeetingUrl\"'><i class='bi bi-plus-lg'></i> Add Meetings</button>";
                     return $str;
                 })
                 ->rawColumns(['actions'])
@@ -255,14 +256,14 @@ class CoworkerController extends Controller
             ->get();
 
         // Fetch meeting fields based on space_id
-        /*$meetingFields = DB::table('meeting_fields')
+        $meetingFields = DB::table('meeting_fields')
             ->where('space_id', $id)
             ->select('num_people', 'price', 'hours')
-            ->get();*/
+            ->get();
 
         // Attach desks and meetings to response
         $spaceDetails->desk_fields = $deskFields;
-        //$spaceDetails->meeting_fields = $meetingFields;
+        $spaceDetails->meeting_fields = $meetingFields;
 
         return response()->json($spaceDetails);
     }
@@ -328,7 +329,7 @@ class CoworkerController extends Controller
         $additionalImages = $space->additional_images ? json_decode($space->additional_images, true) : [];
 
         // Decode desk and meeting fields with enhanced logic
-        /*$jsonWithObject = ['desk_fields', 'meeting_fields'];
+        $jsonWithObject = ['desk_fields', 'meeting_fields'];
         foreach ($jsonWithObject as $field) {
             if (is_string($space->$field) && !empty(trim($space->$field))) {
                 $decodedArray = json_decode($space->$field, true);
@@ -346,10 +347,10 @@ class CoworkerController extends Controller
             } else {
                 $space->$field = [];
             }
-        }*/
+        }
 
         $deskFields = $space->desk_fields;
-        //$meetingFields = $space->meeting_fields;
+        $meetingFields = $space->meeting_fields;
 
         return view('coworker_side.editSpace', compact(
             'space',
@@ -360,8 +361,8 @@ class CoworkerController extends Controller
             'accessibility',
             'perks',
             'additionalImages',
-            'deskFields'
-            //'meetingFields'
+            'deskFields',
+            'meetingFields'
         ));
     }
 
@@ -441,7 +442,7 @@ class CoworkerController extends Controller
             'tables' => $request->input('tables'),
             'capacity' => $request->input('capacity'),
             'meeting_rooms' => $request->input('meetingRooms'),
-            //'virtual_offices' => $request->input('virtualOffices'),
+            'virtual_offices' => $request->input('virtualOffices'),
             'size' => $request->input('size'),
             'measurement_unit' => $request->input('measurementUnit'),
             'header_image' => $headerImagePath,
@@ -452,7 +453,7 @@ class CoworkerController extends Controller
 
             // 'desk_fields' => json_encode($request->input('desks', [])),
             // 'meeting_fields' => json_encode($request->input('meetingRooms', [])),
-            //'virtual_service' => $request->input('virtualService'),
+            'virtual_service' => $request->input('virtualService'),
 
             'membership' => $request->input('membership'),
             'membership_duration' => $request->input('membershipDuration'),
@@ -540,7 +541,7 @@ class CoworkerController extends Controller
             'tables' => $request->input('tables'),
             'capacity' => $request->input('capacity'),
             'meeting_rooms' => $request->input('meetingRoomsCount'),
-            //'virtual_offices' => $request->input('virtualOffices'),
+            'virtual_offices' => $request->input('virtualOffices'),
             'size' => $request->input('size'),
             'measurement_unit' => $request->input('measurementUnit'),
             'header_image' => $path . $filename,
@@ -550,7 +551,7 @@ class CoworkerController extends Controller
             'eWallet' => $request->input('eWallet'),
             // 'desk_fields' => json_encode($request->input('desks')),
             // 'meeting_fields' => json_encode($request->input('meeting_fields')),
-            //'virtual_service' => $request->input('virtualService'),
+            'virtual_service' => $request->input('virtualService'),
             'membership' => $request->input('membership'),
             'membership_duration' => $request->input('membershipDuration'),
             'membership_price' => $request->input('membershipPrice'),
@@ -717,7 +718,7 @@ class CoworkerController extends Controller
     //         return DataTables::of($requests)
     //             // ->addIndexColumn()
     //             ->addColumn('actions', function ($row) {
-    //                 $statuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED',];
+    //                 $statuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED', 'REFUNDED'];
 
     //                 $dropdown = "<div class='dropdown'>
     //                     <button class='btn btn-outline-dark btn-sm dropdown-toggle' type='button' data-bs-toggle='dropdown' aria-expanded='false'>
@@ -764,7 +765,7 @@ class CoworkerController extends Controller
 
             return DataTables::of($requests)
                 ->addColumn('actions', function ($row) {
-                    $statuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED',];
+                    $statuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED', 'REFUNDED'];
                     $dropdown = "<select class='form-select form-select-sm change-status' data-id='{$row->id}'>
                                     <option value='' disabled selected>Change Status</option>";
                     foreach ($statuses as $status) {
@@ -781,25 +782,7 @@ class CoworkerController extends Controller
     }
 
 
-    public function getHours(Request $request)
-    {
-        $spaceType = $request->query('spaceType');
-        $spaceId = $request->query('spaceId'); 
 
-        if ($spaceType === 'desk') {
-            $hours = DB::table('desk_fields')
-                ->where('space_id', $spaceId)
-                ->pluck('hours'); 
-        } elseif ($spaceType === 'meeting_room') {
-            $hours = DB::table('meeting_fields')
-                ->where('space_id', $spaceId)
-                ->pluck('hours');
-        } else {
-            return response()->json(['error' => 'Invalid space type'], 400);
-        }
-
-        return response()->json($hours);
-    }
 
     public function updateStatus(Request $request)
     {
@@ -851,7 +834,7 @@ class CoworkerController extends Controller
     {
         $currentUserId = auth()->id();
 
-        $allStatuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED', 'CANCELLED',];
+        $allStatuses = ['PENDING', 'CONFIRMED', 'COMPLETED', 'FAILED', 'CANCELLED', 'REFUNDED'];
 
         $existingStatuses = DB::table('transactions')
             ->join('list_space_tbl', 'transactions.space_id', '=', 'list_space_tbl.id')
@@ -879,7 +862,7 @@ class CoworkerController extends Controller
             ->count();
 
         // Count meeting fields for the current user's spaces
-        /*$meetingCount = DB::table('meeting_fields')
+        $meetingCount = DB::table('meeting_fields')
             ->join('list_space_tbl', 'meeting_fields.space_id', '=', 'list_space_tbl.id')
             ->where('list_space_tbl.user_id', $currentUserId)
             ->whereNotNull('meeting_fields.id')
@@ -889,7 +872,7 @@ class CoworkerController extends Controller
         $virtualOfficesCount = DB::table('list_space_tbl')
             ->where('list_space_tbl.user_id', $currentUserId)
             ->whereNotNull('list_space_tbl.virtual_offices')
-            ->count();*/
+            ->count();
 
         // Occupied desk fields (transaction status is CONFIRMED) for the current user's spaces
         $occupiedDeskCount = DB::table('transactions')
@@ -899,7 +882,7 @@ class CoworkerController extends Controller
             ->where('transactions.status', 'CONFIRMED')
             ->count();
 
-        /*// Occupied meeting rooms (transaction status is CONFIRMED) for the current user's spaces
+        // Occupied meeting rooms (transaction status is CONFIRMED) for the current user's spaces
         $occupiedMeetingCount = DB::table('transactions')
             ->join('meeting_fields', 'transactions.space_id', '=', 'meeting_fields.space_id')
             ->join('list_space_tbl', 'transactions.space_id', '=', 'list_space_tbl.id') // Join to check user ownership
@@ -913,21 +896,21 @@ class CoworkerController extends Controller
             ->where('list_space_tbl.user_id', $currentUserId)
             ->where('transactions.status', 'CONFIRMED')
             ->whereNotNull('list_space_tbl.virtual_offices')
-            ->count();*/
+            ->count();
 
         // Total occupied count
-        $totalOccupiedCount = $occupiedDeskCount /*+ $occupiedMeetingCount + $occupiedVirtualOfficesCount*/;
+        $totalOccupiedCount = $occupiedDeskCount + $occupiedMeetingCount + $occupiedVirtualOfficesCount;
 
         // Total count (including unoccupied)
-        $totalCount = $deskCount /*+ $meetingCount + $virtualOfficesCount*/;
+        $totalCount = $deskCount + $meetingCount + $virtualOfficesCount;
 
         return response()->json([
             'deskCount' => $deskCount,
-            //'meetingCount' => $meetingCount,
-            //'virtualOfficesCount' => $virtualOfficesCount,
+            'meetingCount' => $meetingCount,
+            'virtualOfficesCount' => $virtualOfficesCount,
             'occupiedDeskCount' => $occupiedDeskCount,
-           //'occupiedMeetingCount' => $occupiedMeetingCount,
-            //'occupiedVirtualOfficesCount' => $occupiedVirtualOfficesCount,
+            'occupiedMeetingCount' => $occupiedMeetingCount,
+            'occupiedVirtualOfficesCount' => $occupiedVirtualOfficesCount,
             'totalOccupiedCount' => $totalOccupiedCount,
             'totalCount' => $totalCount,
         ]);
@@ -940,8 +923,7 @@ class CoworkerController extends Controller
         ]);
 
         DB::table('replies')->insert([
-            'cowork_id' => auth()->id(), // Assuming cowork_id represents the current user
-            'user_id' => auth()->id(),   // Add user_id field
+            'cowork_id' => auth()->id(),
             'review_id' => $reviewId,
             'reply' => $request->input('reply'),
             'created_at' => now(),
@@ -1043,13 +1025,11 @@ class CoworkerController extends Controller
     }
 
 
-    /*public function addMeetings($id)
+    public function addMeetings($id)
     {
         $meetingFields = DB::table('meeting_fields')->where('space_id', $id)->get();
         return view('coworker_side.addMeetings', compact('id', 'meetingFields'));
     }
-
-
 
     // public function saveMeetings(Request $request, $id)
     // {
@@ -1127,20 +1107,20 @@ class CoworkerController extends Controller
             ]);
 
         return response()->json(['status' => 'success']);
-    }*/
+    }
 
     public function getTotalSpaceCounts()
     {
         // Get the total counts for each type of space
         $deskCount = DB::table('desk_fields')->count();
-        //$meetingRoomCount = DB::table('meeting_fields')->count();
-        //$virtualOfficeCount = DB::table('list_space_tbl')->whereNotNull('virtual_offices')->count();
+        $meetingRoomCount = DB::table('meeting_fields')->count();
+        $virtualOfficeCount = DB::table('list_space_tbl')->whereNotNull('virtual_offices')->count();
 
         // Return the counts as a JSON response
         return response()->json([
             'deskCount' => $deskCount,
-            //'meetingRoomCount' => $meetingRoomCount,
-            //'virtualOfficeCount' => $virtualOfficeCount,
+            'meetingRoomCount' => $meetingRoomCount,
+            'virtualOfficeCount' => $virtualOfficeCount,
             'totalCount' => $deskCount + $meetingRoomCount + $virtualOfficeCount,
         ]);
     }
@@ -1151,14 +1131,14 @@ class CoworkerController extends Controller
             ->join('transaction as t', 'l.space_id', '=', 't.space_id')
             ->where('t.status', 'CONFIRMED')
             ->leftJoin('desk_fields as d', 'l.space_id', '=', 'd.space_id')
-            //->leftJoin('meeting_fields as m', 'l.space_id', '=', 'm.space_id')
+            ->leftJoin('meeting_fields as m', 'l.space_id', '=', 'm.space_id')
             ->select(
                 'l.space_id',
-                //'l.virtual_offices',
+                'l.virtual_offices',
                 DB::raw('COUNT(d.desk_id) as total_desks'),
-               // DB::raw('COUNT(m.meeting_id) as total_meeting_rooms')
+                DB::raw('COUNT(m.meeting_id) as total_meeting_rooms')
             )
-            //->groupBy('l.space_id', 'l.virtual_offices')
+            ->groupBy('l.space_id', 'l.virtual_offices')
             ->get();
 
         return response()->json($occupancy);
