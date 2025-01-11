@@ -164,14 +164,14 @@
                     </div>
                 </div>
 
-                <div class="box help-section">
+                <!-- <div class="box help-section">
                     <h4>How can we help?</h4>
                     <p>Our team is available 24/7 to assist you. 24 hours a day, 7 days a week.</p>
                     <a href="#"><i class="fas fa-question-circle"></i> Go to HOW TO</a>
                     <a href="#"><i class="fas fa-comment"></i> Text us</a>
                     <a href="#"><i class="fas fa-phone"></i> Call us</a>
                     <a href="#"><i class="fas fa-envelope"></i> Email us</a>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

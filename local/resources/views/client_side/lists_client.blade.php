@@ -88,29 +88,29 @@
                         <input type="text" class="form-control" id="maxPrice" placeholder="₱">
                     </div>
                     <div class="mb-3">
-                        <label for="duration" class="form-label">Duration</label>
+                        <label for="duration" class="form-label"></label>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="1-2" id="duration1">
+                            <!-- <input class="form-check-input" type="checkbox" value="1-2" id="duration1"> -->
                             <label class="form-check-label" for="duration1">
-                                1 hour - 2 hours
+                                
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="3-5" id="duration2">
+                            <!-- <input class="form-check-input" type="checkbox" value="3-5" id="duration2"> -->
                             <label class="form-check-label" for="duration2">
-                                3 hours - 5 hours
+                                
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="6-8" id="duration3">
+                            <!-- <input class="form-check-input" type="checkbox" value="6-8" id="duration3"> -->
                             <label class="form-check-label" for="duration3">
-                                6 hours - 8 hours
+                                
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="9-12" id="duration4">
+                            <!-- <input class="form-check-input" type="checkbox" value="9-12" id="duration4"> -->
                             <label class="form-check-label" for="duration4">
-                                9 hours - 12 hours
+                                
                             </label>
                         </div>
                     </div>
