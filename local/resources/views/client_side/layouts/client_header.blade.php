@@ -37,9 +37,7 @@
                 </a>
 
                 <div class="d-flex">
-                    <a class="btn btn-outline-secondary me-2" href="{{ route('client_side.how.reserve') }}">How to</a>
                     <a class="btn btn-outline-secondary me-2" href="{{ route('client_side.about') }}">About Us</a>
-                    <a class="btn btn-outline-secondary me-2" href="#">List Space</a>
                 </div>
                 <div class="d-flex align-items-center">
                     <button type="button" id="notification" class="me-3 btn btn-light bg-white border border-0"

@@ -36,7 +36,7 @@
                     <img src="{{ asset('assets/logo.png') }}" alt="Logo" style="height: 40px;">
                 </a>
 
-                <div class="d-flex justify-content-start">
+                <div class="d-flex">
                     <a class="btn btn-outline-secondary me-2" href="{{ route('client_side.about') }}">About Us</a>
                  
                 </div>
@@ -163,7 +163,7 @@
             async function fetchNotifications() {
                 try {
                     const response = await $.ajax({
-                        url: '{{ route('client_side.notifications.all') }}',
+                        url: '{{ route('client_side.notifications.all')}}',
                         method: 'GET',
                         data: {
                             _token: '{{ csrf_token() }}'
