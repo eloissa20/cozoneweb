@@ -1,6 +1,8 @@
 @extends('layouts.client_header')
 @section('title', 'Details')
 @section('content')
+
+
     <style>
         .map-placeholder {
             background: #eaeaea;
@@ -400,8 +402,8 @@
                     </div>
                 </div>
             </div>
-                <div class="card mb-4">
-                    <div class="card-header">Cowork Images</div>
+            <div class="card mb-4">
+                <div class="card-header">Cowork Images</div>
                     <div class="card-body">
                         <div class="image-grid">
                             @php
@@ -412,8 +414,10 @@
                             @foreach ($images as $index => $image)
                                 @if ($index < $maxImages)
                                     <div class="image-container">
-                                        <img src="{{ asset($image) }}" alt="Coworking Space Image" class="image"
-                                            onerror="this.onerror=null;this.src='{{ asset('assets/img/no-image-available.jpeg') }}';">
+                                        <a href="{{ asset($image) }}" data-lightbox="cowork-gallery" data-title="Coworking Space Image">
+                                            <img src="{{ asset($image) }}" alt="Coworking Space Image" class="image"
+                                                onerror="this.onerror=null;this.src='{{ asset('assets/img/no-image-available.jpeg') }}';">
+                                        </a>
                                         @if ($index == $maxImages - 1 && $remainingImages > 0)
                                             <div class="overlay">
                                                 <span>+{{ $remainingImages }}</span>
@@ -462,7 +466,8 @@
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 
     <script>
         // Create a mapping of hours to price from the PHP data
@@ -682,4 +687,10 @@
             .bindPopup('{{ $space->coworking_space_name }}')
             .openPopup();
     </script>
+    <script>
+    lightbox.option({
+        'resizeDuration': 200,
+        'wrapAround': true
+    });
+</script>
 @endsection
