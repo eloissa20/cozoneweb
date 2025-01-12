@@ -17,7 +17,7 @@
                     </select>
                 </div>
                 <div class="form-check mb-3">
-                    <label for="description" class="form-label">Description (minimum of 250 characters)</label>
+                    <label for="description" class="form-label">Description (maximum of 250 characters)</label>
                     <textarea class="form-control" id="description" rows="4"></textarea>
                 </div>
             </div>

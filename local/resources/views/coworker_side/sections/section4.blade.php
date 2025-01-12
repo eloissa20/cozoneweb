@@ -5,7 +5,7 @@
 
 <div class="form-section" id="step4">
 
-    <h2>LETS FIND YOUR SPACE</h2>
+    <h2>LET'S FIND YOUR SPACE</h2>
     <hr class="separator-line" />
     <form id="section4">
         <div class="container mb-5">
