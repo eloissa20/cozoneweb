@@ -84,7 +84,7 @@
                             <tr>
                                 <td>
                                     <p><strong>Number of Hours</strong></p>
-                                    <p>{{ $transaction->hours }} hour(s)</p>
+                                    <p>{{ $transaction->hours }}</p>
                                 </td>
                                 <td>
                                     <p><strong>Contact No.</strong></p>

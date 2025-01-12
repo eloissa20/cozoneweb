@@ -91,75 +91,85 @@
                 <div class="card mb-4">
                     <div class="card-header">Space Overview</div>
                     <div class="card-body">
-                        <p>
-                            Welcome to {{ $space->coworking_space_name }}, a vibrant coworking space located at
-                            {{ $space->unit }}, {{ $space->city }}, {{ $space->location }}, {{ $space->country }},
-                            offering a dynamic environment for freelancers, startups, and established businesses.
-                            Our facility features various workspace types, including private offices and meeting rooms,
-                            with a seating capacity of {{ $space->capacity }}. We are open from
-                            {{ $space->available_days_from }}
-                            to {{ $space->available_days_to }} <b>(except on {{ $space->exceptions }})</b>, operating
-                            between
-                            {{ $space->operating_hours_from }} and {{ $space->operating_hours_to }}.
+                    <p>
+                        Welcome to {{ $space->coworking_space_name }}, a vibrant coworking space located at
+                        {{ $space->unit }}, {{ $space->city }}, {{ $space->location }}, {{ $space->country }},
+                        offering a dynamic environment for freelancers, startups, and established businesses.
+                        Our facility features various workspace types, including private offices and meeting rooms,
+                        with a seating capacity of {{ $space->capacity }}. We are open from
+                        {{ $space->available_days_from }}
+                        to {{ $space->available_days_to }} <b>(except on {{ $space->exceptions }})</b>, operating
+                        between
+                        {{ $space->operating_hours_from }} and {{ $space->operating_hours_to }}.
 
-                            Membership options include short-term and long-term plans at competitive prices, with various
-                            payment methods accepted.
-                            For inquiries, reach us at {{ $space->email }} or {{ $space->contact_no }} /
-                            {{ $space->phone }},
-                            and
-                            connect with us on Instagram ({{ $space->instagram }}) and Facebook ({{ $space->facebook }}).
-                        </p>
+                        Membership options include short-term and long-term plans at competitive prices, with various
+                        payment methods accepted.
+                        For inquiries, reach us at {{ $space->email }} or {{ $space->contact_no }} /
+                        {{ $space->phone }},
+                        and
+                        connect with us on Instagram ({{ $space->instagram }}) and Facebook ({{ $space->facebook }}).
+                    </p>
 
-                    </div>
+                    <div style="border-top: 1px solid #ccc; margin: 20px 0;"></div>
+                    <p>{{ $space->description }}</p>
+
+                </div>
+
                 </div>
 
                 <div class="card mb-4">
                     <div class="card-header">Space Amenities & Facilities</div>
-                    <div class="card-body">
-                        <div class="row">
-                            @if ($space->basics)
-                                <div class="col-6">
-                                    <h6>Basics</h6>
-                                    <ul class="list-unstyled">
-                                        @foreach ($space->basics as $basic)
-                                            <li>{{ $basic }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-                            @if ($space->seats)
-                                <div class="col-6">
-                                    <h6>Seats</h6>
-                                    <ul class="list-unstyled">
-                                        @foreach ($space->seats as $seat)
-                                            <li>{{ $seat }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-                            @if ($space->equipment)
-                                <div class="col-6">
-                                    <h6>Equipments</h6>
-                                    <ul class="list-unstyled">
-                                        @foreach ($space->equipment as $equipment)
-                                            <li>{{ $equipment }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-                            @if ($space->facilities)
-                                <div class="col-6">
-                                    <h6>Facilities</h6>
-                                    <ul class="list-unstyled">
-                                        @foreach ($space->facilities as $facility)
-                                            <li>{{ $facility }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-
+                <div class="card-body">
+                    <div class="row">
+                        @if ($space->basics)
+                        <div class="col-6">
+                            <h6 style="font-weight: bold;">Basics</h6>
+                            <div style="border-top: 1px solid #ccc; margin: 10px 0;"></div>
+                            <ul class="list-unstyled">
+                                @foreach ($space->basics as $basic)
+                                <li>{{ $basic }}</li>
+                                @endforeach
+                            </ul>
                         </div>
+                        @endif
+                        @if ($space->seats)
+                        <div class="col-6">
+                            <h6 style="font-weight: bold;">Seats</h6>
+                            <div style="border-top: 1px solid #ccc; margin: 10px 0;"></div>
+                            <ul class="list-unstyled">
+                                @foreach ($space->seats as $seat)
+                                <li>{{ $seat }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
+                        @if ($space->equipment)
+                        <div class="col-6">
+                            <h6 style="font-weight: bold;">Equipments</h6>
+                            <div style="border-top: 1px solid #ccc; margin: 10px 0;"></div>
+
+                            <ul class="list-unstyled">
+                                @foreach ($space->equipment as $equipment)
+                                <li>{{ $equipment }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
+                        @if ($space->facilities)
+                        <div class="col-6">
+                            <h6 style="font-weight: bold;">Facilities</h6>
+                            <div style="border-top: 1px solid #ccc; margin: 10px 0;"></div>
+
+                            <ul class="list-unstyled">
+                                @foreach ($space->facilities as $facility)
+                                <li>{{ $facility }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
+
                     </div>
+                </div>
                 </div>
 
                 <div class="card mb-4">
@@ -447,8 +457,10 @@
                             @foreach ($images as $index => $image)
                                 @if ($index < $maxImages)
                                     <div class="image-container">
-                                        <img src="{{ asset($image) }}" alt="Coworking Space Image" class="image"
-                                            onerror="this.onerror=null;this.src='{{ asset('assets/img/no-image-available.jpeg') }}';">
+                                        <a href="{{ asset($image) }}" data-lightbox="cowork-gallery" data-title="Coworking Space Image">
+                                            <img src="{{ asset($image) }}" alt="Coworking Space Image" class="image"
+                                                onerror="this.onerror=null;this.src='{{ asset('assets/img/no-image-available.jpeg') }}';">
+                                        </a>
                                         @if ($index == $maxImages - 1 && $remainingImages > 0)
                                             <div class="overlay">
                                                 <span>+{{ $remainingImages }}</span>
@@ -497,6 +509,8 @@
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 
 
     <script>
@@ -671,4 +685,10 @@
             .bindPopup('{{ $space->coworking_space_name }}')
             .openPopup();
     </script>
+    <script>
+    lightbox.option({
+        'resizeDuration': 200,
+        'wrapAround': true
+    });
+</script>
 @endsection
